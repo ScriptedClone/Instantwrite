@@ -3,7 +3,7 @@ import { EditorContent, useEditor } from "@tiptap/react"
 import { useEffect } from "react";
 import './EditorPanel.css'
 
-export default function EditorPanel({getEditorTxt, getSelectedTxt, selectedDoc}) {
+export default function EditorPanel({onEditorTxtUpdate, getSelectedTxt, selectedDoc}) {
     const editor = useEditor({
         extensions: extensions,
         content: "",
@@ -16,7 +16,7 @@ export default function EditorPanel({getEditorTxt, getSelectedTxt, selectedDoc})
     
     useEffect(() => {
         editor.on('update', () => {
-            getEditorTxt(editor.getJSON());
+            onEditorTxtUpdate(editor.getJSON());
         })
     }, [])
 

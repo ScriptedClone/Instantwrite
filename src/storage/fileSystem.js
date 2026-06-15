@@ -9,14 +9,13 @@ import seed from './files.json'
 localStorage.setItem("FileTree", JSON.stringify(seed));
 
 const tree = JSON.parse(localStorage.getItem("FileTree"));
-
-// holds tiptap document objects
 const documentMap = {};
 
-function saveDoc() {
-    localStorage.setItem("FileTree", tree)
-}
-
+/**
+ * Finds all document node and stores it as value paired
+ * with document name as key. 
+ * @param {*} nodes 
+ */
 function populateDocMap(nodes) {
 
     nodes.map((node) => {
@@ -31,4 +30,4 @@ function populateDocMap(nodes) {
 
 populateDocMap(tree.content);
 
-export { tree, documentMap, saveDoc }
+export { tree, documentMap }
