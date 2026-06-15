@@ -5,16 +5,16 @@ import EditorPanel from "./EditorPanel/EditorPanel.jsx"
 import FileTreePanel from "./FileTreePanel/FileTreePanel.jsx"
 
 export default function Panels() {
-    // For Debugging
-    useEffect(() => {
-        console.log(selectedDoc);
-        //console.log("")
-    })
 
     /**
-     * This variable stores the current document object in Tiptap JSON format. 
+     * Stores the current document object in Tiptap JSON format from editor
      */
     const [editorDoc, setEditorDoc] = useState(); // remember to change to editorDoc / setEditorDoc
+
+    /**
+     * Stores the selected document object in Tiptap JSON format from hashmap/docMap
+     */
+    const [selectedDoc, setSelectedDoc] = useState();
 
     /**
      * This variable stores selected text as a string from the 
@@ -23,44 +23,56 @@ export default function Panels() {
     const [editorSelectedTxt, setEditorSelectedTxt] = useState();
 
     /**
-     * Stores the current document object in Tiptap JSON format
-     */
-    const [selectedDoc, setSelectedDoc] = useState();
-
-    /**
      * Stores current document's name.
      */
     const [docName, setDocName] = useState();
 
     /**
-     * Holds the current file tree [reference: not yet] from local storage in memory.
+     * Holds the current file tree from local storage in memory.
+     * 
+     * USAGE: Building file tree panel list.
      */
     const [fileTree, setFileTree] = useState(tree.content);
 
     /**
-     * Stores a hashmap reference for document objects using their
+     * Stores a hashmap reference for document node from tree using their
      * document name as key.
+     * 
      */
     const docMap = useRef(documentMap)
     
+    // For Debugging
+    useEffect(() => {
+        if(!editorDoc) return
+        //console.log("current selected doc")
+        //console.log(selectedDoc);
+        //console.log(docMap)
+        //console.log("The editor doc")
+        //console.log(editorDoc)
+    }, [editorDoc])
+
     /**
-     * Updates docMap hashmap in real-time 
+     * Updates docMap hashmap in real-time by using
+     * editor doc to update selector doc
      */
     useEffect(() => {
         if(!editorDoc) return;
-        docMap.current[docName] = editorDoc
+        docMap.current[docName].tiptapContent = editorDoc
 
     },[editorDoc])
 
     /**
-     * Event handler for the file tree panel when selecting a 
-     * document.
+     * Event handler for the file tree panel when selecting a document from 
+     * file panel. Updates selected doc by getting object from hashmap. Updates
+     * docName. 
      * 
-     * @param {*} e 
+     * @param {*} e is an event object from the selected <li>. 
      */
     function handleSelectedDoc(e) { 
         // Gets the document object from hashmap using key from selected text content
-        setSelectedDoc(s => docMap.current[e.target.textContent]);
+        const nodeDoc = docMap.current[e.target.textContent].tiptapContent;
+
+        setSelectedDoc(s => nodeDoc);
         setDocName(e.target.textContent);
     }
 
@@ -85,11 +97,10 @@ export default function Panels() {
 
     return (
         <div className="panelHolder">
-            <FileTreePanel docMap={docMap}
-                           fileTree={fileTree}
+            <FileTreePanel fileTree={fileTree}
                            handleSelectedDoc={handleSelectedDoc}/>
 
-            <EditorPanel selectedDoc={selectedDoc}                
+            <EditorPanel selectedDoc={selectedDoc}
                          onEditorTxtUpdate={onEditorTxtUpdate}
                          getSelectedTxt={getSelectedTxt}/>
                          

@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 
-export default function FileTree({ fileTree, docMap, handleSelectedDoc}) {
+export default function FileTree({ fileTree, handleSelectedDoc}) {
     function traverseFileTree(nodes) {
         const elements = nodes.map((node) => {
             if(node.content !== undefined) {

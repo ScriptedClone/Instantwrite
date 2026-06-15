@@ -1,4 +1,10 @@
 #header * {
     margin: 0;
-    text-align: center;
+}
+
+#header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }

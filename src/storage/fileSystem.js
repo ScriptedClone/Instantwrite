@@ -6,7 +6,10 @@
 // 
 // - local storage is simulated disk before migrating to Electron file system.
 import seed from './files.json'
-localStorage.setItem("FileTree", JSON.stringify(seed));
+
+if (!localStorage.getItem("FileTree")) {
+    localStorage.setItem("FileTree", JSON.stringify(seed));
+}
 
 const tree = JSON.parse(localStorage.getItem("FileTree"));
 const documentMap = {};
@@ -23,11 +26,19 @@ function populateDocMap(nodes) {
             populateDocMap(node.content)
         }
         if(node.type === "text") {
-            documentMap[node.name] = node.tiptapContent;
+            //console.log(node);
+            documentMap[node.name] = node;
         }
     })
 }
 
-populateDocMap(tree.content);
+function syncFileTreeToDisk() {
+    console.log(tree);
+    localStorage.setItem("FileTree", JSON.stringify(tree));
+}
 
-export { tree, documentMap }
+console.log("Nodes in hashmap")
+populateDocMap(tree.content);
+console.log(documentMap)
+
+export { tree, documentMap, syncFileTreeToDisk }

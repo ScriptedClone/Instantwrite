@@ -9,11 +9,13 @@ export default function EditorPanel({onEditorTxtUpdate, getSelectedTxt, selected
         content: "",
     })
 
+    // Uses selected document from file tree to update editor.
     useEffect(() => {
         if(!selectedDoc || !editor) return;
         editor.commands.setContent(selectedDoc)
     }, [selectedDoc])
     
+    // Updates current editor to....
     useEffect(() => {
         editor.on('update', () => {
             onEditorTxtUpdate(editor.getJSON());
