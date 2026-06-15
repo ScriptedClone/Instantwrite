@@ -1,0 +1,66 @@
+.assistantPanel * {
+    margin: 0;
+}
+
+.assistantPanel {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.textBox {
+    display: flex;
+    align-items: center;
+    background-color:  hsl(0, 1%, 40%);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: auto;
+    width: 90%;
+}
+
+.textBox textarea {
+    background-color: hsl(0, 1%, 40%);
+    width:90%;
+    color: white;
+    border: none;
+    resize: none;
+}
+
+.chatBox {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.user {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.user p{
+    padding: 8px 10px;
+    border-radius: 8px;
+    background-color: #eee;
+    max-width: 60%;
+}
+
+.contextBox {
+    background-color: hsl(0, 1%, 40%);
+    padding: 10px;
+    margin: 15px 0;
+    border-radius: 10px;
+}
+
+.suggestionBox {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+.exampleSuggestions {
+    background-color: hsl(0, 1%, 40%);
+    padding: 10px;
+    border-radius: 10px;
+}
