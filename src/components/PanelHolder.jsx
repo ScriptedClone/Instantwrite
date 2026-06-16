@@ -25,7 +25,7 @@ export default function Panels() {
     /**
      * Stores current document's name.
      */
-    const [docName, setDocName] = useState();
+    const [docId, setDocId] = useState();
 
     /**
      * A hashmap for node reference from file tree in memory. Node name
@@ -36,6 +36,7 @@ export default function Panels() {
     // For Debugging
     useEffect(() => {
         if(!nodeMap) return
+        //console.log(nodeMap);
     }, [nodeMap])
 
     /**
@@ -43,23 +44,24 @@ export default function Panels() {
      */
     useEffect(() => {
         if(!editorDoc) return;
-        nodeMap.current[docName].tiptapContent = editorDoc
+        nodeMap.current[docId].tiptapContent = editorDoc
 
     },[editorDoc])
 
     /**
      * Event handler when selecting a document from file panel. Updates selected 
-     * doc by getting object from hashmap. Updates docName. 
+     * doc by getting object from hashmap using id. Updates docId using id
      * 
      * @param {*} e is an event object from the selected <li>. 
      */
-    function handleSelectedDoc(e) { 
-        console.log(nodeMap.current);
-        // Gets the document object from hashmap using key from selected text content
-        const nodeDoc = nodeMap.current[e.target.textContent].tiptapContent;
+    function handleSelectedDoc(id) { 
+        console.log(id)
+        // Gets the document object from hashmap using 
+        const nodeDoc = nodeMap.current[id].tiptapContent;
 
+        // Updates selected doc.
         setSelectedDoc(s => nodeDoc);
-        setDocName(e.target.textContent);
+        setDocId(id);
     }
 
     /**

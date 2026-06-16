@@ -1,43 +1,49 @@
 import { tree } from "../../storage/fileSystem"
 
-export default function FileTree({ fileTree, handleSelectedDoc}) {
+export default function FileTree({ fileTree, handleSelectedDoc, handleSelectedFolder}) {
 
-    function createFileTree(nodes) {
-        
+    function displayFileTree(nodes) {
         const elements = nodes.map((node) => {
             if(node.content !== undefined) {
                 return(
-                    <li className="folder" key={node.id}>
-                        {node.name}
-                        {createFileTree(node.content)}
+                    <li className="folder" 
+                        key={node.id}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelectedFolder(node.id);
+                        }}
+                    >
+                            {node.name}
+                            {displayFileTree(node.content)}
                     </li> 
                 )
             }
 
             if(node.type === "text" ) {
-                return <li key={node.name} 
-                           id={node.id} 
+                return (
+                    <li key={node.id} 
                            className="text"
                            onClick={(e) => {
                                 e.stopPropagation();
-                                handleSelectedDoc(e)
-                           }}
+                                handleSelectedDoc(node.id)
+                            }}
                         >
                             {node.name}
-                        </li>
+                    </li>
+                )
             }
         })
         
         return (
-            <ul className="root">
+            <ul>
                 {elements}
             </ul>
         ) 
     }
 
     return(
-        <div className="FileTree">
-            {tree && createFileTree(fileTree.content)}
+        <div className="FileTree" onClick={(e) => {handleSelectedFolder(0)}}>
+            {tree && displayFileTree(fileTree.content)}
         </div>
     )
 }

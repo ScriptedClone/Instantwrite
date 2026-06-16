@@ -1,13 +1,25 @@
 import seed from './files.json'
 
+/**
+ * Seeds file tree on disk with placeholder
+ */
 if (!localStorage.getItem("FileTree")) {
     localStorage.setItem("FileTree", JSON.stringify(seed));
 }
 
+/**
+ * File tree in memory.
+ */
 let tree = JSON.parse(localStorage.getItem("FileTree"));
-const treeNodeMap = {};
 
-//const folderNodeMap = {};
+/**
+ * Hashmap for node reference in tree.
+ */
+const treeNodeMap = {}
+
+if(!treeNodeMap.content) {
+    populateMap(tree.content);
+}
 
 /**
  * Finds all document node and stores it as value paired
@@ -15,39 +27,26 @@ const treeNodeMap = {};
  * @param {*} nodes 
  */
 function populateMap(nodes) {
-
     nodes.map((node) => {
         if(node.content !== undefined) {
             populateMap(node.content)
         }
-        if(node.type === "text") {
-            treeNodeMap[node.name] = node;
+        if(node.type === "text") { 
+            treeNodeMap[node.id] = node;
         }
         if(node.type === "folder") {
-            treeNodeMap[node.name] = node;
+            treeNodeMap[node.id] = node;
         }
     })
-}
 
-/*
-function populateFolderMap(nodes) {
-    nodes.map((node) => {
-        if(node.content !== undefined) {
-            populateMap(node.content)
-        }
-        if(node.type === "folder") {
-            console.log(node.name);
-            folderNodeMap[node.name] = node;
-        }
-    })
+    treeNodeMap[0] = tree;
 }
-*/
 
 /**
  * Overwrites file tree on disk with file tree in memory.  
  */
 function syncFileTreeToDisk() {
-    //console.log(tree);
+    console.log("Files synced")
     localStorage.setItem("FileTree", JSON.stringify(tree));
 }
 
@@ -82,29 +81,24 @@ function createTextNode(docName) {
     return node;
 }
 
-
+// REMEMBER TO CHANGE UPDATE TREE 
 /**
- * Creates a new file tree with a new text document and overwrites
- * old file tree. 
+ * Creates a new textNode on selected folder and replaces old tree
+ * with a new tree object.
  * 
- * to-do:
- * - get currently selected folder reference
- * - add new textnode to its content array.
- * @param {*} docName 
+ * @param {*} folderName 
+ * @returns 
  */
-function updateTree() {
-    const newTree = {type:"folder", 
-                     content:[...tree.content, createTextNode()]}
-    tree = newTree;
+function updateTree(folderName) {
+    treeNodeMap[folderName].content = [...treeNodeMap[folderName].content, createTextNode()]
+    const newTree = {content:[...tree.content]}
 
     populateMap(newTree.content);
-
+    
     return newTree
 }
 
 
-if(!treeNodeMap.content) {
-    populateMap(tree.content);
-}
+
 
 export { tree, treeNodeMap, syncFileTreeToDisk, updateTree }

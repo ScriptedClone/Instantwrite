@@ -1,5 +1,7 @@
 {
+  "id": 0,
   "type": "folder",
+  "name": "root",
   "content": [
     {
       "id": 1,
@@ -48,7 +50,10 @@
               {
                 "type": "paragraph",
                 "content": [
-                  { "type": "text", "text": "This is the second paragraph." }
+                  {
+                    "type": "text",
+                    "text": "This is the second paragraph."
+                  }
                 ]
               }
             ]
@@ -89,7 +94,10 @@
               {
                 "type": "paragraph",
                 "content": [
-                  { "type": "text", "text": "This is the second paragraph." }
+                  {
+                    "type": "text",
+                    "text": "This is the second paragraph."
+                  }
                 ]
               }
             ]
@@ -173,7 +181,10 @@
               {
                 "type": "paragraph",
                 "content": [
-                  { "type": "text", "text": "This is the second paragraph." }
+                  {
+                    "type": "text",
+                    "text": "This is the second paragraph."
+                  }
                 ]
               }
             ]
