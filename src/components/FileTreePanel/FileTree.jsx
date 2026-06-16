@@ -1,20 +1,22 @@
-import { useEffect } from "react"
+import { tree } from "../../storage/fileSystem"
 
 export default function FileTree({ fileTree, handleSelectedDoc}) {
-    function traverseFileTree(nodes) {
+
+    function createFileTree(nodes) {
+        
         const elements = nodes.map((node) => {
             if(node.content !== undefined) {
                 return(
-                    <li className="folder" key={node.name}>
+                    <li className="folder" key={node.id}>
                         {node.name}
-                        {traverseFileTree(node.content)}
+                        {createFileTree(node.content)}
                     </li> 
                 )
             }
 
             if(node.type === "text" ) {
                 return <li key={node.name} 
-                           id={node.name} 
+                           id={node.id} 
                            className="text"
                            onClick={(e) => {
                                 e.stopPropagation();
@@ -27,7 +29,7 @@ export default function FileTree({ fileTree, handleSelectedDoc}) {
         })
         
         return (
-            <ul>
+            <ul className="root">
                 {elements}
             </ul>
         ) 
@@ -35,7 +37,7 @@ export default function FileTree({ fileTree, handleSelectedDoc}) {
 
     return(
         <div className="FileTree">
-            {fileTree && traverseFileTree(fileTree)}
+            {tree && createFileTree(fileTree.content)}
         </div>
     )
 }
