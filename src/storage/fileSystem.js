@@ -13,7 +13,7 @@ if (!localStorage.getItem("FileTree")) {
 let tree = JSON.parse(localStorage.getItem("FileTree"));
 
 /**
- * Hashmap for node reference in tree.
+ * Hashmap for node object reference in tree.
  */
 const treeNodeMap = {}
 
@@ -27,7 +27,7 @@ if(!treeNodeMap.content) {
  * @param {*} nodes 
  */
 function populateMap(nodes) {
-    nodes.map((node) => {
+    nodes.forEach((node) => {
         if(node.content !== undefined) {
             populateMap(node.content)
         }
@@ -55,7 +55,7 @@ function syncFileTreeToDisk() {
  * @param {} docName 
  * @returns 
  */
-function createTextNode(docName) {
+function createTextNode(docName) { // change to createDocNode
 
     const node =
     {
@@ -81,6 +81,46 @@ function createTextNode(docName) {
     return node;
 }
 
+function findParentNodeId(nodeId, nodes) {
+    const currentNodeId = nodes.id;
+    let parentNodeId;
+
+    let i = 0;
+    while((i < nodes.content.length) && !parentNodeId) {
+        const node = nodes.content[i]
+        if(node.id !== nodeId){
+            if(node.content !== undefined) {
+                parentNodeId = findParentNodeId(nodeId, node)
+            }
+        } else {
+            return parentNodeId = currentNodeId;
+        }
+        i++;
+    }
+
+    return parentNodeId;
+}
+function deleteTextNode(nodeId, btnType) {
+    
+    const parentNodeId = findParentNodeId(nodeId, tree);
+    console.log(parentNodeId)
+
+    const parentNode = treeNodeMap[parentNodeId];
+
+    parentNode.content = parentNode.content.filter((item) =>{
+        return item.id !== nodeId
+    })
+
+    console.log(tree);
+
+    const newTree = {content:[...tree.content]}
+
+    populateMap(newTree.content);
+
+    return newTree;
+
+}
+
 // REMEMBER TO CHANGE UPDATE TREE 
 /**
  * Creates a new textNode on selected folder and replaces old tree
@@ -101,4 +141,4 @@ function updateTree(folderName) {
 
 
 
-export { tree, treeNodeMap, syncFileTreeToDisk, updateTree }
+export { tree, treeNodeMap, deleteTextNode, syncFileTreeToDisk, updateTree }

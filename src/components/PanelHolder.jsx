@@ -55,7 +55,7 @@ export default function Panels() {
      * @param {*} e is an event object from the selected <li>. 
      */
     function handleSelectedDoc(id) { 
-        console.log(id)
+        //console.log(id)
         // Gets the document object from hashmap using 
         const nodeDoc = nodeMap.current[id].tiptapContent;
 

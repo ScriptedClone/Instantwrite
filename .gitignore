@@ -1,3 +1,4 @@
 src/components/AssistantPanel/groq.js
 node_modules/
 package-lock.json
+garbage.jsx

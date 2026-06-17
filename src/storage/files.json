@@ -1,20 +1,20 @@
 {
-  "id": 0,
+  "id": "0",
   "type": "folder",
   "name": "root",
   "content": [
     {
-      "id": 1,
+      "id": "1",
       "type": "folder",
       "name": "Chapters",
       "content": [
         {
-          "id": 2,
+          "id": "2",
           "type": "folder",
           "name": "Sub chapters",
           "content": [
             {
-              "id": 3,
+              "id": "3",
               "type": "text",
               "name": "chapter1.5",
               "tiptapContent": {
@@ -35,7 +35,7 @@
           ]
         },
         {
-          "id": 4,
+          "id": "4",
           "type": "text",
           "name": "chapter 1",
           "tiptapContent": {
@@ -60,7 +60,7 @@
           }
         },
         {
-          "id": 5,
+          "id": "5",
           "type": "text",
           "name": "chapter 2",
           "tiptapContent": {
@@ -79,7 +79,7 @@
           }
         },
         {
-          "id": 6,
+          "id": "6",
           "type": "text",
           "name": "chapter 3",
           "tiptapContent": {
@@ -106,12 +106,12 @@
       ]
     },
     {
-      "id": 7,
+      "id": "7",
       "type": "folder",
       "name": "Characters",
       "content": [
         {
-          "id": 8,
+          "id": "8",
           "type": "text",
           "name": "Cedric",
           "tiptapContent": {
@@ -125,7 +125,7 @@
           }
         },
         {
-          "id": 9,
+          "id": "9",
           "type": "text",
           "name": "Gedric",
           "tiptapContent": {
@@ -147,7 +147,7 @@
           }
         },
         {
-          "id": 10,
+          "id": "10",
           "type": "text",
           "name": "Jedric",
           "tiptapContent": {
@@ -166,7 +166,7 @@
           }
         },
         {
-          "id": 11,
+          "id": "11",
           "type": "text",
           "name": "Bedric",
           "tiptapContent": {
@@ -193,7 +193,7 @@
       ]
     },
     {
-      "id": 12,
+      "id": "12",
       "type": "text",
       "name": "Magic System",
       "tiptapContent": {
@@ -212,7 +212,7 @@
       }
     },
     {
-      "id": 13,
+      "id": "13",
       "type": "text",
       "name": "Example tiptap file",
       "tiptapContent": {

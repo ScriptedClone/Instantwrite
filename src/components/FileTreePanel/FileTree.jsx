@@ -1,6 +1,7 @@
 import { tree } from "../../storage/fileSystem"
 
-export default function FileTree({ fileTree, handleSelectedDoc, handleSelectedFolder}) {
+export default function FileTree({ fileTree, 
+                                   handleFileTree}) {
 
     function displayFileTree(nodes) {
         const elements = nodes.map((node) => {
@@ -8,30 +9,25 @@ export default function FileTree({ fileTree, handleSelectedDoc, handleSelectedFo
                 return(
                     <li className="folder" 
                         key={node.id}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleSelectedFolder(node.id);
-                        }}
+                        data-id={node.id}
                     >
-                            {node.name}
-                            {displayFileTree(node.content)}
+                        {node.name}
+                        {displayFileTree(node.content)}
                     </li> 
                 )
             }
 
             if(node.type === "text" ) {
                 return (
-                    <li key={node.id} 
-                           className="text"
-                           onClick={(e) => {
-                                e.stopPropagation();
-                                handleSelectedDoc(node.id)
-                            }}
-                        >
-                            {node.name}
+                    <li key={node.id} className="text">
+                        <span data-id={node.id}>{node.name}</span>
+                        <button data-id={node.id + "|deleteBtn"} key={node.id + "|deleteBtn"}>
+                            DELETE
+                        </button>
                     </li>
                 )
             }
+
         })
         
         return (
@@ -42,7 +38,7 @@ export default function FileTree({ fileTree, handleSelectedDoc, handleSelectedFo
     }
 
     return(
-        <div className="FileTree" onClick={(e) => {handleSelectedFolder(0)}}>
+        <div className="FileTreeRoot" data-id={"0"} onClick={handleFileTree}>
             {tree && displayFileTree(fileTree.content)}
         </div>
     )
