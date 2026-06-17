@@ -22,8 +22,8 @@ if(!treeNodeMap.content) {
 }
 
 /**
- * Finds all document node and stores it as value paired
- * with document name as key. 
+ * Recursively traverses through file tree and stores each node
+ * on the map.
  * @param {*} nodes 
  */
 function populateMap(nodes) {
@@ -52,10 +52,9 @@ function syncFileTreeToDisk() {
 
 /**
  * Creates a text node.
- * @param {} docName 
  * @returns 
  */
-function createTextNode(docName) { // change to createDocNode
+function createDocNode() {
 
     const node =
     {
@@ -81,6 +80,30 @@ function createTextNode(docName) { // change to createDocNode
     return node;
 }
 
+/**
+ * Creates a folder node
+ * @param {} folderName 
+ * @returns 
+ */
+function createFolderNode(folderName) {
+
+    const node = 
+    {
+        id: crypto.randomUUID(),
+        type: "folder",
+        name: "New folder",
+        content:[]
+    }
+
+    return node;
+}
+
+/**
+ * Find parent node of passed node within tree.
+ * @param {*} nodeId is the child of parent node to find.
+ * @param {*} nodes is the tree.
+ * @returns parent node Id.
+ */
 function findParentNodeId(nodeId, nodes) {
     const currentNodeId = nodes.id;
     let parentNodeId;
@@ -100,7 +123,15 @@ function findParentNodeId(nodeId, nodes) {
 
     return parentNodeId;
 }
-function deleteTextNode(nodeId, btnType) {
+
+/**
+ * Deletes a node on file tree and returns a new tree object reference with
+ * updated structure.
+ * @param {*} nodeId 
+ * @param {*} btnType 
+ * @returns 
+ */
+function deleteNode(nodeId, btnType) {
     
     const parentNodeId = findParentNodeId(nodeId, tree);
     console.log(parentNodeId)
@@ -121,16 +152,13 @@ function deleteTextNode(nodeId, btnType) {
 
 }
 
-// REMEMBER TO CHANGE UPDATE TREE 
 /**
- * Creates a new textNode on selected folder and replaces old tree
- * with a new tree object.
- * 
- * @param {*} folderName 
- * @returns 
+ * Create document node in parent folder.
+ * @param {*} parentFolderId 
+ * @returns new tree object reference      
  */
-function updateTree(folderName) {
-    treeNodeMap[folderName].content = [...treeNodeMap[folderName].content, createTextNode()]
+function addDocumentNode(parentFolderId) {
+    treeNodeMap[parentFolderId].content = [...treeNodeMap[parentFolderId].content, createDocNode()]
     const newTree = {content:[...tree.content]}
 
     populateMap(newTree.content);
@@ -138,7 +166,20 @@ function updateTree(folderName) {
     return newTree
 }
 
+/**
+ * Create folder node in parent folder.
+ * @param {*} parentFolderid
+ * @returns new tree object reference
+ */
+function addFolderNode(parentFolderid) {
+    treeNodeMap[parentFolderid].content = [...treeNodeMap[parentFolderid].content, createFolderNode()]
+    const newTree = {content:[...tree.content]}
+
+    populateMap(newTree.content)
+
+    return newTree;
+}
 
 
 
-export { tree, treeNodeMap, deleteTextNode, syncFileTreeToDisk, updateTree }
+export { tree, treeNodeMap, deleteNode, syncFileTreeToDisk, addDocumentNode, addFolderNode }

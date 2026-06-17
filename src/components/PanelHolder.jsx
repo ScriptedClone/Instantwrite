@@ -17,15 +17,14 @@ export default function Panels() {
     const [selectedDoc, setSelectedDoc] = useState();
 
     /**
-     * This variable stores selected text as a string from the 
-     * editor.
+     * Stores selected text as a string from the editor.
      */
     const [editorSelectedTxt, setEditorSelectedTxt] = useState();
 
     /**
-     * Stores current document's name.
+     * Stores current document node's unique identifier.
      */
-    const [docId, setDocId] = useState();
+    const [docNodeId, setDocNodeId] = useState();
 
     /**
      * A hashmap for node reference from file tree in memory. Node name
@@ -40,28 +39,28 @@ export default function Panels() {
     }, [nodeMap])
 
     /**
-     * Updates docMap hashmap in real-time by using editorDoc.
+     * Update nodeMap on editor text update by using editorDoc state
      */
     useEffect(() => {
         if(!editorDoc) return;
-        nodeMap.current[docId].tiptapContent = editorDoc
+        nodeMap.current[docNodeId].tiptapContent = editorDoc
 
     },[editorDoc])
 
     /**
      * Event handler when selecting a document from file panel. Updates selected 
-     * doc by getting object from hashmap using id. Updates docId using id
+     * doc state by getting document object from hashmap using passed id. Updates docId 
+     * to passed id
      * 
-     * @param {*} e is an event object from the selected <li>. 
+     * @param {*} id is the user selected document node's Id. 
      */
     function handleSelectedDoc(id) { 
-        //console.log(id)
-        // Gets the document object from hashmap using 
+
         const nodeDoc = nodeMap.current[id].tiptapContent;
 
         // Updates selected doc.
         setSelectedDoc(s => nodeDoc);
-        setDocId(id);
+        setDocNodeId(id);
     }
 
     /**

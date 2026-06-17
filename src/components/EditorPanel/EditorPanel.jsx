@@ -15,13 +15,16 @@ export default function EditorPanel({onEditorTxtUpdate, getSelectedTxt, selected
         editor.commands.setContent(selectedDoc)
     }, [selectedDoc])
     
-    // Updates current editor to....
+    // Track editor text and update editorDoc 
+    // state in parent component.
     useEffect(() => {
         editor.on('update', () => {
             onEditorTxtUpdate(editor.getJSON());
         })
     }, [])
 
+    // Tracks selected text by user and update
+    // editorSelectedTxt
     useEffect(() => {
         editor.on('selectionUpdate', () => {
             if (editor.state.selection.empty) return

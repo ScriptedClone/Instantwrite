@@ -1,53 +1,62 @@
 // Is this using the concept of tree-traversal and recursive components?
 import { useState , useEffect} from "react";
-import { treeNodeMap, tree, updateTree, deleteTextNode } from "../../storage/fileSystem"
+import { treeNodeMap, tree, addDocumentNode, addFolderNode, deleteNode } from "../../storage/fileSystem"
 import FileTree from "./FileTree";
 import FileTreeHeader from "./FileTreeHeader";
 import './FileTreePanel.css'
 
 export default function FileTreePanel({ handleSelectedDoc }) {
     /**
-     * Stores object reference of tree from fileSystem module.
+     * Stores object reference of tree from fileSystem module. It
+     * is used to track file tree structural updates.
      */
     const [fileTree, setFileTree] = useState(tree);
 
     /**
-     * Used to determine user selected folder.
+     * Stores user selected folder node id.
      */
-    const [folderID, selectedFolderID] = useState(0);
+    const [folderNodeId, selectedFolderNodeId] = useState(0);
     
     /**
      * Sets selected folder ID by user.
      * @param {*} e 
      */
     function handleSelectedFolder(id) {
-        selectedFolderID(id)
+        selectedFolderNodeId(id)
     }
 
     /**
-     * Creates a new tree and overwrites old tree with
-     * new text document inside selected folder.
+     * Event router for creating document or folder nodes within
+     * selected folder.
      */
-    function handleSetFileTree() {
-        setFileTree(f => updateTree(folderID));
+    function handleSetFileTree(nodeType) {
+
+        if(nodeType === "document") {
+            setFileTree(f => addDocumentNode(folderNodeId));
+        }
+        
+        if(nodeType === "folder") {
+            setFileTree(f => addFolderNode(folderNodeId))
+        }
     }
 
     
     /**
-     * Event router for file tree.
+     * Event router for events within file tree component.
      * @param {*} e 
      */
     function handleFileTree(e) {
-        //console.log(e.target.tagName)
+
         const id = e.target.dataset.id;
         
-        //console.log(treeNodeMap[id])
         if(e.target.tagName === "BUTTON") {
             const btnKey = e.target.dataset.id.split('|');
             const nodeId = btnKey[0];
             const btnType = btnKey[1]
 
-            setFileTree(f => deleteTextNode(nodeId, btnType))
+            if(btnType === "deleteBtn") {
+                setFileTree(f => deleteNode(nodeId, btnType))
+            }
         }
 
         if(treeNodeMap[id]?.type === 'text') {
