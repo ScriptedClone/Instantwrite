@@ -47,6 +47,7 @@ export default function FileTreePanel({ handleSelectedDoc }) {
      */
     function handleFileTree(e) {
 
+        console.log("event delegated")
         const id = e.target.dataset.id;
         
         if(e.target.tagName === "BUTTON") {

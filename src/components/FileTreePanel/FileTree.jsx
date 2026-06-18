@@ -1,53 +1,28 @@
+import { useState } from "react";
 import { tree } from "../../storage/fileSystem"
+import Folder from "./Folder"
 
-export default function FileTree({ fileTree, 
-                                   handleFileTree}) {
-    /**
-     * Traverses file tree and build nested lists. 
-     * @param {*} nodes is the array of nodes of from parent node.
-     * @returns 
-     */
-    function displayFileTree(nodes) {
-        const elements = nodes.map((node) => {
-            if(node.content !== undefined) {
-                return(
-                    <li className="folder" 
-                        key={node.id}
-                        data-id={node.id}
-                    >
-                        <button data-id={node.id + "|folderToggleBtn"}>Y</button>
-                        {node.name}
-                        <button data-id={node.id + "|deleteBtn"} key={node.id + "|deleteBtn"}>
-                            X
-                        </button>
-                        {displayFileTree(node.content)}
-                    </li> 
-                )
-            }
-
-            if(node.type === "text" ) {
-                return (
-                    <li key={node.id} className="text">
-                        <span data-id={node.id}>{node.name}</span>
-                        <button data-id={node.id + "|deleteBtn"} key={node.id + "|deleteBtn"}>
-                            X
-                        </button>
-                    </li>
-                )
-            }
-
-        })
-        
-        return (
-            <ul>
-                {elements}
-            </ul>
-        ) 
-    }
+export default function FileTree({fileTree, handleFileTree}) {
 
     return(
-        <div className="FileTreeRoot" data-id={"0"} onClick={handleFileTree}>
-            {tree && displayFileTree(fileTree.content)}
-        </div>
+        <ul className="FileTreeRoot" data-id={"0"} onClick={handleFileTree}>
+            {fileTree && fileTree.content.map((node) => {
+                if(node.type === "folder") {
+                    return (<Folder key={node.id} node={node}/>)
+                }
+
+                if(node.type === "text") {
+                    return (
+                        <li key={node.id} className="text">
+                            <span data-id={node.id}>{node.name}</span>
+                            <button data-id={node.id + "|deleteBtn"} key={node.id + "|deleteBtn"}>
+                                X
+                            </button>
+                        </li>
+                    )
+                }
+            })}
+        </ul>
     )
 }
+
