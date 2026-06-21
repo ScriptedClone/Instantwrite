@@ -1,8 +1,8 @@
-export default function FileTreeHeader({handleSetFileTree}) {
+export default function FileTreeHeader({handleHeaderBtn}) {
     return(
         <div className="fileTreeHeader">
-            <button onClick={() => handleSetFileTree("document")}>TEXT</button>
-            <button onClick={() => handleSetFileTree("folder")}>FOLDER</button>
+            <button onClick={() => handleHeaderBtn("document")}>TEXT</button>
+            <button onClick={() => handleHeaderBtn("folder")}>FOLDER</button>
         </div>
     )
 }

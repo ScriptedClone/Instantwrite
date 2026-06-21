@@ -1,30 +1,22 @@
+import { nodeMap } from "../../storage/fileSystem"
 import Folder from "./Folder"
+import Document from "./Document"
 
-export default function FolderChildren({parentNode}) {
-    
+export default function FolderChildren({folderId, folderTree}) {
     return (
-        parentNode.content.map((node) => {
-            if(node.type  === "folder") {
-                return (
-                    <ul key={node.id}><Folder node={node}/></ul>
-                )
-                
-            }
+        <ul>
+            {folderTree[folderId].map((childId) => {
+                if(nodeMap[childId].type === "folder") {
+                    return <Folder key={childId}
+                                   folderTree={folderTree}
+                                   node={nodeMap[childId]}/>
+                }
 
-            if(node.type === "text") {
-                return (
-                    <li key={node.id} className="text">
-                        <span data-id={node.id}>{node.name}</span>
-                        <button data-id={node.id + "|deleteBtn"} key={node.id + "|deleteBtn"}>
-                            X
-                        </button>
-                    </li>
-                )
-
-            }
-
-        })
-
+                if(nodeMap[childId].type === "text") {
+                    return <Document key={childId} 
+                                     node={nodeMap[childId]}/>
+                }
+            })}
+        </ul>
     )
-
 }

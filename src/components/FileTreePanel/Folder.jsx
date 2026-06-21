@@ -1,7 +1,7 @@
 import { useState } from "react"
 import FolderChildren from "./FolderChildren"
 
-export default function Folder({node}) {
+export default function Folder({node, folderTree}) {
     const [isOpen, setIsOpen] = useState(false);
 
     function handleFolderToggle() {
@@ -10,19 +10,22 @@ export default function Folder({node}) {
     }
     
     return (
-        <li className="folder"
-            key={node.id}
-            data-id={node.id}
-        >
+        <li className="folder" key={node.id}  data-id={node.id}>
             <span onClick={(e) => {
-                e.stopPropagation();
+                e.stopPropagation() // Stop file tree handler catching this event.
                 handleFolderToggle()
-            }}> {">"} </span>
+            }}>
+                {">"}
+            </span>
+
             {node.name}
+
             <button data-id={node.id + "|deleteBtn"} key={node.id + "|deleteBtn"}>
                 X
             </button>
-            {isOpen && <ul><FolderChildren parentNode={node} /></ul>}
+
+            {isOpen && <FolderChildren folderId={node.id}
+                                       folderTree={folderTree}/>} 
         </li>
     )
 }

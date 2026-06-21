@@ -1,80 +1,82 @@
-// Is this using the concept of tree-traversal and recursive components?
 import { useState , useEffect} from "react";
-import { treeNodeMap, tree, addDocumentNode, addFolderNode, deleteNode } from "../../storage/fileSystem"
+import { folderTree, nodeMap, addDocumentNode, addFolderNode, deleteNode } from "../../storage/fileSystem"
 import FileTree from "./FileTree";
 import FileTreeHeader from "./FileTreeHeader";
 import './FileTreePanel.css'
 
 export default function FileTreePanel({ handleSelectedDoc }) {
+
     /**
-     * Stores object reference of tree from fileSystem module. It
-     * is used to track file tree structural updates.
+     * Track structural changes to folder tree.
      */
-    const [fileTree, setFileTree] = useState(tree);
+    const [tree, setTree] = useState(folderTree);
 
     /**
      * Stores user selected folder node id.
      */
-    const [folderNodeId, selectedFolderNodeId] = useState(0);
-    
+    const [folderNodeId, setFolderNodeId] = useState(0);
+
     /**
      * Sets selected folder ID by user.
      * @param {*} e 
      */
     function handleSelectedFolder(id) {
-        selectedFolderNodeId(id)
+        setFolderNodeId(id)
     }
 
     /**
-     * Event router for creating document or folder nodes within
-     * selected folder.
+     * Event router for header component
+     * @param {} button 
+     * @returns 
      */
-    function handleSetFileTree(nodeType) {
-
-        if(nodeType === "document") {
-            setFileTree(f => addDocumentNode(folderNodeId));
+    function handleHeaderBtn(button) {
+        if(button === "document") {
+            console.log("Create document");
+            setTree(addDocumentNode(folderNodeId))
         }
-        
-        if(nodeType === "folder") {
-            setFileTree(f => addFolderNode(folderNodeId))
+
+        if(button === "folder") {
+            console.log("Create folder")
+            setTree(addFolderNode(folderNodeId));
         }
     }
-
     
     /**
-     * Event router for events within file tree component.
+     * Event router within file tree component.
      * @param {*} e 
      */
-    function handleFileTree(e) {
-
-        console.log("event delegated")
+    function handleTree(e) {
+        //console.log("event from file tree")
         const id = e.target.dataset.id;
-        
-        if(e.target.tagName === "BUTTON") {
-            const btnKey = e.target.dataset.id.split('|');
+
+        if(id.includes("|")) {
+            const btnKey = id.split("|");
             const nodeId = btnKey[0];
-            const btnType = btnKey[1]
+            const btnType = btnKey[1];
 
             if(btnType === "deleteBtn") {
-                setFileTree(f => deleteNode(nodeId, btnType))
+                //console.log("Selected delete button")
+                setTree(deleteNode(nodeId));
             }
         }
 
-        if(treeNodeMap[id]?.type === 'text') {
-            console.log(id);
+        if(nodeMap[id]?.type === 'text') {
+            //console.log("selected text id: " + id)
             handleSelectedDoc(id);
+            return;
         }
-        if(treeNodeMap[id]?.type === 'folder') {
-            console.log(id);
+        if(nodeMap[id]?.type === 'folder') {
+            //console.log("selected folder id: " + id);
             handleSelectedFolder(id);
+            return;
         }
     }
 
     return (
         <div className="fileTreePanel">
-            <FileTreeHeader handleSetFileTree={handleSetFileTree}/>
-            <FileTree fileTree={fileTree} 
-                      handleFileTree={handleFileTree}/>
+            <FileTreeHeader handleHeaderBtn={handleHeaderBtn}/>
+            <FileTree folderTree={folderTree} 
+                      handleTree={handleTree}/>
         </div>
     
     )

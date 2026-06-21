@@ -1,66 +1,38 @@
-import seed from './files.json'
+import {nodeMapSeed, treeSeed} from './seed'
+
+/** Store node map and folder children on disk*/
+
+/** 
+ * This variable stores folder lookup by Id and their children's Id as
+ * an array. Each folder must be treated as immutable.
+ * 
+*/
+let folderTree = treeSeed;
 
 /**
- * Seeds file tree on disk with placeholder
- */
-if (!localStorage.getItem("FileTree")) {
-    localStorage.setItem("FileTree", JSON.stringify(seed));
+ * Stores each node in tree on the map. Each node is mutable. 
+*/
+let nodeMap = nodeMapSeed;
+
+function copyFolderTree(tree) {
+    const newTree = {...tree}
+    return newTree;
 }
 
-/**
- * File tree in memory.
- */
-let tree = JSON.parse(localStorage.getItem("FileTree"));
-
-/**
- * Hashmap for node object reference in tree.
- */
-const treeNodeMap = {}
-
-if(!treeNodeMap.content) {
-    populateMap(tree.content);
-}
-
-/**
- * Recursively traverses through file tree and stores each node
- * on the map.
- * @param {*} nodes 
- */
-function populateMap(nodes) {
-    nodes.forEach((node) => {
-        if(node.content !== undefined) {
-            populateMap(node.content)
-        }
-        if(node.type === "text") { 
-            treeNodeMap[node.id] = node;
-        }
-        if(node.type === "folder") {
-            treeNodeMap[node.id] = node;
-        }
-    })
-
-    treeNodeMap[0] = tree;
-}
-
-/**
- * Overwrites file tree on disk with file tree in memory.  
- */
 function syncFileTreeToDisk() {
-    console.log("Files synced")
-    localStorage.setItem("FileTree", JSON.stringify(tree));
+    return null;
 }
 
 /**
- * Creates a text node.
- * @returns 
+ * Creates document node and updates nodemap
+ * @param {*} name 
+ * @returns id of created node.
  */
-function createDocNode() {
-
-    const node =
-    {
+function createDocNode(name) {
+    const node = {
         id: crypto.randomUUID(),
         type:"text",
-        name: "Untitled",
+        name: (name)? name : "Untitled",
         tiptapContent: {
             type: "doc",
             content: [
@@ -77,109 +49,80 @@ function createDocNode() {
         }
     }
 
-    return node;
+    nodeMap = {...nodeMap, [node.id]:node}
+    return node.id
 }
 
 /**
- * Creates a folder node
- * @param {} folderName 
+ * Creates a folder node and updates nodemap
+ * @param {*} name 
  * @returns 
  */
-function createFolderNode(folderName) {
-
-    const node = 
-    {
+function createFolderNode(name) {
+    const node = {
         id: crypto.randomUUID(),
         type: "folder",
-        name: "New folder",
-        content:[]
+        name: (name)? name : "New folder"
     }
 
-    return node;
+    nodeMap = {...nodeMap, [node.id]:node}
+    return node
 }
 
 /**
- * Find parent node of passed node within tree.
- * @param {*} nodeId is the child of parent node to find.
- * @param {*} nodes is the tree.
- * @returns parent node Id.
+ * Add document node inside a folder using its id.
+ * @param {*} folderId 
  */
-function findParentNodeId(nodeId, nodes) {
-    const currentNodeId = nodes.id;
-    let parentNodeId;
+function addDocumentNode(folderId) {
+    folderTree[folderId] = [...folderTree[folderId], createDocNode()]
 
+    // Create new object reference for React.
+    return copyFolderTree(folderTree);
+}
+
+/**
+ * Add folder node inside a folder using its id
+ * @param {*} folderId 
+ */
+function addFolderNode(folderId) {
+    const node = createFolderNode();
+
+    folderTree[folderId] = [...folderTree[folderId], node.id]
+    folderTree = {...folderTree, [node.id]: []}
+
+    // Create new object reference for React.
+    return copyFolderTree(folderTree);
+}
+
+function deleteNode(nodeId) {
+    const keys = Object.keys(folderTree)
     let i = 0;
-    while((i < nodes.content.length) && !parentNodeId) {
-        const node = nodes.content[i]
-        if(node.id !== nodeId){
-            if(node.content !== undefined) {
-                parentNodeId = findParentNodeId(nodeId, node)
+    let j = 0;
+    let key;
+
+    while(i < keys.length) {
+        key = keys[i]
+        
+        while(j < folderTree[key].length) {
+            if(folderTree[key][j] === nodeId) {
+                folderTree[key] = folderTree[key].filter((nodeid) => {
+                    return nodeid !== nodeId;
+                })
+
+                return copyFolderTree(folderTree);;
             }
-        } else {
-            return parentNodeId = currentNodeId;
-        }
+
+            j++;
+        }   
+
+        j = 0;
         i++;
     }
-
-    return parentNodeId;
 }
 
-/**
- * Deletes a node on file tree and returns a new tree object reference with
- * updated structure.
- * @param {*} nodeId 
- * @param {*} btnType 
- * @returns 
- */
-function deleteNode(nodeId, btnType) {
-    
-    const parentNodeId = findParentNodeId(nodeId, tree);
-    console.log(parentNodeId)
-
-    const parentNode = treeNodeMap[parentNodeId];
-
-    parentNode.content = parentNode.content.filter((item) =>{
-        return item.id !== nodeId
-    })
-
-    console.log(tree);
-
-    const newTree = {content:[...tree.content]}
-
-    populateMap(newTree.content);
-
-    return newTree;
-
-}
-
-/**
- * Create document node in parent folder.
- * @param {*} parentFolderId 
- * @returns new tree object reference      
- */
-function addDocumentNode(parentFolderId) {
-    treeNodeMap[parentFolderId].content = [...treeNodeMap[parentFolderId].content, createDocNode()]
-    const newTree = {content:[...tree.content]}
-
-    populateMap(newTree.content);
-    
-    return newTree
-}
-
-/**
- * Create folder node in parent folder.
- * @param {*} parentFolderid
- * @returns new tree object reference
- */
-function addFolderNode(parentFolderid) {
-    treeNodeMap[parentFolderid].content = [...treeNodeMap[parentFolderid].content, createFolderNode()]
-    const newTree = {content:[...tree.content]}
-
-    populateMap(newTree.content)
-
-    return newTree;
-}
-
-
-
-export { tree, treeNodeMap, deleteNode, syncFileTreeToDisk, addDocumentNode, addFolderNode }
+export { nodeMap, 
+         folderTree, 
+         deleteNode, 
+         addDocumentNode, 
+         addFolderNode, 
+         syncFileTreeToDisk }

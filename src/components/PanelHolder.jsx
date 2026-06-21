@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, use} from "react";
-import { tree, treeNodeMap } from "../storage/fileSystem.js";
+import { nodeMap } from "../storage/fileSystem.js";
 import AssistantPanel from "./AssistantPanel/AssistantPanel.jsx"
 import EditorPanel from "./EditorPanel/EditorPanel.jsx"
 import FileTreePanel from "./FileTreePanel/FileTreePanel.jsx"
@@ -25,12 +25,6 @@ export default function Panels() {
      * Stores current document node's unique identifier.
      */
     const [docNodeId, setDocNodeId] = useState();
-
-    /**
-     * A hashmap for node reference from file tree in memory. Node name
-     * name is used as key.
-     */
-    const nodeMap = useRef(treeNodeMap)
     
     // For Debugging
     useEffect(() => {
@@ -43,7 +37,7 @@ export default function Panels() {
      */
     useEffect(() => {
         if(!editorDoc) return;
-        nodeMap.current[docNodeId].tiptapContent = editorDoc
+        nodeMap[docNodeId].tiptapContent = editorDoc
 
     },[editorDoc])
 
@@ -55,8 +49,7 @@ export default function Panels() {
      * @param {*} id is the user selected document node's Id. 
      */
     function handleSelectedDoc(id) { 
-
-        const nodeDoc = nodeMap.current[id].tiptapContent;
+        const nodeDoc = nodeMap[id].tiptapContent;
 
         // Updates selected doc.
         setSelectedDoc(s => nodeDoc);
