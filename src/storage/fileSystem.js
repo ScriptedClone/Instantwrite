@@ -9,7 +9,13 @@ if (!localStorage.getItem("tree") && !localStorage.getItem("nodeMap")) {
 }
 
 /**
- * Stores each node in tree on the map. Each node is mutable. 
+ * Stores each node in tree on a map.
+ * 
+ * node properties:
+ * - id: STRING node identifier
+ * - type: STRING text / folder
+ * - name: STRING displayed name
+ * - tiptapContent: OBJECT in tiptap format.
 */
 let nodeMap = JSON.parse(localStorage.getItem("nodeMap"));
 
@@ -172,9 +178,25 @@ function deleteNode(nodeId, tree) {
     }
 }
 
+/**
+ * Renames node using id in tree.
+ * 
+ * @param {*} newName is the value for the node's new name.
+ * @param {*} nodeId id of the node being renamed.
+ * @param {*} tree the tree object that holds a map to each folder node and its children
+ * @returns a new tree object with the renamed node.
+ */
+function renameNode(newName, nodeId, tree) {
+    const newTree = copyTree(tree);
+    nodeMap[nodeId].name = newName;
+
+    return newTree;
+}
+
 export { nodeMap,
+         renameNode,
          deleteNode, 
          addDocumentNode, 
          addFolderNode, 
          syncFileTreeToDisk,
-         isNodeDescendant }
+         isNodeDescendant}

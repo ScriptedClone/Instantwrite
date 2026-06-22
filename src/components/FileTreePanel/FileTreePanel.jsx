@@ -1,11 +1,13 @@
 import { useState, 
          useRef,
-         useEffect} from "react";
+         useEffect,
+         createContext} from "react";
 import { nodeMap,
          syncFileTreeToDisk, 
          addDocumentNode, 
          addFolderNode, 
-         deleteNode} from "../../storage/fileSystem"
+         deleteNode,
+         renameNode} from "../../storage/fileSystem"
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers"
 import FileTree from "./FileTree";
@@ -13,7 +15,7 @@ import FileTreeHeader from "./FileTreeHeader";
 import './FileTreePanel.css'
 
 export default function FileTreePanel({ handleSelectedDoc }) {
-    /** Track structural changes to folder tree.*/
+    /** Track structural changes to folder tree in memory*/
     const [tree, setTree] = useState(()=> {
         const localTree = JSON.parse(localStorage.getItem("tree"));
         return localTree;
@@ -70,6 +72,11 @@ export default function FileTreePanel({ handleSelectedDoc }) {
 
             if(btnType === "deleteBtn") {
                 setTree(deleteNode(nodeId, tree));
+            }
+
+            if(btnType === "renameBtn") {
+                const newName = e.target.value
+                setTree(renameNode(newName, nodeId, tree))
             }
         }
 

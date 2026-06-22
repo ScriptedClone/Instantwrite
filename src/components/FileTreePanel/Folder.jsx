@@ -2,8 +2,12 @@ import { useState } from "react"
 import { useSortable } from "@dnd-kit/react/sortable";
 import { isNodeDescendant } from "../../storage/fileSystem"
 import FolderChildren from "./FolderChildren"
+import RenameNode from "./RenameNode";
 
-export default function Folder({folderId, tree, node, index, depth}) {
+export default function Folder({folderId, tree, node, index, 
+                                depth, renameIcon, deleteIcon}) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isRenaming, setIsRenaming] = useState(false);
     const {ref} = useSortable({
         id: node.id,
         index: index,
@@ -17,7 +21,9 @@ export default function Folder({folderId, tree, node, index, depth}) {
         }
     })
 
-    const [isOpen, setIsOpen] = useState(false);
+    function handleRenameToggle(e) {
+        setIsRenaming(!isRenaming)
+    }
 
     function handleFolderToggle() {
         console.log("toggle")
@@ -25,18 +31,38 @@ export default function Folder({folderId, tree, node, index, depth}) {
     }
     
     return (
-        <li className="folder" key={node.id}  data-id={node.id} ref={ref}>
+        <li className="folder" 
+            key={node.id}  
+            data-id={node.id} 
+            ref={ref}
+        >
             <span onClick={(e) => {
-                e.stopPropagation() // Stop filetree component catching folderToggle event.
-                handleFolderToggle()
+                  e.stopPropagation() // Stop filetree component catching folderToggle event.
+                  handleFolderToggle()
             }}>
                 {">"}
             </span>
 
-            {node.name}
+            {(isRenaming) 
+            ? <RenameNode node={node} handleRenameToggle={handleRenameToggle}/> 
+            : node.name}
 
-            <button data-id={node.id + "|deleteBtn"} key={node.id + "|deleteBtn"}>
-                X
+            <button className="deleteBtn">
+                <img src={deleteIcon} 
+                     alt="delete icon" 
+                     className="deleteIcon"
+                     data-id={node.id + "|deleteBtn"}     
+                />
+            </button>
+
+            <button className="renameBtn">
+                <img src={renameIcon} 
+                     alt="rename icon" 
+                     className="renameIcon"
+                     onClick={(e) => {
+                        e.stopPropagation()
+                        handleRenameToggle()
+                }}/>
             </button>
 
             {isOpen && <FolderChildren folderId={node.id}

@@ -1,7 +1,13 @@
 import { nodeMap } from "../../storage/fileSystem"
+import renameIcon from "../../assets/renameIcon.png"
+import deleteIcon from "../../assets/deleteIcon.png"
 import Folder from "./Folder"
 import Document from "./Document"
 
+/**
+ * This is a recursive component that builds the nested list. The
+ * recursion is triggered when a folder is toggled to expand.
+ */
 export default function FolderChildren({folderId, tree, depth}) {
     return (
         <ul>
@@ -12,7 +18,9 @@ export default function FolderChildren({folderId, tree, depth}) {
                                    tree={tree}
                                    node={nodeMap[childId]}
                                    index={index}
-                                   depth={depth}/>
+                                   depth={depth}
+                                   renameIcon={renameIcon}
+                                   deleteIcon={deleteIcon}/>
                 }
 
                 if(nodeMap[childId].type === "text") {
@@ -21,7 +29,9 @@ export default function FolderChildren({folderId, tree, depth}) {
                                      tree={tree}
                                      node={nodeMap[childId]}
                                      index={index}
-                                     depth={depth}/>
+                                     depth={depth}
+                                     renameIcon={renameIcon}
+                                     deleteIcon={deleteIcon}/>
                 }
             })}
         </ul>
