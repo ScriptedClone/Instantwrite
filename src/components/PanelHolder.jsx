@@ -25,6 +25,11 @@ export default function Panels() {
      * Stores current document node's unique identifier.
      */
     const [docNodeId, setDocNodeId] = useState();
+
+    /**
+     * Stores current document name.
+     */
+    const [docName, setDocName] = useState();
     
     /**
      * Update nodeMap on editor text update by using editorDoc state
@@ -48,6 +53,8 @@ export default function Panels() {
         // Updates selected doc.
         setSelectedDoc(s => nodeDoc);
         setDocNodeId(id);
+        setDocName(nodeMap[id].name)
+        localStorage.setItem("prevDocId", id);
     }
 
     /**
@@ -57,6 +64,14 @@ export default function Panels() {
      */
     function onEditorTxtUpdate(currentDoc) {
         setEditorDoc(currentDoc);
+    }
+
+    /**
+     * Updates editor title when document is renamed on file tree.
+     * @param {*} id 
+     */
+    function onDocumentRename(id) {
+        setDocName(nodeMap[id].name)
     }
 
     /**
@@ -71,9 +86,12 @@ export default function Panels() {
 
     return (
         <div className="panelHolder">
-            <FileTreePanel handleSelectedDoc={handleSelectedDoc}/>
+            <FileTreePanel handleSelectedDoc={handleSelectedDoc}
+                           onDocumentRename={onDocumentRename}/>
 
             <EditorPanel selectedDoc={selectedDoc}
+                         docName={docName}
+                         handleSelectedDoc={handleSelectedDoc}
                          onEditorTxtUpdate={onEditorTxtUpdate}
                          getSelectedTxt={getSelectedTxt}/>
                          

@@ -146,6 +146,10 @@ function addFolderNode(folderId, tree) {
 }
 
 /**
+ * TO-DO: if a folder is deleted, i need to delete all of its
+ * children as on nodemap. On tree, its id must be deleted on 
+ * its parent array. Its key must also be deleted.
+ * 
  * Deletes node using id in tree.
  * @param {*} nodeId is id of the node that you pass
  * @param {*} tree the tree object that holds a map to each folder node and its children
@@ -166,7 +170,8 @@ function deleteNode(nodeId, tree) {
                 newTree[key] = newTree[key].filter((nodeid) => {
                     return nodeid !== nodeId;
                 })
-
+                console.log(nodeMap[nodeId]);
+                delete nodeMap[nodeId];
                 return newTree;;
             }
 

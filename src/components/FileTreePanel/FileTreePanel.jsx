@@ -14,7 +14,7 @@ import FileTree from "./FileTree";
 import FileTreeHeader from "./FileTreeHeader";
 import './FileTreePanel.css'
 
-export default function FileTreePanel({ handleSelectedDoc }) {
+export default function FileTreePanel({ handleSelectedDoc, onDocumentRename }) {
     /** Track structural changes to folder tree in memory*/
     const [tree, setTree] = useState(()=> {
         const localTree = JSON.parse(localStorage.getItem("tree"));
@@ -64,7 +64,7 @@ export default function FileTreePanel({ handleSelectedDoc }) {
     function handleTree(e) {
         if(!e.target.dataset.id) return;
         const id = e.target.dataset.id;
-
+        console.log("event delegated");
         if(id.includes("|")) {
             const btnKey = id.split("|");
             const nodeId = btnKey[0];
@@ -77,6 +77,7 @@ export default function FileTreePanel({ handleSelectedDoc }) {
             if(btnType === "renameBtn") {
                 const newName = e.target.value
                 setTree(renameNode(newName, nodeId, tree))
+                onDocumentRename(nodeId);
             }
         }
 
