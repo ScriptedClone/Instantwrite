@@ -1,43 +1,57 @@
-import { useState , useEffect} from "react";
-import { folderTree, nodeMap, addDocumentNode, addFolderNode, deleteNode } from "../../storage/fileSystem"
+import { useState, 
+         useRef,
+         useEffect} from "react";
+import { nodeMap,
+         syncFileTreeToDisk, 
+         addDocumentNode, 
+         addFolderNode, 
+         deleteNode} from "../../storage/fileSystem"
+import { DragDropProvider } from "@dnd-kit/react";
+import { move } from "@dnd-kit/helpers"
 import FileTree from "./FileTree";
 import FileTreeHeader from "./FileTreeHeader";
 import './FileTreePanel.css'
 
 export default function FileTreePanel({ handleSelectedDoc }) {
+    /** Track structural changes to folder tree.*/
+    const [tree, setTree] = useState(()=> {
+        const localTree = JSON.parse(localStorage.getItem("tree"));
+        return localTree;
+    });
 
-    /**
-     * Track structural changes to folder tree.
-     */
-    const [tree, setTree] = useState(folderTree);
+    /** Store previous tree on drag start. */
+    const previousTree = useRef(tree);
 
-    /**
-     * Stores user selected folder node id.
-     */
+    /** Stores user selected folder node id. */
     const [folderNodeId, setFolderNodeId] = useState(0);
 
     /**
      * Sets selected folder ID by user.
-     * @param {*} e 
+     * @param {*} id is the id of currently selected folder.
      */
     function handleSelectedFolder(id) {
         setFolderNodeId(id)
     }
 
     /**
-     * Event router for header component
-     * @param {} button 
+     * Event router for header component.
+     * @param {} button is the button type the user selects. 
      * @returns 
      */
     function handleHeaderBtn(button) {
         if(button === "document") {
             console.log("Create document");
-            setTree(addDocumentNode(folderNodeId))
+            setTree(addDocumentNode(folderNodeId, tree));
         }
 
         if(button === "folder") {
             console.log("Create folder")
-            setTree(addFolderNode(folderNodeId));
+            setTree(addFolderNode(folderNodeId, tree));
+        }
+
+        if(button === "save") {
+            console.log("Synced files");
+            syncFileTreeToDisk(tree);
         }
     }
     
@@ -46,7 +60,7 @@ export default function FileTreePanel({ handleSelectedDoc }) {
      * @param {*} e 
      */
     function handleTree(e) {
-        //console.log("event from file tree")
+        if(!e.target.dataset.id) return;
         const id = e.target.dataset.id;
 
         if(id.includes("|")) {
@@ -55,18 +69,16 @@ export default function FileTreePanel({ handleSelectedDoc }) {
             const btnType = btnKey[1];
 
             if(btnType === "deleteBtn") {
-                //console.log("Selected delete button")
-                setTree(deleteNode(nodeId));
+                setTree(deleteNode(nodeId, tree));
             }
         }
 
         if(nodeMap[id]?.type === 'text') {
-            //console.log("selected text id: " + id)
             handleSelectedDoc(id);
             return;
         }
+        
         if(nodeMap[id]?.type === 'folder') {
-            //console.log("selected folder id: " + id);
             handleSelectedFolder(id);
             return;
         }
@@ -75,9 +87,31 @@ export default function FileTreePanel({ handleSelectedDoc }) {
     return (
         <div className="fileTreePanel">
             <FileTreeHeader handleHeaderBtn={handleHeaderBtn}/>
-            <FileTree folderTree={folderTree} 
-                      handleTree={handleTree}/>
+            <DragDropProvider
+                onDragStart={() => {
+                    previousTree.current = tree;
+                }}
+
+                onDragOver={(e) => {
+                    const {source, target} = e.operation;
+                    setTree((items) => move(items, e))
+                }}
+
+                onDragEnd={(e)=> {
+                    const {source, target} = e.operation;
+
+                    if(e.canceled) {
+                        setTree(previousTree.current);
+                        return;
+                    }
+                }}
+            >
+                <FileTree tree={tree} 
+                          handleTree={handleTree}/>
+            </DragDropProvider>
+
         </div>
     
     )
 }
+

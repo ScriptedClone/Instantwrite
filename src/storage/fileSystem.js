@@ -1,31 +1,74 @@
 import {nodeMapSeed, treeSeed} from './seed'
 
-/** Store node map and folder children on disk*/
-
-/** 
- * This variable stores folder lookup by Id and their children's Id as
- * an array. Each folder must be treated as immutable.
- * 
-*/
-let folderTree = treeSeed;
+/**
+ * Seed local storage.
+ */
+if (!localStorage.getItem("tree") && !localStorage.getItem("nodeMap")) {
+    localStorage.setItem("tree", JSON.stringify(treeSeed));
+    localStorage.setItem("nodeMap", JSON.stringify(nodeMapSeed))
+}
 
 /**
  * Stores each node in tree on the map. Each node is mutable. 
 */
-let nodeMap = nodeMapSeed;
+let nodeMap = JSON.parse(localStorage.getItem("nodeMap"));
 
-function copyFolderTree(tree) {
-    const newTree = {...tree}
+/**
+ * Copies contents of tree and returns it as a new object.
+ * @param {*} tree 
+ * @returns 
+ */
+function copyTree(tree) {
+    const newTree = {};
+    for (const key of Object.keys(tree)) {
+        newTree[key] = [...tree[key]];
+    }
     return newTree;
 }
 
-function syncFileTreeToDisk() {
-    return null;
+/**
+ * Writes tree and nodemap on local storage.
+ * @param {*} tree
+ */
+function syncFileTreeToDisk(tree) {
+    localStorage.setItem("tree", JSON.stringify(tree));
+    localStorage.setItem("nodeMap", JSON.stringify(nodeMap));
+}
+
+
+/**
+ * Checks if target node is descendant of source. This is used as
+ * an accept condition for sortable node components.
+ * @param {*} sourceId is the id of the node being dragged.
+ * @param {*} nodeId is the id of the node target destination. 
+ * @returns true if nodeId is a descendant. 
+ */
+function isNodeDescendant(sourceId, nodeId, tree) {
+    const children = tree[sourceId];
+
+    for(let i = 0; i < children.length; i++) {
+        const node = nodeMap[children[i]];
+        
+        if(node.type === "folder") {
+
+            // This recursion returns true if any node of a nested
+            // folder is a descendant of source.
+            if(isNodeDescendant(node.id, nodeId, tree)) {
+                return true
+            }
+        }
+
+        if(children[i] === nodeId) {
+            return true;
+        }
+    }
+
+    return false
 }
 
 /**
- * Creates document node and updates nodemap
- * @param {*} name 
+ * Creates document node and updates nodemap.
+ * @param {*} name optional argument to set document name.
  * @returns id of created node.
  */
 function createDocNode(name) {
@@ -55,8 +98,8 @@ function createDocNode(name) {
 
 /**
  * Creates a folder node and updates nodemap
- * @param {*} name 
- * @returns 
+ * @param {*} name optional argument to set folder name.
+ * @returns folder node.
  */
 function createFolderNode(name) {
     const node = {
@@ -71,45 +114,54 @@ function createFolderNode(name) {
 
 /**
  * Add document node inside a folder using its id.
- * @param {*} folderId 
+ * @param {*} folderId is the id of the folder to add a new document.
  */
-function addDocumentNode(folderId) {
-    folderTree[folderId] = [...folderTree[folderId], createDocNode()]
+function addDocumentNode(folderId, tree) {
+    const newTree = copyTree(tree)
 
-    // Create new object reference for React.
-    return copyFolderTree(folderTree);
+    newTree[folderId] = [...newTree[folderId], createDocNode()]
+    
+    return newTree;
 }
 
 /**
- * Add folder node inside a folder using its id
- * @param {*} folderId 
+ * Add folder node inside a folder using its id and updates list 
+ * of folder keys inside tree.
+ * @param {*} folderId is the id of the folder to add a new folder.
  */
-function addFolderNode(folderId) {
+function addFolderNode(folderId, tree) {
     const node = createFolderNode();
+    let newTree = copyTree(tree);
 
-    folderTree[folderId] = [...folderTree[folderId], node.id]
-    folderTree = {...folderTree, [node.id]: []}
+    newTree[folderId] = [...newTree[folderId], node.id]
+    newTree = {...newTree, [node.id]: []}
 
-    // Create new object reference for React.
-    return copyFolderTree(folderTree);
+    return newTree;
 }
 
-function deleteNode(nodeId) {
-    const keys = Object.keys(folderTree)
+/**
+ * Deletes node using id in tree.
+ * @param {*} nodeId is id of the node that you pass
+ * @param {*} tree the tree object that holds a map to each folder node and its children
+ * @returns a new tree object with deleted node.
+ */
+function deleteNode(nodeId, tree) {
+    const keys = Object.keys(tree);
+    const newTree = copyTree(tree);
+
     let i = 0;
     let j = 0;
     let key;
-
     while(i < keys.length) {
         key = keys[i]
         
-        while(j < folderTree[key].length) {
-            if(folderTree[key][j] === nodeId) {
-                folderTree[key] = folderTree[key].filter((nodeid) => {
+        while(j < newTree[key].length) {
+            if(newTree[key][j] === nodeId) {
+                newTree[key] = newTree[key].filter((nodeid) => {
                     return nodeid !== nodeId;
                 })
 
-                return copyFolderTree(folderTree);;
+                return newTree;;
             }
 
             j++;
@@ -120,9 +172,9 @@ function deleteNode(nodeId) {
     }
 }
 
-export { nodeMap, 
-         folderTree, 
+export { nodeMap,
          deleteNode, 
          addDocumentNode, 
          addFolderNode, 
-         syncFileTreeToDisk }
+         syncFileTreeToDisk,
+         isNodeDescendant }

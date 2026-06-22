@@ -26,12 +26,6 @@ export default function Panels() {
      */
     const [docNodeId, setDocNodeId] = useState();
     
-    // For Debugging
-    useEffect(() => {
-        if(!nodeMap) return
-        //console.log(nodeMap);
-    }, [nodeMap])
-
     /**
      * Update nodeMap on editor text update by using editorDoc state
      */

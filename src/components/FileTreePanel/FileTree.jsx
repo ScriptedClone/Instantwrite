@@ -1,12 +1,13 @@
 import { useState } from "react";
 import FolderChildren from "./FolderChildren"
 
-export default function FileTree({ folderTree, handleTree }) {
+export default function FileTree({ tree, handleTree }) {
 
     return(
         <div className="fileTree" onClick={handleTree} >
             <FolderChildren folderId={"0"}
-                            folderTree={folderTree} /> 
+                            tree={tree} 
+                            depth={1}/> 
         </div>
     )
 }
