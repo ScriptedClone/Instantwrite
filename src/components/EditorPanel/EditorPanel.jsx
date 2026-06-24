@@ -7,7 +7,7 @@ import EditorTitle from "./EditorTitle.jsx";
 import Editor from "./Editor.jsx";
 
 export default function EditorPanel({onEditorTxtUpdate, 
-                                     getSelectedTxt, 
+                                     getSelectionEvent, 
                                      selectedDoc, 
                                      handleSelectedDoc, 
                                      docName}) {
@@ -16,7 +16,7 @@ export default function EditorPanel({onEditorTxtUpdate,
         <div className="editorPanel">
             <EditorTitle docName={docName}/>
             <Editor onEditorTxtUpdate={onEditorTxtUpdate}
-                    getSelectedTxt={getSelectedTxt}
+                    getSelectionEvent={getSelectionEvent}
                     selectedDoc={selectedDoc}
                     handleSelectedDoc={handleSelectedDoc}/>
         </div>

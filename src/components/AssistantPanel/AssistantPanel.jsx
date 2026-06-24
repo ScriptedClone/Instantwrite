@@ -3,12 +3,12 @@ import TextBox from "./TextBox"
 import ChatBox from "./ChatBox"
 import ContextBox from "./ContextBox"
 import SuggestionBox from "./SuggestionBox"
-import{ systemChatPrompt, systemRewritePrompt, getGroqChat, generateGroqSuggestion }from "./groq"
+import{ systemChatPrompt, getGroqChat, generateSuggestion}from "./groq"
 import { use, useEffect, useState } from "react"
 import "./AssistantPanel.css"
 
 
-export default function AssistantPanel({editorSelectedTxt}) {
+export default function AssistantPanel({selection}) {
     const [chats, setChats] = useState([]);
     const [mode, setMode] = useState("CHAT");
     const [writeStyle, setWriteStyle] = useState("Descriptive");
@@ -42,11 +42,12 @@ export default function AssistantPanel({editorSelectedTxt}) {
     }
 
     async function handleContextBox(e) {
+
         if(e.target.textContent === "Generate") {
-            const data = await generateGroqSuggestion([systemRewritePrompt(writeStyle),
-                                                       {role: "user", content: editorSelectedTxt},])
-            
-            setSuggestions(s => [...s, {style: writeStyle, text: data.choices[0]?.message?.content || "Error. Please try again"}]);
+            const response = await generateSuggestion(writeStyle, selection)
+
+            setSuggestions(s => [{style: writeStyle, text: response}, ...s])
+
             return;
         }
 
@@ -62,7 +63,7 @@ export default function AssistantPanel({editorSelectedTxt}) {
                 <TextBox addUserChat={addUserChat}/>
               </> 
             : <>
-                <ContextBox editorSelectedTxt={editorSelectedTxt} handleContextBox={handleContextBox}/>
+                <ContextBox selection={selection} handleContextBox={handleContextBox}/>
                 <SuggestionBox suggestions={suggestions} handleDeleteSuggestion={handleDeleteSuggestion}/>
               </>}
         </div>

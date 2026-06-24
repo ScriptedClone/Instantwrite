@@ -150,6 +150,8 @@ function addFolderNode(folderId, tree) {
  * children as on nodemap. On tree, its id must be deleted on 
  * its parent array. Its key must also be deleted.
  * 
+ * Must write two paths for type document / folder
+ * 
  * Deletes node using id in tree.
  * @param {*} nodeId is id of the node that you pass
  * @param {*} tree the tree object that holds a map to each folder node and its children
@@ -157,7 +159,7 @@ function addFolderNode(folderId, tree) {
  */
 function deleteNode(nodeId, tree) {
     const keys = Object.keys(tree);
-    const newTree = copyTree(tree);
+    const newTree = copyTree(tree); 
 
     let i = 0;
     let j = 0;
@@ -172,15 +174,16 @@ function deleteNode(nodeId, tree) {
                 })
                 console.log(nodeMap[nodeId]);
                 delete nodeMap[nodeId];
-                return newTree;;
             }
-
+            
             j++;
         }   
 
         j = 0;
         i++;
     }
+
+    return newTree;
 }
 
 /**

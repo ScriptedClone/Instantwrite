@@ -1,11 +1,13 @@
+import { selectionValues } from "../EditorPanel/editorUtilities";
 
+export default function ContextBox({selection, handleContextBox}) {
 
-export default function ContextBox({editorSelectedTxt, handleContextBox}) {
+    const textSelected = selectionValues(selection)?.textSelected;
     return(
         <>
-            {editorSelectedTxt &&
+            {textSelected &&
                 <div className="contextBox" onClick={handleContextBox}>
-                    <p>{editorSelectedTxt}</p>
+                    <p>{textSelected}</p>
                     <button >Descriptive</button>
                     <button>Romantic</button>
                     <button>Horror</button> 

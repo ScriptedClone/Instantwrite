@@ -12,14 +12,14 @@ export default function Panels() {
     const [editorDoc, setEditorDoc] = useState();
 
     /**
-     * Stores the selected document object in Tiptap JSON format from hashmap/docMap.
+     * Stores the selected document object in Tiptap JSON format from nodeMap.
      */
     const [selectedDoc, setSelectedDoc] = useState();
 
     /**
-     * Stores selected text as a string from the editor.
+     * Text selection event from editor.
      */
-    const [editorSelectedTxt, setEditorSelectedTxt] = useState();
+    const [selection, setSelection] = useState(null);
 
     /**
      * Stores current document node's unique identifier.
@@ -50,17 +50,15 @@ export default function Panels() {
     function handleSelectedDoc(id) { 
         const nodeDoc = nodeMap[id].tiptapContent;
 
-        // Updates selected doc.
         setSelectedDoc(s => nodeDoc);
         setDocNodeId(id);
-        setDocName(nodeMap[id].name)
+        setDocName(nodeMap[id].name);
         localStorage.setItem("prevDocId", id);
     }
 
     /**
      * Updates editorDoc by tracking document changes on editor component.
-     *  
-     * @param {*} currentContext 
+     * @param {*} currentDoc 
      */
     function onEditorTxtUpdate(currentDoc) {
         setEditorDoc(currentDoc);
@@ -80,8 +78,8 @@ export default function Panels() {
      * 
      * @param {*} selectedTxt 
      */
-    function getSelectedTxt(selectedTxt) {
-        setEditorSelectedTxt(selectedTxt);
+    function getSelectionEvent(selection) {
+        setSelection(selection)
     }
 
     return (
@@ -93,9 +91,9 @@ export default function Panels() {
                          docName={docName}
                          handleSelectedDoc={handleSelectedDoc}
                          onEditorTxtUpdate={onEditorTxtUpdate}
-                         getSelectedTxt={getSelectedTxt}/>
+                         getSelectionEvent={getSelectionEvent}/>
                          
-            <AssistantPanel editorSelectedTxt={editorSelectedTxt}/>
+            <AssistantPanel selection={selection}/>
         </div>
     )
 }

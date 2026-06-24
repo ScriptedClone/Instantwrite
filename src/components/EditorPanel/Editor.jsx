@@ -3,21 +3,19 @@ import { EditorContent, useEditor } from "@tiptap/react"
 import { useEffect } from "react";
 import { nodeMap } from "../../storage/fileSystem.js";
 
-export default function Editor({onEditorTxtUpdate, getSelectedTxt, selectedDoc, handleSelectedDoc}) {
+export default function Editor({onEditorTxtUpdate, getSelectionEvent, selectedDoc, handleSelectedDoc}) {
     const editor = useEditor({
         extensions: extensions,
         content: "",
     })
 
-    // Uses selected document from file tree to update editor.
-    // The created event is from folder/document component.
+    /** Set editor to selected document in file tree */
     useEffect(() => {
         if(!selectedDoc || !editor) return;
         editor.commands.setContent(selectedDoc)
     }, [selectedDoc])
 
-    // Displays previously selected document before 
-    // Application was closed. 
+    /** Restore last active document on mount. */
     useEffect(() => {
         if(editor.isEmpty) {
             const prevDocId = localStorage.getItem("prevDocId");
@@ -31,23 +29,32 @@ export default function Editor({onEditorTxtUpdate, getSelectedTxt, selectedDoc, 
         }
     }, [])
     
-    // Track editor text and update editorDoc content
-    // state in parent component.
+    /** Returns editor text content on update.*/
     useEffect(() => {
-        editor.on('update', () => {
+        function handleEditorUpdate() {
             onEditorTxtUpdate(editor.getJSON());
-        })
+        }
+
+        editor.on('update', handleEditorUpdate);
+
+        return () => editor.off('update', handleEditorUpdate)
     }, [])
 
-    // Tracks selected text by user and update
-    // editorSelectedTxt
+    /**
+     * 
+     */
     useEffect(() => {
-        editor.on('selectionUpdate', () => {
+        function handleSelectionUpdate() {
             if (editor.state.selection.empty) return
-            const { from, to } = editor.state.selection;
 
-            getSelectedTxt(editor.state.doc.textBetween(from, to, ' '));
-        })
+            const selection = editor.state.selection
+
+            getSelectionEvent(selection);
+        }
+
+        editor.on('selectionUpdate', handleSelectionUpdate);
+
+        return () => editor.off('selectionUpdate', handleSelectionUpdate);
     }, [])
 
     return <EditorContent className ="editor" editor={editor}/>
