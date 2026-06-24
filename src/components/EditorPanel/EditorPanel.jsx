@@ -1,6 +1,6 @@
 import { extensions } from "./extensions.js"
 import { EditorContent, useEditor } from "@tiptap/react"
-import { useEffect } from "react";
+import { } from "react";
 import './EditorPanel.css'
 import { nodeMap } from "../../storage/fileSystem.js";
 import EditorTitle from "./EditorTitle.jsx";
@@ -8,8 +8,7 @@ import Editor from "./Editor.jsx";
 
 export default function EditorPanel({handleEditorTxtUpdate, 
                                      handleSelection, 
-                                     selectedDoc, 
-                                     handleSelectedDoc, 
+                                     selectedDoc,
                                      docName}) {
 
     return (
@@ -17,8 +16,7 @@ export default function EditorPanel({handleEditorTxtUpdate,
             <EditorTitle docName={docName}/>
             <Editor selectedDoc={selectedDoc}
                     handleEditorTxtUpdate={handleEditorTxtUpdate}
-                    handleSelection={handleSelection}
-                    handleSelectedDoc={handleSelectedDoc}/>
+                    handleSelection={handleSelection}/>
         </div>
     )
 

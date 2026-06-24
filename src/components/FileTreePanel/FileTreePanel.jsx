@@ -77,7 +77,8 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
             if(btnType === "renameBtn") {
                 const newName = e.target.value
                 setTree(renameNode(newName, nodeId, tree))
-                handleDocumentRename(nodeId);
+
+                if(nodeMap[nodeId].type !== "folder") handleDocumentRename(nodeId);
             }
         }
 

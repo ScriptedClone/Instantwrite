@@ -3,7 +3,7 @@ import { EditorContent, useEditor } from "@tiptap/react"
 import { useEffect } from "react";
 import { nodeMap } from "../../storage/fileSystem.js";
 
-export default function Editor({handleEditorTxtUpdate, handleSelection, selectedDoc, handleSelectedDoc}) {
+export default function Editor({handleEditorTxtUpdate, handleSelection, selectedDoc}) {
     const editor = useEditor({
         extensions: extensions,
         content: "",
@@ -22,10 +22,7 @@ export default function Editor({handleEditorTxtUpdate, handleSelection, selected
             const nodeMap = JSON.parse(localStorage.getItem("nodeMap"));
             const doc = nodeMap[prevDocId]?.tiptapContent;
 
-            if(doc) {
-                editor.commands.setContent(doc);
-                handleSelectedDoc(prevDocId)
-            }
+            editor.commands.setContent(doc);
         }
     }, [])
     

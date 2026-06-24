@@ -1,4 +1,4 @@
-import { nodeMap } from "../../storage/fileSystem"
+import { useEffect, useRef } from "react"
 
 export default function EditorTitle({docName}) {
     return (

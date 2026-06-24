@@ -37,7 +37,6 @@ export default function PanelHolder() {
     useEffect(() => {
         if(!editorDoc) return;
         nodeMap[docNodeId].tiptapContent = editorDoc
-
     },[editorDoc])
 
     /**
@@ -45,23 +44,34 @@ export default function PanelHolder() {
      * get last active document on editor mount. 
      */
     useEffect(() => {
-        localStorage.setItem("prevDocId", docNodeId);
+        if(docNodeId) {
+            localStorage.setItem("prevDocId", docNodeId);
+        }
+        
     }, [docNodeId])
 
     /**
      * Set current document name. 
      */
     useEffect(() => {
+        
         setDocName(nodeMap[docNodeId]?.name);
     }, [docNodeId])
 
+
+    useEffect(() => {
+        const prevDocId = localStorage.getItem("prevDocId");
+
+        if(prevDocId) setDocName(nodeMap[prevDocId].name);        
+    }, [])
+
     /**
      * Event handler when selecting a document from file panel. Updates selected 
-     * doc using nodeMap and updates nodeId.
+     * doc using passed id for nodeMap lookup and updates nodeId.
      * 
      * @param {*} id is the user selected document node's Id. 
      */
-    function handleSelectedDoc(id) { 
+    function handleSelectedDoc(id) {
         const nodeDoc = nodeMap[id].tiptapContent;
 
         setSelectedDoc(s => nodeDoc);
@@ -101,7 +111,6 @@ export default function PanelHolder() {
 
             <EditorPanel selectedDoc={selectedDoc}
                          docName={docName}
-                         handleSelectedDoc={handleSelectedDoc}
                          handleEditorTxtUpdate={handleEditorTxtUpdate}
                          handleSelection={handleSelection}/>
                          
