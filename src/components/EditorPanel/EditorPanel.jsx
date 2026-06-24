@@ -6,8 +6,8 @@ import { nodeMap } from "../../storage/fileSystem.js";
 import EditorTitle from "./EditorTitle.jsx";
 import Editor from "./Editor.jsx";
 
-export default function EditorPanel({onEditorTxtUpdate, 
-                                     getSelectionEvent, 
+export default function EditorPanel({handleEditorTxtUpdate, 
+                                     handleSelection, 
                                      selectedDoc, 
                                      handleSelectedDoc, 
                                      docName}) {
@@ -15,9 +15,9 @@ export default function EditorPanel({onEditorTxtUpdate,
     return (
         <div className="editorPanel">
             <EditorTitle docName={docName}/>
-            <Editor onEditorTxtUpdate={onEditorTxtUpdate}
-                    getSelectionEvent={getSelectionEvent}
-                    selectedDoc={selectedDoc}
+            <Editor selectedDoc={selectedDoc}
+                    handleEditorTxtUpdate={handleEditorTxtUpdate}
+                    handleSelection={handleSelection}
                     handleSelectedDoc={handleSelectedDoc}/>
         </div>
     )

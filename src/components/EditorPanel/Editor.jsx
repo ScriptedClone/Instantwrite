@@ -3,7 +3,7 @@ import { EditorContent, useEditor } from "@tiptap/react"
 import { useEffect } from "react";
 import { nodeMap } from "../../storage/fileSystem.js";
 
-export default function Editor({onEditorTxtUpdate, getSelectionEvent, selectedDoc, handleSelectedDoc}) {
+export default function Editor({handleEditorTxtUpdate, handleSelection, selectedDoc, handleSelectedDoc}) {
     const editor = useEditor({
         extensions: extensions,
         content: "",
@@ -15,7 +15,7 @@ export default function Editor({onEditorTxtUpdate, getSelectionEvent, selectedDo
         editor.commands.setContent(selectedDoc)
     }, [selectedDoc])
 
-    /** Restore last active document on mount. */
+    /** Get last active document on mount. */
     useEffect(() => {
         if(editor.isEmpty) {
             const prevDocId = localStorage.getItem("prevDocId");
@@ -29,10 +29,13 @@ export default function Editor({onEditorTxtUpdate, getSelectionEvent, selectedDo
         }
     }, [])
     
-    /** Returns editor text content on update.*/
+    /** 
+     * Gets editor and converts to JSON for every
+     * editor text update.
+     */
     useEffect(() => {
         function handleEditorUpdate() {
-            onEditorTxtUpdate(editor.getJSON());
+            handleEditorTxtUpdate(editor.getJSON());
         }
 
         editor.on('update', handleEditorUpdate);
@@ -40,16 +43,16 @@ export default function Editor({onEditorTxtUpdate, getSelectionEvent, selectedDo
         return () => editor.off('update', handleEditorUpdate)
     }, [])
 
-    /**
-     * 
+    /** 
+     * Pass generated selection event when user 
+     * selects a text to handleSelection.
      */
     useEffect(() => {
         function handleSelectionUpdate() {
             if (editor.state.selection.empty) return
-
             const selection = editor.state.selection
 
-            getSelectionEvent(selection);
+            handleSelection(selection);
         }
 
         editor.on('selectionUpdate', handleSelectionUpdate);

@@ -4,15 +4,15 @@ import AssistantPanel from "./AssistantPanel/AssistantPanel.jsx"
 import EditorPanel from "./EditorPanel/EditorPanel.jsx"
 import FileTreePanel from "./FileTreePanel/FileTreePanel.jsx"
 
-export default function Panels() {
+export default function PanelHolder() {
 
     /**
-     * Stores the current document object in Tiptap JSON format from editor.
+     * The current document object in Tiptap JSON format from editor.
      */
     const [editorDoc, setEditorDoc] = useState();
 
     /**
-     * Stores the selected document object in Tiptap JSON format from nodeMap.
+     * The selected document object in Tiptap JSON format from nodeMap.
      */
     const [selectedDoc, setSelectedDoc] = useState();
 
@@ -22,17 +22,17 @@ export default function Panels() {
     const [selection, setSelection] = useState(null);
 
     /**
-     * Stores current document node's unique identifier.
+     * The current document node's unique identifier in nodeMap.
      */
     const [docNodeId, setDocNodeId] = useState();
 
     /**
-     * Stores current document name.
+     * The current document name.
      */
     const [docName, setDocName] = useState();
     
     /**
-     * Update nodeMap on editor text update by using editorDoc state
+     * Update nodeMap on editor text update using editorDoc.
      */
     useEffect(() => {
         if(!editorDoc) return;
@@ -41,9 +41,23 @@ export default function Panels() {
     },[editorDoc])
 
     /**
+     * Saves selected document's id in nodemap to 
+     * get last active document on editor mount. 
+     */
+    useEffect(() => {
+        localStorage.setItem("prevDocId", docNodeId);
+    }, [docNodeId])
+
+    /**
+     * Set current document name. 
+     */
+    useEffect(() => {
+        setDocName(nodeMap[docNodeId]?.name);
+    }, [docNodeId])
+
+    /**
      * Event handler when selecting a document from file panel. Updates selected 
-     * doc state by getting document object from hashmap using passed id. Updates docId 
-     * to passed id
+     * doc using nodeMap and updates nodeId.
      * 
      * @param {*} id is the user selected document node's Id. 
      */
@@ -52,15 +66,13 @@ export default function Panels() {
 
         setSelectedDoc(s => nodeDoc);
         setDocNodeId(id);
-        setDocName(nodeMap[id].name);
-        localStorage.setItem("prevDocId", id);
     }
 
     /**
      * Updates editorDoc by tracking document changes on editor component.
      * @param {*} currentDoc 
      */
-    function onEditorTxtUpdate(currentDoc) {
+    function handleEditorTxtUpdate(currentDoc) {
         setEditorDoc(currentDoc);
     }
 
@@ -68,7 +80,7 @@ export default function Panels() {
      * Updates editor title when document is renamed on file tree.
      * @param {*} id 
      */
-    function onDocumentRename(id) {
+    function handleDocumentRename(id) {
         setDocName(nodeMap[id].name)
     }
 
@@ -78,20 +90,20 @@ export default function Panels() {
      * 
      * @param {*} selectedTxt 
      */
-    function getSelectionEvent(selection) {
+    function handleSelection(selection) {
         setSelection(selection)
     }
 
     return (
         <div className="panelHolder">
             <FileTreePanel handleSelectedDoc={handleSelectedDoc}
-                           onDocumentRename={onDocumentRename}/>
+                           handleDocumentRename={handleDocumentRename}/>
 
             <EditorPanel selectedDoc={selectedDoc}
                          docName={docName}
                          handleSelectedDoc={handleSelectedDoc}
-                         onEditorTxtUpdate={onEditorTxtUpdate}
-                         getSelectionEvent={getSelectionEvent}/>
+                         handleEditorTxtUpdate={handleEditorTxtUpdate}
+                         handleSelection={handleSelection}/>
                          
             <AssistantPanel selection={selection}/>
         </div>
