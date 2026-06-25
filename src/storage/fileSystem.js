@@ -10,13 +10,7 @@ if (!localStorage.getItem("tree") && !localStorage.getItem("nodeMap")) {
 
 /**
  * Stores each node in tree on a map.
- * 
- * node properties:
- * - id: STRING node identifier
- * - type: STRING text / folder
- * - name: STRING displayed name
- * - tiptapContent: OBJECT in tiptap format.
-*/
+ */
 let nodeMap = JSON.parse(localStorage.getItem("nodeMap"));
 
 /**
@@ -146,21 +140,48 @@ function addFolderNode(folderId, tree) {
 }
 
 /**
- * TO-DO: if a folder is deleted, i need to delete all of its
- * children as on nodemap. On tree, its id must be deleted on 
- * its parent array. Its key must also be deleted.
- * 
- * Must write two paths for type document / folder
- * 
+ * Delete the folder and its children
+ * @param {*} folder children of folder in array.
+ * @param {*} tree folder id map.
+ */
+function deleteFolder(folderId, tree) {
+    const folderChildren = tree[folderId]
+
+    // delete children in nodemap
+    for(let i = 0; i < folderChildren.length; i++) {
+        const childId = folderChildren[i]
+        
+        if(nodeMap[childId].type === "folder") deleteFolder(childId, tree)
+            
+        delete nodeMap[childId];
+    }
+
+    delete nodeMap[folderId]; // delete the folder's id entry in node map.
+    delete tree[folderId]; // delete the folder's id entry in tree.
+}
+
+/**
  * Deletes node using id in tree.
+ * 
  * @param {*} nodeId is id of the node that you pass
- * @param {*} tree the tree object that holds a map to each folder node and its children
+ * @param {*} tree the tree object that holds a map to each folder id and children in an array as value.
  * @returns a new tree object with deleted node.
  */
 function deleteNode(nodeId, tree) {
+    console.log(nodeId);
     const keys = Object.keys(tree);
     const newTree = copyTree(tree); 
+    const node = nodeMap[nodeId]
 
+    if(node.type === "folder") {
+        deleteFolder(nodeId, newTree)
+    }
+
+    if (node.type === "text") {
+        delete nodeMap[nodeId];
+    }
+ 
+    // Delete node where it lives in tree.
     let i = 0;
     let j = 0;
     let key;
@@ -172,8 +193,7 @@ function deleteNode(nodeId, tree) {
                 newTree[key] = newTree[key].filter((nodeid) => {
                     return nodeid !== nodeId;
                 })
-                console.log(nodeMap[nodeId]);
-                delete nodeMap[nodeId];
+                return newTree;
             }
             
             j++;
@@ -182,8 +202,6 @@ function deleteNode(nodeId, tree) {
         j = 0;
         i++;
     }
-
-    return newTree;
 }
 
 /**

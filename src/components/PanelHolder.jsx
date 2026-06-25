@@ -54,11 +54,12 @@ export default function PanelHolder() {
      * Set current document name. 
      */
     useEffect(() => {
-        
         setDocName(nodeMap[docNodeId]?.name);
     }, [docNodeId])
 
-
+    /**
+     * Set docname if previous doc id exists on mount
+     */
     useEffect(() => {
         const prevDocId = localStorage.getItem("prevDocId");
 
