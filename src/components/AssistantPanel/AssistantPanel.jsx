@@ -3,7 +3,7 @@ import TextBox from "./TextBox"
 import ChatBox from "./ChatBox"
 import ContextBox from "./ContextBox"
 import SuggestionBox from "./SuggestionBox"
-import{ systemChatPrompt, getGroqChat, generateSuggestion}from "./groq"
+import{ systemChatPrompt, getGroqChat, generateSuggestion }from "./groq"
 import { use, useEffect, useState } from "react"
 import "./AssistantPanel.css"
 
@@ -47,7 +47,6 @@ export default function AssistantPanel({selection}) {
 
     function handleDeleteSuggestion(index) {
         setSuggestions(s => s.filter((_, i) => index !== i));
-        console.log("Deleted a suggestion!");
     }
 
     async function handleGenerateSuggestion() {

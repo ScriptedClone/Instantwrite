@@ -1,8 +1,3 @@
-/** MODEL LIST
- * llama-3.1-8b-instant [workers]
- * lama-3.1-8b-instant [judge]
- */
-
 import Groq from 'groq-sdk'
 import { selectionValues } from '../EditorPanel/editorUtilities'
 const key = import.meta.env.VITE_GROQ_API_KEY
@@ -76,10 +71,6 @@ async function generateSuggestion(setting, selection) {
         // Default setting. 
         return "Your task is to edit the given passage.";
     }
-
-    console.log(style)
-    console.log(tone)
-    console.log(systemSetting(style, tone));
 
     const systemPrompt = "You're a webnovel editor."
                        + ` ${systemSetting(style, tone)}`

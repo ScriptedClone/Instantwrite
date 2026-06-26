@@ -1,4 +1,4 @@
-import {nodeMapSeed, treeSeed} from './seed'
+import { nodeMapSeed, treeSeed } from './seed'
 
 /**
  * Seed local storage.
@@ -9,7 +9,8 @@ if (!localStorage.getItem("tree") && !localStorage.getItem("nodeMap")) {
 }
 
 /**
- * Stores each node in tree on a map.
+ * This is a hashmap that contains node id as key and the node itself
+ * as value.
  */
 let nodeMap = JSON.parse(localStorage.getItem("nodeMap"));
 
@@ -141,8 +142,8 @@ function addFolderNode(folderId, tree) {
 
 /**
  * Delete the folder and its children
- * @param {*} folder children of folder in array.
- * @param {*} tree folder id map.
+ * @param {*} folderId folder unique identifier.
+ * @param {*} tree A hashmap that uses folder id as key and an array of its children's id as value.
  */
 function deleteFolder(folderId, tree) {
     const folderChildren = tree[folderId]
@@ -161,14 +162,13 @@ function deleteFolder(folderId, tree) {
 }
 
 /**
- * Deletes node using id in tree.
+ * Deletes node using id in tree and nodemap.
  * 
- * @param {*} nodeId is id of the node that you pass
- * @param {*} tree the tree object that holds a map to each folder id and children in an array as value.
+ * @param {*} nodeId Node unique identifier. Can be of type folder or text.
+ * @param {*} tree A hashmap that uses folder id as key and an array of its children's id as value.
  * @returns a new tree object with deleted node.
  */
 function deleteNode(nodeId, tree) {
-    console.log(nodeId);
     const keys = Object.keys(tree);
     const newTree = copyTree(tree); 
     const node = nodeMap[nodeId]
@@ -205,12 +205,13 @@ function deleteNode(nodeId, tree) {
 }
 
 /**
- * Renames node using id in tree.
+ * Renames node using its id in nodemap. Returns a new
+ * tree reference for React.
  * 
  * @param {*} newName is the value for the node's new name.
  * @param {*} nodeId id of the node being renamed.
- * @param {*} tree the tree object that holds a map to each folder node and its children
- * @returns a new tree object with the renamed node.
+ * @param {*} tree A hashmap that uses folder id as key and an array of its children's id as value.
+ * @returns a new tree object.
  */
 function renameNode(newName, nodeId, tree) {
     const newTree = copyTree(tree);

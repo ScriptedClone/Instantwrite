@@ -1,7 +1,6 @@
 export default function AssistantHeader({handleSetMode}) {
     function handleClick(e) {
         handleSetMode(e)
-        console.log(e.target.textContent);
     }
 
     return(

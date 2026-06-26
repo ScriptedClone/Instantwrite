@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, use} from "react";
+import { useState, useEffect } from "react";
 import { nodeMap } from "../storage/fileSystem.js";
 import AssistantPanel from "./AssistantPanel/AssistantPanel.jsx"
 import EditorPanel from "./EditorPanel/EditorPanel.jsx"
@@ -40,7 +40,7 @@ export default function PanelHolder() {
     },[editorDoc])
 
     /**
-     * Saves selected document's id in nodemap to 
+     * Saves selected document's id to local storage
      * get last active document on editor mount. 
      */
     useEffect(() => {
@@ -98,10 +98,9 @@ export default function PanelHolder() {
     }
 
     /**
-     * Updates editorSelectedTxt by a string returned from user selected
-     * text on editor component. 
+     * Updates selection state when use selects a text on editor.
      * 
-     * @param {*} selectedTxt 
+     * @param {*} selection the selection object from Tiptap editor.
      */
     function handleSelection(selection) {
         setSelection(selection)

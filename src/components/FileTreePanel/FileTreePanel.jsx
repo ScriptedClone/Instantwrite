@@ -1,7 +1,4 @@
-import { useState, 
-         useRef,
-         useEffect,
-         createContext} from "react";
+import { useState, useRef } from "react";
 import { nodeMap,
          syncFileTreeToDisk, 
          addDocumentNode, 
@@ -42,17 +39,14 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
      */
     function handleHeaderBtn(button) {
         if(button === "document") {
-            console.log("Create document");
             setTree(addDocumentNode(folderNodeId, tree));
         }
 
         if(button === "folder") {
-            console.log("Create folder")
             setTree(addFolderNode(folderNodeId, tree));
         }
 
         if(button === "save") {
-            console.log("Synced files");
             syncFileTreeToDisk(tree);
         }
     }
@@ -64,7 +58,7 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
     function handleTree(e) {
         if(!e.target.dataset.id) return;
         const id = e.target.dataset.id;
-        console.log("event delegated");
+        
         if(id.includes("|")) {
             const btnKey = id.split("|");
             const nodeId = btnKey[0];

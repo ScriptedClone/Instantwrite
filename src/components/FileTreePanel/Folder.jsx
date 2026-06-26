@@ -26,7 +26,6 @@ export default function Folder({folderId, tree, node, index,
     }
 
     function handleFolderToggle() {
-        console.log("toggle")
         setIsOpen(!isOpen)
     }
     

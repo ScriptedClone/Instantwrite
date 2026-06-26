@@ -41,8 +41,7 @@ export default function Editor({handleEditorTxtUpdate, handleSelection, selected
     }, [])
 
     /** 
-     * Pass generated selection event when user 
-     * selects a text to handleSelection.
+     * Pass generated selection object to handler
      */
     useEffect(() => {
         function handleSelectionUpdate() {

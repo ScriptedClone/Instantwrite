@@ -1,9 +1,9 @@
 {
-  "name": "app",
-  "version": "1.0.0",
-  "description": "",
+  "name": "Instantwrite",
+  "version": "0.0.1",
+  "description": "A React writing assistant prototype with document editing, file-tree organization, and AI rewrite/chat features.",
   "license": "ISC",
-  "author": "",
+  "author": "Tracee Anrei Miasco",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
