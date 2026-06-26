@@ -11,7 +11,8 @@ import "./AssistantPanel.css"
 export default function AssistantPanel({selection}) {
     const [chats, setChats] = useState([]);
     const [mode, setMode] = useState("CHAT");
-    const [writeStyle, setWriteStyle] = useState("Descriptive");
+    const [style, setStyle] = useState(null);
+    const [tone, setTone,] = useState(null);
     const [suggestions, setSuggestions] = useState([]);
 
     useEffect(() => {
@@ -36,22 +37,29 @@ export default function AssistantPanel({selection}) {
         setMode(m => e.target.textContent);
     }
 
+    function handleStyle(e) {
+        setStyle(e.target.textContent)
+    }
+
+    function handleTone(e) {
+        setTone(e.target.textContent)
+    }
+
     function handleDeleteSuggestion(index) {
         setSuggestions(s => s.filter((_, i) => index !== i));
         console.log("Deleted a suggestion!");
     }
 
-    async function handleContextBox(e) {
-
-        if(e.target.textContent === "Generate") {
-            const response = await generateSuggestion(writeStyle, selection)
-
-            setSuggestions(s => [{style: writeStyle, text: response}, ...s])
-
+    async function handleGenerateSuggestion() {
+        if(!selection) {
+            alert("Please highlight a text")
             return;
-        }
+        };
 
-        setWriteStyle(w => e.target.textContent);
+        const setting = {style: style, tone: tone};
+        const response = await generateSuggestion(setting, selection);
+
+        setSuggestions(s => [{style: style, tone: tone, text: response}, ...s])
     }
 
     return (
@@ -63,8 +71,12 @@ export default function AssistantPanel({selection}) {
                 <TextBox addUserChat={addUserChat}/>
               </> 
             : <>
-                <ContextBox selection={selection} handleContextBox={handleContextBox}/>
-                <SuggestionBox suggestions={suggestions} handleDeleteSuggestion={handleDeleteSuggestion}/>
+                <ContextBox selection={selection} 
+                            handleStyle={handleStyle}
+                            handleTone={handleTone}
+                            handleGenerateSuggestion={handleGenerateSuggestion}/>
+                <SuggestionBox suggestions={suggestions} 
+                                handleDeleteSuggestion={handleDeleteSuggestion}/>
               </>}
         </div>
     )
