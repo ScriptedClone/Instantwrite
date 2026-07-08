@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { nodeMap,
+         moveNode,
          syncFileTreeToDisk, 
          addDocumentNode, 
          addFolderNode, 
@@ -10,8 +11,10 @@ import { move } from "@dnd-kit/helpers"
 import FileTree from "./FileTree";
 import FileTreeHeader from "./FileTreeHeader";
 import './FileTreePanel.css'
+import { isSortable } from "@dnd-kit/react/sortable";
 
 export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename }) {
+
     /** Track structural changes to folder tree in memory*/
     const [tree, setTree] = useState(()=> {
         const localTree = JSON.parse(localStorage.getItem("tree"));
@@ -86,35 +89,54 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
             return;
         }
     }
+    
+    function isFolderDroppable(isEmpty) {
+        if(isEmpty) return true;
+    }
 
+
+    /**
+     * to-do
+     * 
+     * - on dragover
+     * - Within group, update index
+     * - New group, update group, 
+     * - old group can be found onDragStart, newvalues onDragOver.
+     * - 
+     */
     return (
         <div className="fileTreePanel">
             <FileTreeHeader handleHeaderBtn={handleHeaderBtn}/>
             <DragDropProvider
-                onDragStart={() => {
+                onDragStart={(e) => {
+
                     previousTree.current = tree;
                 }}
 
                 onDragOver={(e) => {
-                    const {source, target} = e.operation;
-                    setTree((items) => move(items, e))
+                    e.preventDefault()
                 }}
 
                 onDragEnd={(e)=> {
-                    const {source, target} = e.operation;
-
                     if(e.canceled) {
                         setTree(previousTree.current);
                         return;
                     }
+
+                    const { source, target } = e.operation;
+                    if (!target) return;
+                    const {initialIndex, initialGroup, id} = source
+                    const {index, group} = target
+
+                    setTree(moveNode(initialIndex, initialGroup, index, group, tree, id))
                 }}
             >
                 <FileTree tree={tree} 
-                          handleTree={handleTree}/>
+                          handleTree={handleTree}
+                          isFolderDroppable={isFolderDroppable}/>
             </DragDropProvider>
 
         </div>
     
     )
 }
-
