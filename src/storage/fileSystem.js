@@ -49,19 +49,14 @@ function isNodeDescendant(sourceId, nodeId, tree) {
 
     for(let i = 0; i < children.length; i++) {
         const node = nodeMap[children[i]];
-        
-        if(node.type === "folder") {
 
-            // This recursion returns true if any node of a nested
-            // folder is a descendant of source.
+        if(node.type === "folder") {
             if(isNodeDescendant(node.id, nodeId, tree)) {
                 return true
             }
         }
 
-        if(children[i] === nodeId) {
-            return true;
-        }
+        if(children[i] === nodeId)  return true;
     }
 
     return false
@@ -202,7 +197,7 @@ function deleteNode(nodeId, tree) {
         j = 0;
         i++;
     }
-}
+} 
 
 /**
  * Renames node using its id in nodemap. Returns a new
@@ -220,7 +215,38 @@ function renameNode(newName, nodeId, tree) {
     return newTree;
 }
 
+/**
+ * Moves a node within a folder or to a new folder.
+ * 
+ * @param {*} initialIndex node id index inside initial folder.
+ * @param {*} initialGroup initial folder group.
+ * @param {*} index new index of node id.
+ * @param {*} group new folder group.
+ * @param {*} tree map of folders and its children.
+ * @param {*} id the node being moved.
+ */
+function moveNode(initialIndex, initialGroup, index, group, tree, id) {
+    let newTree = copyTree(tree);
+
+    if(initialGroup === group) {
+        if(index < initialIndex) {
+            newTree[group] = newTree[group].toSpliced(index, 0, id);
+            newTree[group] = newTree[group].toSpliced(initialIndex + 1, 1);
+            return newTree;
+        } else {
+            newTree[group] = newTree[group].toSpliced(index + 1, 0, id);
+            newTree[group] = newTree[group].toSpliced(initialIndex, 1);
+            return newTree;
+        }
+    } else {
+        newTree[initialGroup] = newTree[initialGroup].toSpliced(initialIndex, 1);
+        newTree[group] = newTree[group].toSpliced(index, 0, id);
+        return newTree
+    }
+}
+
 export { nodeMap,
+         moveNode,
          renameNode,
          deleteNode, 
          addDocumentNode, 

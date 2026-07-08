@@ -63,7 +63,7 @@ export default function PanelHolder() {
     useEffect(() => {
         const prevDocId = localStorage.getItem("prevDocId");
 
-        if(prevDocId) setDocName(nodeMap[prevDocId].name);        
+        if(prevDocId) setDocName(nodeMap[prevDocId]?.name);        
     }, [])
 
     /**
