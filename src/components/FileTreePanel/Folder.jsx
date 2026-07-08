@@ -1,14 +1,33 @@
 import { useState } from "react"
 import { useSortable } from "@dnd-kit/react/sortable";
+import { useDroppable, useDragOperation } from "@dnd-kit/react";
+import { CollisionPriority } from "@dnd-kit/abstract"
 import { isNodeDescendant } from "../../storage/fileSystem"
 import FolderChildren from "./FolderChildren"
 import RenameNode from "./RenameNode";
 
 export default function Folder({folderId, tree, node, index, 
                                 depth, renameIcon, deleteIcon}) {
+
+    const { source } = useDragOperation();
+    const isDraggingItself = source?.id === node.id;
+    const isDroppable = tree[node.id].length === 0 && !isDraggingItself;
+
     const [isOpen, setIsOpen] = useState(false);
     const [isRenaming, setIsRenaming] = useState(false);
-    const {ref} = useSortable({
+    
+    const {ref: droppableRef} = useDroppable({
+        id:node.id,
+        type: "folder",
+        collisionPriority: CollisionPriority.Low,
+        accept: (source) => {
+            if(source.type !== "folder") return true;
+
+            return !isNodeDescendant(source.id, node.id, tree)
+        }
+    })
+
+    const {ref: sortableRef} = useSortable({
         id: node.id,
         index: index,
         group: folderId,
@@ -33,7 +52,13 @@ export default function Folder({folderId, tree, node, index,
         <li className="folder" 
             key={node.id}  
             data-id={node.id} 
-            ref={ref}
+            ref={(li) => {
+                if(isDroppable) {
+                    droppableRef(li);
+                } else {
+                    sortableRef(li);
+                }
+            }}
         >
             <span onClick={(e) => {
                   e.stopPropagation() // Stop filetree component catching folderToggle event.
