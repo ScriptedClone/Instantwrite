@@ -8,7 +8,7 @@ import Document from "./Document"
  * This is a recursive component that builds the nested list. The
  * recursion is triggered when a folder is toggled to expand.
  */
-export default function FolderChildren({folderId, tree, depth, isFolderDroppable}) {
+export default function FolderChildren({folderId, tree, depth}) {
     return (
         <ul>
             {tree[folderId].map((childId, index) => {
@@ -20,8 +20,7 @@ export default function FolderChildren({folderId, tree, depth, isFolderDroppable
                                    index={index}
                                    depth={depth}
                                    renameIcon={renameIcon}
-                                   deleteIcon={deleteIcon}
-                                   isFolderDroppable={isFolderDroppable}/>
+                                   deleteIcon={deleteIcon}/>
                 }
 
                 if(nodeMap[childId].type === "text") {

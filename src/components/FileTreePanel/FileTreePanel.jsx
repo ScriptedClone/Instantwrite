@@ -89,11 +89,6 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
             return;
         }
     }
-    
-    function isFolderDroppable(isEmpty) {
-        if(isEmpty) return true
-        return false
-    }
 
     return (
         <div className="fileTreePanel">
@@ -108,18 +103,19 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
                 }}
 
                 onDragEnd={(e)=> {
+                    const { source, target } = e.operation;
                     if(e.canceled) {
                         setTree(previousTree.current);
                         return;
                     }
 
-                    const { source, target } = e.operation;
-                    
+
                     if (!target) return;
+                    
                     if(isSortable(target)) {
                         const {initialIndex, initialGroup, id} = source;
                         const {index, group} = target;
-
+                        
                         setTree(moveNode(initialIndex, initialGroup, index, group, tree, id))
                         return;
                     }
@@ -128,12 +124,16 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
                     const {id: key} = target;
                     const group = key.split("|");
 
+                    if(source.id === group[0]) {
+                        setTree(previousTree.current);
+                        return;
+                    }
+
                     setTree(moveNode(initialIndex, initialGroup, null, group[0], tree, id))
                 }}
             >
                 <FileTree tree={tree} 
-                          handleTree={handleTree}
-                          isFolderDroppable={isFolderDroppable}/>
+                          handleTree={handleTree}/>
             </DragDropProvider>
 
         </div>
