@@ -104,13 +104,11 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
 
                 onDragEnd={(e)=> {
                     const { source, target } = e.operation;
-                    if(e.canceled) {
+
+                    if(e.canceled || !target) {
                         setTree(previousTree.current);
                         return;
                     }
-
-
-                    if (!target) return;
                     
                     if(isSortable(target)) {
                         const {initialIndex, initialGroup, id} = source;
@@ -122,21 +120,19 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
 
                     const {initialIndex, initialGroup, id} = source;
                     const {id: key} = target;
-                    const group = key.split("|");
+                    const group = key.slice(0, key.indexOf("|"))
 
-                    if(source.id === group[0]) {
+                    if(source.id === group) {
                         setTree(previousTree.current);
                         return;
                     }
 
-                    setTree(moveNode(initialIndex, initialGroup, null, group[0], tree, id))
+                    setTree(moveNode(initialIndex, initialGroup, 0, group, tree, id))
                 }}
             >
                 <FileTree tree={tree} 
                           handleTree={handleTree}/>
             </DragDropProvider>
-
         </div>
-    
     )
 }
