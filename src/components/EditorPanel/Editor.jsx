@@ -1,7 +1,6 @@
 import { extensions } from "./extensions.js"
 import { EditorContent, useEditor } from "@tiptap/react"
 import { useEffect } from "react";
-import { nodeMap } from "../../storage/fileSystem.js";
 
 export default function Editor({handleEditorTxtUpdate, handleSelection, selectedDoc}) {
     const editor = useEditor({
