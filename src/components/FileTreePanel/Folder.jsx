@@ -68,7 +68,7 @@ export default function Folder({folderId, tree, node, index,
             }}>
                 {">"}
             </span>
-
+            
             {(isRenaming) 
             ? <RenameNode node={node} handleRenameToggle={handleRenameToggle}/> 
             : node.name}
