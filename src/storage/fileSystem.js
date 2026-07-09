@@ -49,8 +49,8 @@ function isNodeDescendant(sourceId, nodeId, tree) {
 
     for(let i = 0; i < children.length; i++) {
         const node = nodeMap[children[i]];
-
-        if(node.type === "folder") {
+        
+        if(node.type === "folder" && sourceId !== node.id) {
             if(isNodeDescendant(node.id, nodeId, tree)) {
                 return true
             }

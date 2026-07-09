@@ -6,8 +6,7 @@ import FolderChildren from "./FolderChildren"
 import RenameNode from "./RenameNode";
 
 export default function Folder({folderId, tree, node, index, 
-                                depth, renameIcon, deleteIcon,
-                                isFolderDroppable}) {
+                                depth, renameIcon, deleteIcon}) {
     const isEmpty = tree[node.id].length === 0;
     const [isDragging, setIsDragging] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +49,11 @@ export default function Folder({folderId, tree, node, index,
         return (node) => {
             refs.forEach((ref) => ref(node))
         }
+    }
+
+    function isFolderDroppable(isEmpty) {
+        if(isEmpty) return true
+        return false
     }
     
     return (
