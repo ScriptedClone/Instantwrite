@@ -91,25 +91,15 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
     }
     
     function isFolderDroppable(isEmpty) {
-        if(isEmpty) return true;
+        if(isEmpty) return true
+        return false
     }
 
-
-    /**
-     * to-do
-     * 
-     * - on dragover
-     * - Within group, update index
-     * - New group, update group, 
-     * - old group can be found onDragStart, newvalues onDragOver.
-     * - 
-     */
     return (
         <div className="fileTreePanel">
             <FileTreeHeader handleHeaderBtn={handleHeaderBtn}/>
             <DragDropProvider
                 onDragStart={(e) => {
-
                     previousTree.current = tree;
                 }}
 
@@ -124,11 +114,21 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
                     }
 
                     const { source, target } = e.operation;
+                    
                     if (!target) return;
-                    const {initialIndex, initialGroup, id} = source
-                    const {index, group} = target
+                    if(isSortable(target)) {
+                        const {initialIndex, initialGroup, id} = source;
+                        const {index, group} = target;
 
-                    setTree(moveNode(initialIndex, initialGroup, index, group, tree, id))
+                        setTree(moveNode(initialIndex, initialGroup, index, group, tree, id))
+                        return;
+                    }
+
+                    const {initialIndex, initialGroup, id} = source;
+                    const {id: key} = target;
+                    const group = key.split("|");
+
+                    setTree(moveNode(initialIndex, initialGroup, null, group[0], tree, id))
                 }}
             >
                 <FileTree tree={tree} 

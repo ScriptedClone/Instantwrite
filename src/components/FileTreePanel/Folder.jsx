@@ -1,21 +1,15 @@
 import { use, useEffect, useState } from "react"
 import { useSortable } from "@dnd-kit/react/sortable";
 import { useDroppable, useDragOperation } from "@dnd-kit/react";
-import { CollisionPriority } from "@dnd-kit/abstract"
 import { isNodeDescendant } from "../../storage/fileSystem"
 import FolderChildren from "./FolderChildren"
 import RenameNode from "./RenameNode";
 
-/**
- * to do
- * - Folder becomes droppable when empty or closed.
- * - Need to implement how to know if folder is empty. 
- */
-
 export default function Folder({folderId, tree, node, index, 
                                 depth, renameIcon, deleteIcon,
-                                isFolderDroppable, children}) {
-    const [isEmpty, setIsEmpty] = useState();
+                                isFolderDroppable}) {
+    const isEmpty = tree[node.id].length === 0;
+    const [isDragging, setIsDragging] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isRenaming, setIsRenaming] = useState(false);
     const {ref: sortable} = useSortable({
@@ -23,6 +17,7 @@ export default function Folder({folderId, tree, node, index,
         index: index,
         group: folderId,
         collisionPriority: depth,
+        disabled: isDragging,
         type: "folder",
         accept: (source) => {
             if(source.type !== "folder") return true;
@@ -32,14 +27,10 @@ export default function Folder({folderId, tree, node, index,
     })
 
     const {ref: droppable} = useDroppable({
-        id: node.id + "droppable",
+        id: node.id + "|droppable",
         type: "folder",
-        collisionPriority: CollisionPriority.Low,
-        accept: (source) => {
-            if(source.type !== "folder") return true;
-
-            return !isNodeDescendant(source.id, node.id, tree)
-        }
+        collisionPriority: depth + 1,
+        disabled: !isFolderDroppable(isEmpty),
     })
 
     function handleRenameToggle(e) {
@@ -49,16 +40,23 @@ export default function Folder({folderId, tree, node, index,
     function handleFolderToggle() {
         setIsOpen(!isOpen)
     }
+
+    function handleIsDragging() {
+        const {source} = useDragOperation();
+        setIsDragging(source.id === node.id);
+    }
     
-    useEffect(() => {
-        setIsEmpty(tree[node.id].length === 0);
-    },[tree])
+    function mergeRefs(...refs) {
+        return (node) => {
+            refs.forEach((ref) => ref(node))
+        }
+    }
     
     return (
         <li className="folder" 
             key={node.id}  
             data-id={node.id} 
-            ref={sortable}
+            ref={mergeRefs(sortable, droppable)}
         >
             <span onClick={(e) => {
                   e.stopPropagation() // Stop filetree component catching folderToggle event.
@@ -92,8 +90,7 @@ export default function Folder({folderId, tree, node, index,
             {isOpen && <FolderChildren folderId={node.id}
                                        tree={tree}
                                        depth={depth + 1}
-                                       isFolderDroppable={isFolderDroppable}
-                                       children={children}/>} 
+                                       isFolderDroppable={isFolderDroppable}/>} 
         </li>
     )
 }
