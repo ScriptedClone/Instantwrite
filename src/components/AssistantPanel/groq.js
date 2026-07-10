@@ -23,7 +23,10 @@ const SYSTEM_PROMPT = {
                 + " Do not add new events, characters, or details."
                 + " Respond with rewritten passage only.",
 
-    CHAT: "You are a webnovel editing assistant. Ask for context if not provided."
+    CHAT: "You are a professional webnovel assistant."
+          + " Use SURROUNDING CONTEXT BEFORE and SURROUNDING CONTEXT AFTER to understand passage."
+          + " Your job is to assist the user based on USER PROMPT and PASSAGE TO READ"
+          + " If there is no context or passage, assist user based on USER PROMPT."
 }
 
 function suggestionSettings(style, tone) {
@@ -58,6 +61,26 @@ async function fetchModelResponse(messages, model, temperature) {
     })
 }
 
+function buildChatContext(chats, selection) {
+    if(!selection) return chats;
+    const { textBefore, textSelected, textAfter, contextBefore, contextAfter} = selectionValues(selection)
+    const newChats = chats.slice();
+    const firstChat = chats[0].content;
+
+    newChats[0] = createUserPrompt("--- SURROUNDING CONTEXT BEFORE ---\n"
+                                   + `${contextBefore}`
+                                   + `${textBefore}`
+                                   + " \n--- PASSAGE TO READ ---"
+                                   + `${textSelected}`
+                                   + "\n--- SURROUNDING CONTEXT AFTER ---"
+                                   + `${textAfter}`
+                                   + `${contextAfter}`
+                                   + "\n---USER PROMPT ---"
+                                   + `${firstChat}`)
+    
+    return newChats;
+}
+
 /**
  * Returns a suggestion based on user selected text 
  * and context from the editor. Context is limited to
@@ -85,7 +108,6 @@ async function generateSuggestion(setting, selection) {
                      + `${contextAfter}`
 
     const prompt = [createSystemPrompt(SYSTEM_PROMPT.SUGGESTION(style, tone)), createUserPrompt(userPrompt)];
-
     const data = await fetchModelResponse(prompt, MODELS.llama70b, 0.7)
 
     return data.choices[0]?.message?.content || "Error. Try again";
@@ -94,12 +116,13 @@ async function generateSuggestion(setting, selection) {
 /**
  * Generate groq response based on chats.
  */
-async function generateGroqChat(chats, selection) {
+async function generateGroqChat(chats) {
     const prompt = [createSystemPrompt(SYSTEM_PROMPT.CHAT), ...chats]
     const data = await fetchModelResponse(prompt, MODELS.llama8b, 1);
-
+    console.log(prompt);
     return data.choices[0]?.message?.content || "Error. Try again.";
 }
 
 export { generateSuggestion,
-         generateGroqChat }
+         generateGroqChat,
+         buildChatContext }

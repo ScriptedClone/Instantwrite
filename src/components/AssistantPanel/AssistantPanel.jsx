@@ -3,7 +3,7 @@ import TextBox from "./TextBox"
 import ChatBox from "./ChatBox"
 import ContextBox from "./ContextBox"
 import SuggestionBox from "./SuggestionBox"
-import{ generateGroqChat, generateSuggestion }from "./groq"
+import{ generateGroqChat, generateSuggestion, buildChatContext }from "./groq"
 import { use, useEffect, useState } from "react"
 import "./AssistantPanel.css"
 
@@ -20,7 +20,7 @@ export default function AssistantPanel({selection}) {
         if(chats.length === 0 || chats.at(-1).role !== 'user') return;
         
         async function addGroqChat() {
-            const chat = await generateGroqChat([...chats]);
+            const chat = await generateGroqChat(buildChatContext(chats, selection));
             setChats(c => [...c, {role: "assistant", content: chat}]);
         }
 
