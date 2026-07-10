@@ -40,3 +40,8 @@ export function selectionValues(selection) {
         contextAfter,
     })
 }
+
+export function isPositionEqual(positionA, positionB) {
+    if(positionA.from === positionB.from || positionA.to === positionB.to) return true
+    return false;
+}
