@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { isNodeDescendant } from "../../storage/fileSystem"
+import { TreeActionsContext } from "./TreeActionsContext";
 import RenameNode from "./RenameNode";
+
 
 export default function Document({folderId, tree, node, index, 
                                   depth, renameIcon, deleteIcon}) {
+
+    const { onDelete, onSelectDoc } = useContext(TreeActionsContext)
+    const [isRenaming, setIsRenaming] = useState(false);
+
     const {ref} = useSortable({
         id: node.id,
         index: index,
@@ -17,15 +23,13 @@ export default function Document({folderId, tree, node, index,
             return !isNodeDescendant(source.id, node.id, tree)
         }
     })
-
-    const [isRenaming, setIsRenaming] = useState(false);
     
     function handleRenameToggle() {
         setIsRenaming(!isRenaming)
     }
 
     return (
-        <li key={node.id} className="text" data-id={node.id} ref={ref}>
+        <li key={node.id} className="text" onClick={() => onSelectDoc(node.id)} ref={ref}>
             
             {(isRenaming) 
             ? <RenameNode node={node} handleRenameToggle={handleRenameToggle}/> 
@@ -35,7 +39,10 @@ export default function Document({folderId, tree, node, index,
                 <img src={deleteIcon} 
                      alt="delete icon" 
                      className="deleteIcon"
-                     data-id={node.id + "|deleteBtn"}     
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(node.id);
+                    }}  
                 />
             </button>
 
@@ -43,9 +50,10 @@ export default function Document({folderId, tree, node, index,
                 <img src={renameIcon} 
                      alt="rename icon" 
                      className="renameIcon"
-                     data-id={node.id + "|renameBtn"}
-                     onClick={handleRenameToggle}
-                />
+                     onClick={(e) => {
+                        e.stopPropagation() // Stop filetree component catching rename toggle event.
+                        handleRenameToggle()
+                }}/>
             </button>
 
         </li>

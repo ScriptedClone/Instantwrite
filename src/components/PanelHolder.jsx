@@ -88,8 +88,10 @@ export default function PanelHolder() {
     }
 
     /**
-     * Updates editor title when document is renamed on file tree.
-     * @param {*} id of node that is renamed.
+     * Update editor title if document renamed on file tree is the document
+     * on the editor.
+     *
+     * @param {*} id id of node that is renamed.
      */
     function handleDocumentRename(id) {
         if(docNodeId === id) {

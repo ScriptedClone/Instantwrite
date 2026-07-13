@@ -1,22 +1,25 @@
-import { use, useEffect, useState } from "react"
+import { useState, useContext } from "react"
 import { useSortable } from "@dnd-kit/react/sortable";
-import { useDroppable, useDragOperation } from "@dnd-kit/react";
+import { useDroppable } from "@dnd-kit/react";
 import { isNodeDescendant } from "../../storage/fileSystem"
+import { TreeActionsContext } from "./TreeActionsContext";
 import FolderChildren from "./FolderChildren"
 import RenameNode from "./RenameNode";
 
+
 export default function Folder({folderId, tree, node, index, 
                                 depth, renameIcon, deleteIcon}) {
-    const isEmpty = tree[node.id].length === 0;
-    const [isDragging, setIsDragging] = useState(false);
+    
+    const { onDelete, onSelectFolder } = useContext(TreeActionsContext)
     const [isOpen, setIsOpen] = useState(false);
     const [isRenaming, setIsRenaming] = useState(false);
+    const isEmpty = tree[node.id].length === 0;
+
     const {ref: sortable} = useSortable({
         id: node.id,
         index: index,
         group: folderId,
         collisionPriority: depth,
-        disabled: isDragging,
         type: "folder",
         accept: (source) => {
             if(source.type !== "folder") return true;
@@ -29,7 +32,7 @@ export default function Folder({folderId, tree, node, index,
         id: node.id + "|droppable",
         type: "folder",
         collisionPriority: depth + 1,
-        disabled: !isFolderDroppable(isEmpty),
+        disabled: !isEmpty, 
     })
 
     function handleRenameToggle(e) {
@@ -39,31 +42,21 @@ export default function Folder({folderId, tree, node, index,
     function handleFolderToggle() {
         setIsOpen(!isOpen)
     }
-
-    function handleIsDragging() {
-        const {source} = useDragOperation();
-        setIsDragging(source.id === node.id);
-    }
     
     function mergeRefs(...refs) {
         return (node) => {
             refs.forEach((ref) => ref(node))
         }
     }
-
-    function isFolderDroppable(isEmpty) {
-        if(isEmpty) return true
-        return false
-    }
     
     return (
         <li className="folder" 
-            key={node.id}  
-            data-id={node.id} 
+            key={node.id}
             ref={mergeRefs(sortable, droppable)}
+            onClick={() => onSelectFolder(node.id)}
         >
             <span onClick={(e) => {
-                  e.stopPropagation() // Stop filetree component catching folderToggle event.
+                  e.stopPropagation() // Stop onSelectFolder catching folder toggle.
                   handleFolderToggle()
             }}>
                 {">"}
@@ -77,7 +70,10 @@ export default function Folder({folderId, tree, node, index,
                 <img src={deleteIcon} 
                      alt="delete icon" 
                      className="deleteIcon"
-                     data-id={node.id + "|deleteBtn"}     
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(node.id);
+                    }}
                 />
             </button>
 
@@ -86,15 +82,14 @@ export default function Folder({folderId, tree, node, index,
                      alt="rename icon" 
                      className="renameIcon"
                      onClick={(e) => {
-                        e.stopPropagation()
+                        e.stopPropagation() // Stop onSelectFolder catching rename toggle.
                         handleRenameToggle()
                 }}/>
             </button>
 
             {isOpen && <FolderChildren folderId={node.id}
                                        tree={tree}
-                                       depth={depth + 1}
-                                       isFolderDroppable={isFolderDroppable}/>} 
+                                       depth={depth + 1}/>} 
         </li>
     )
 }

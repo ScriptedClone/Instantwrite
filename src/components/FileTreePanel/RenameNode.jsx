@@ -1,18 +1,23 @@
+import { useContext, useRef } from "react";
+import { TreeActionsContext } from "./TreeActionsContext";
+
 export default function RenameNode({node, handleRenameToggle}) {
+    const { onRename } = useContext(TreeActionsContext)
+
     return (
         <input className="nodeRename"
-                data-id={node.id + "|renameBtn"}
-                onClick={(e) =>  e.stopPropagation()}
+                onClick={(e) =>  e.stopPropagation()} // Stop onSelectFolder catching input click.
                 onKeyDown={(e) => {
-
-                if(e.key !== "Enter") {
-                    e.stopPropagation();
-                }
-
                 if(e.key === "Enter") {
+                    if(e.target.value === '' || e.target.value === null) {
+                        handleRenameToggle();
+                        return;
+                    }
+                    const newName = e.target.value;
+
+                    onRename(newName, node.id);
                     handleRenameToggle();
                 }
-                        
         }}/>
     )
 }

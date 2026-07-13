@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { isSortable } from "@dnd-kit/react/sortable";
 import { nodeMap,
          moveNode,
          syncFileTreeToDisk, 
@@ -10,12 +11,12 @@ import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers"
 import FileTree from "./FileTree";
 import FileTreeHeader from "./FileTreeHeader";
+import { TreeActionsContext } from "./TreeActionsContext";
 import './FileTreePanel.css'
-import { isSortable } from "@dnd-kit/react/sortable";
 
 export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename }) {
 
-    /** Track structural changes to folder tree in memory*/
+    /**  Store tree from local storage in memory and react on structural changes. */
     const [tree, setTree] = useState(()=> {
         const localTree = JSON.parse(localStorage.getItem("tree"));
         return localTree;
@@ -28,16 +29,10 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
     const [folderNodeId, setFolderNodeId] = useState(0);
 
     /**
-     * Sets selected folder ID by user.
-     * @param {*} id is the id of currently selected folder.
-     */
-    function handleSelectedFolder(id) {
-        setFolderNodeId(id)
-    }
-
-    /**
-     * Event router for header component.
-     * @param {} button is the button type the user selects. 
+     * handles header button clicks which adds a folder or document or save the 
+     * current file tree to local storage.
+     * 
+     * @param {} button "document", "folder", "save"
      * @returns 
      */
     function handleHeaderBtn(button) {
@@ -53,41 +48,30 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
             syncFileTreeToDisk(tree);
         }
     }
-    
+
     /**
-     * Event router within file tree component.
-     * @param {*} e 
+     * Renames a node on tree and passes the id of node that was renamed
+     * to handler to check if the current document on the editor is the node
+     * that is renamed.
+     * 
+     * @param {*} name the name to be set.
+     * @param {*} nodeId id of node to be renamed.
      */
-    function handleTree(e) {
-        if(!e.target.dataset.id) return;
-        const id = e.target.dataset.id;
-        
-        if(id.includes("|")) {
-            const btnKey = id.split("|");
-            const nodeId = btnKey[0];
-            const btnType = btnKey[1];
+    function handleRename(name, nodeId) {
+        setTree(renameNode(name, nodeId, tree));
 
-            if(btnType === "deleteBtn") {
-                setTree(deleteNode(nodeId, tree));
-            }
+        if(nodeMap[nodeId].type !== "folder") handleDocumentRename(nodeId);
+    }
 
-            if(btnType === "renameBtn") {
-                const newName = e.target.value
-                setTree(renameNode(newName, nodeId, tree))
+    function handleDelete(nodeId){
+        setTree(deleteNode(nodeId, tree));
+    }
 
-                if(nodeMap[nodeId].type !== "folder") handleDocumentRename(nodeId);
-            }
-        }
-
-        if(nodeMap[id]?.type === 'text') {
-            handleSelectedDoc(id);
-            return;
-        }
-        
-        if(nodeMap[id]?.type === 'folder') {
-            handleSelectedFolder(id);
-            return;
-        }
+    const actions = {
+        onRename: handleRename,
+        onDelete: handleDelete,
+        onSelectDoc: handleSelectedDoc,
+        onSelectFolder: setFolderNodeId,
     }
 
     return (
@@ -130,8 +114,9 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
                     setTree(moveNode(initialIndex, initialGroup, 0, group, tree, id))
                 }}
             >
-                <FileTree tree={tree} 
-                          handleTree={handleTree}/>
+                <TreeActionsContext.Provider value={actions}>
+                    <FileTree tree={tree}/>
+                </TreeActionsContext.Provider>
             </DragDropProvider>
         </div>
     )
