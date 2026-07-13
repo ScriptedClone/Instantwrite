@@ -3,19 +3,17 @@ import TextBox from "./TextBox"
 import ChatBox from "./ChatBox"
 import ContextBox from "./ContextBox"
 import SuggestionBox from "./SuggestionBox"
-import{ generateGroqChat, generateSuggestion, insertChatContext, getCharCount, summarizeChats }from "./groq"
+import{ generateGroqChat, generateSuggestion, insertChatContext, getCharCount, insertChatsSummary }from "./groq"
 import { useEffect, useRef, useState } from "react"
 import "./AssistantPanel.css"
 import { isPositionEqual } from "../EditorPanel/editorUtilities"
 
-const CHAR_LIMIT = 1500;
+const CHAR_LIMIT = 5000;
 
 export default function AssistantPanel({selection}) {
     const selectionPosition = useRef({from: 0, to: 0});
     const selectionChange = useRef(false);
-
     const [chats, setChats] = useState([]);
-    const groqChats = useRef([]);
 
     const [suggestions, setSuggestions] = useState([]);
     const [mode, setMode] = useState("CHAT");
@@ -29,42 +27,29 @@ export default function AssistantPanel({selection}) {
             selectionPosition.current.to = selection.to;
             selectionChange.current = true;
         }
-    })
-
+    },[chats])
+    
     useEffect(() => {
-        if(getCharCount(groqChats.current) > CHAR_LIMIT) {
-            async function summarizeGroqChats() {
-                const res = await summarizeChats(groqChats.current, 0, groqChats.current.length - 3);
-                const chatSummary = {role: "user", content: res};
-
-                groqChats.current = [chatSummary, ...groqChats.current.slice(groqChats.current.length - 3, groqChats.current.length)];
+        async function addGroqChat() {
+            if(chats.length === 0 || chats.at(-1).role !== 'user') return;
+            if(selectionChange.current) {
+                insertChatContext(chats, selection);
+                selectionChange.current = false;
+            }
+            if(getCharCount(chats) > CHAR_LIMIT) {
+                await insertChatsSummary(chats);
             }
 
-            summarizeGroqChats() 
-        }
-    })
-
-    useEffect(() => {
-        if(chats.length === 0 || chats.at(-1).role !== 'user') return;
-        if(selectionChange.current) {
-            const index = groqChats.current.length - 1;
-            groqChats.current[index] = insertChatContext(chats, selection)
-            selectionChange.current = false;
-        }
-
-        async function addGroqChat() {
-            const chat = await generateGroqChat(groqChats.current);
-
+            const chat = await generateGroqChat(chats);
             setChats(c => [...c, {role: "assistant", content: chat}]);
-            groqChats.current = [...groqChats.current, {role: "assistant", content: chat}];
         }
 
         addGroqChat();
+                
     },[chats])
 
     function addUserChat(userChat) {
         setChats(c => [...c, {role: "user", content: userChat}])
-        groqChats.current = [...groqChats.current, {role: "user", content: userChat}];
     }
 
     function handleSetMode(e) {
