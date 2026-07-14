@@ -1,4 +1,4 @@
-import { nodeMap } from "../../storage/fileSystem"
+import { nodeMap } from "../../storage/fileTree"
 import renameIcon from "../../assets/renameIcon.png"
 import deleteIcon from "../../assets/deleteIcon.png"
 import Folder from "./Folder"

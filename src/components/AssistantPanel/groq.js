@@ -248,11 +248,9 @@ function rebuildChat(chats) {
  * @returns string from groq chat completion.
  */
 async function generateGroqChat(chats) {
-    console.log("chats from componnent:", chats)
     const newChats = rebuildChat(chats)
     const prompt = [createSystemPrompt(SYSTEM_PROMPT.CHAT), ...newChats]
     const res = await fetchModelResponse(prompt, MODELS.llama8b, 1);
-    console.log("prompt to send", prompt)
 
     return res.choices[0]?.message?.content || "Error. Try again.";
 }

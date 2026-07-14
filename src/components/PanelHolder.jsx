@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { nodeMap } from "../storage/fileSystem.js";
+import { nodeMap } from "../storage/fileTree.js";
 import AssistantPanel from "./AssistantPanel/AssistantPanel.jsx"
 import EditorPanel from "./EditorPanel/EditorPanel.jsx"
 import FileTreePanel from "./FileTreePanel/FileTreePanel.jsx"

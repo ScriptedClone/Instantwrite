@@ -1,5 +1,5 @@
 import { useState, useContext } from "react"
-import { TreeActionsContext } from "./TreeActionsContext";
+import { TreeActionsContext } from "./TreeActionsContext.js";
 import FolderChildren from "./FolderChildren"
 import RenameNode from "./RenameNode";
 import useFolderDnd from "./hooks/useFolderDnd";
