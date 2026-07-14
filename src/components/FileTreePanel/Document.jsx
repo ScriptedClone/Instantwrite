@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
-import { useSortable } from "@dnd-kit/react/sortable";
 import { isNodeDescendant } from "../../storage/fileSystem"
 import { TreeActionsContext } from "./TreeActionsContext";
 import RenameNode from "./RenameNode";
+import useDocumentDnd from "./hooks/useDocumentDnd";
 
 
 export default function Document({folderId, tree, node, index, 
@@ -10,26 +10,17 @@ export default function Document({folderId, tree, node, index,
 
     const { onDelete, onSelectDoc } = useContext(TreeActionsContext)
     const [isRenaming, setIsRenaming] = useState(false);
-
-    const {ref} = useSortable({
-        id: node.id,
-        index: index,
-        group: folderId,
-        collisionPriority: depth,
-        type: "text",
-        accept: (source) => {
-            if(source.type !== "folder") return true;
-
-            return !isNodeDescendant(source.id, node.id, tree)
-        }
-    })
+    const { ref } = useDocumentDnd({node, index, folderId, depth, tree});
     
     function handleRenameToggle() {
         setIsRenaming(!isRenaming)
     }
 
     return (
-        <li key={node.id} className="text" onClick={() => onSelectDoc(node.id)} ref={ref}>
+        <li key={node.id} 
+            className="text" 
+            ref={ref}
+            onClick={() => onSelectDoc(node.id)}>
             
             {(isRenaming) 
             ? <RenameNode node={node} handleRenameToggle={handleRenameToggle}/> 
@@ -51,7 +42,7 @@ export default function Document({folderId, tree, node, index,
                      alt="rename icon" 
                      className="renameIcon"
                      onClick={(e) => {
-                        e.stopPropagation() // Stop filetree component catching rename toggle event.
+                        e.stopPropagation() // Stop onSelectDoc catching rename toggle.
                         handleRenameToggle()
                 }}/>
             </button>
