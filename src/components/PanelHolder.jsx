@@ -58,12 +58,18 @@ export default function PanelHolder() {
     }, [docNodeId])
 
     /**
-     * Set docname if previous doc id exists on mount
+     * Initializes the following react states if previous document id exists
+     * on mount. This is done to restore previously open document on the
+     * editor.
      */
     useEffect(() => {
         const prevDocId = localStorage.getItem("prevDocId");
 
-        if(prevDocId) setDocName(nodeMap[prevDocId]?.name);        
+        if(prevDocId) {
+            setDocNodeId(nodeMap[prevDocId]?.id)
+            setDocName(nodeMap[prevDocId]?.name)
+            setSelectedDoc(nodeMap[prevDocId]?.tiptapContent)
+        };        
     }, [])
 
     /**

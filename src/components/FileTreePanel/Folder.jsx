@@ -25,7 +25,10 @@ export default function Folder({folderId, tree, node, index,
         <li className="folder" 
             key={node.id}
             ref={ref}
-            onClick={() => onSelectFolder(node.id)}
+            onClick={(e) => {
+                e.stopPropagation(); // Stop parent folder overwriting selection when event bubbles.
+                onSelectFolder(node.id)
+            }}
         >
             <span onClick={(e) => {
                   e.stopPropagation() // Stop onSelectFolder catching folder toggle.

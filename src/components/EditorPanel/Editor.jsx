@@ -13,17 +13,6 @@ export default function Editor({handleEditorTxtUpdate, handleSelection, selected
         if(!selectedDoc || !editor) return;
         editor.commands.setContent(selectedDoc)
     }, [selectedDoc])
-
-    /** Get last active document on mount. */
-    useEffect(() => {
-        if(editor.isEmpty) {
-            const prevDocId = localStorage.getItem("prevDocId");
-            const nodeMap = JSON.parse(localStorage.getItem("nodeMap"));
-            const doc = nodeMap[prevDocId]?.tiptapContent;
-
-            editor.commands.setContent(doc);
-        }
-    }, [])
     
     /** 
      * Gets editor and converts to JSON for every
