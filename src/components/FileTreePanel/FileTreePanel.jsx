@@ -62,23 +62,46 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
 
         if(nodeMap[nodeId].type !== "folder") handleDocumentRename(nodeId);
     }
-
     function handleDelete(nodeId){
         setTree(deleteNode(nodeId, tree));
     }
-
     const actions = {
         onRename: handleRename,
         onDelete: handleDelete,
         onSelectDoc: handleSelectedDoc,
         onSelectFolder: setFolderNodeId,
     }
+    
+    function handleOnDragEnd(e) {
+        const { source, target } = e.operation;
+        if(e.canceled || !target) {
+            setTree(previousTree.current);
+            return;
+        }
+        if(isSortable(target)) {
+            const {initialIndex, initialGroup, id} = source;
+            const {index, group} = target;
+            
+            setTree(moveNode(initialIndex, initialGroup, index, group, tree, id))
+            return;
+        }
+
+        const {initialIndex, initialGroup, id} = source;
+        const {id: key} = target;
+        const group = key.slice(0, key.indexOf("|"))
+        if(source.id === group) {
+            setTree(previousTree.current);
+            return;
+        }
+
+        setTree(moveNode(initialIndex, initialGroup, 0, group, tree, id))
+    }
 
     return (
         <div className="fileTreePanel">
             <FileTreeHeader handleHeaderBtn={handleHeaderBtn}/>
             <DragDropProvider
-                onDragStart={(e) => {
+                onDragStart={() => {
                     previousTree.current = tree;
                 }}
 
@@ -86,33 +109,7 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
                     e.preventDefault()
                 }}
 
-                onDragEnd={(e)=> {
-                    const { source, target } = e.operation;
-
-                    if(e.canceled || !target) {
-                        setTree(previousTree.current);
-                        return;
-                    }
-                    
-                    if(isSortable(target)) {
-                        const {initialIndex, initialGroup, id} = source;
-                        const {index, group} = target;
-                        
-                        setTree(moveNode(initialIndex, initialGroup, index, group, tree, id))
-                        return;
-                    }
-
-                    const {initialIndex, initialGroup, id} = source;
-                    const {id: key} = target;
-                    const group = key.slice(0, key.indexOf("|"))
-
-                    if(source.id === group) {
-                        setTree(previousTree.current);
-                        return;
-                    }
-
-                    setTree(moveNode(initialIndex, initialGroup, 0, group, tree, id))
-                }}
+                onDragEnd={handleOnDragEnd}
             >
                 <TreeActionsContext.Provider value={actions}>
                     <FileTree tree={tree}/>
