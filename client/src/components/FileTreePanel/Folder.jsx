@@ -1,8 +1,8 @@
 import { useState, useContext } from "react"
 import { TreeActionsContext } from "./TreeActionsContext.js";
-import FolderChildren from "./FolderChildren"
-import RenameNode from "./RenameNode";
-import useFolderDnd from "./hooks/useFolderDnd";
+import FolderChildren from "./FolderChildren.jsx"
+import RenameNode from "./RenameNode.jsx";
+import useFolderDnd from "./hooks/useFolderDnd.jsx";
 
 
 export default function Folder({folderId, tree, node, index, 

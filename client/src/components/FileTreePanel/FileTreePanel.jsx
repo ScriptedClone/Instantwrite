@@ -6,11 +6,11 @@ import { nodeMap,
          addDocumentNode, 
          addFolderNode, 
          deleteNode,
-         renameNode} from "../../storage/fileTree"
+         renameNode} from "../../storage/fileTree.js"
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers"
 import FileTree from "./FileTree.jsx";
-import FileTreeHeader from "./FileTreeHeader";
+import FileTreeHeader from "./FileTreeHeader.jsx";
 import { TreeActionsContext } from "./TreeActionsContext.js";
 import './FileTreePanel.css'
 

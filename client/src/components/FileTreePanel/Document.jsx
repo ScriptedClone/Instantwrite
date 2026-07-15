@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
-import { isNodeDescendant } from "../../storage/fileTree"
+import { isNodeDescendant } from "../../storage/fileTree.js"
 import { TreeActionsContext } from "./TreeActionsContext.js";
-import RenameNode from "./RenameNode";
-import useDocumentDnd from "./hooks/useDocumentDnd";
+import RenameNode from "./RenameNode.jsx";
+import useDocumentDnd from "./hooks/useDocumentDnd.jsx";
 
 
 export default function Document({folderId, tree, node, index, 
