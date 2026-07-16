@@ -115,9 +115,7 @@
     pointer-events: all;
 }
 
-
-
-.suggestionBox {
+.rewriteBox {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -129,7 +127,7 @@
     overflow-y: auto;
 }
 
-.exampleSuggestions {
+.exampleRewrites {
     position: relative;
 
     padding: 10px;
@@ -138,11 +136,11 @@
     background-color: hsl(0, 1%, 40%);
 }
 
-.exampleSuggestions * {
+.exampleRewrites * {
     margin-top: 5px;
 }
 
-.exampleSuggestions button {
+.exampleRewrites button {
     position: absolute;
 
     top: -5px;

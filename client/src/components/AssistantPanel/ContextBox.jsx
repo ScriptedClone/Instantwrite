@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { selectionValues } from "../EditorPanel/editorUtilities";
 
-export default function ContextBox({selection, handleStyle, handleTone, handleGenerateSuggestion}) {
+export default function ContextBox({selection, handleStyle, handleTone, handleGenerateRewrite}) {
     const textSelected = selectionValues(selection)?.textSelected;
     const [isStyleOpen, setIsStyleOpen] = useState(false)
     const [isToneOpen, setIsToneOpen] = useState(false)
@@ -60,7 +60,7 @@ export default function ContextBox({selection, handleStyle, handleTone, handleGe
                 </div>                   
             </div>
             
-            <button onClick={handleGenerateSuggestion}>Generate</button>
+            <button onClick={handleGenerateRewrite}>Generate</button>
         </div>
     )
 }

@@ -1,21 +1,23 @@
+import { useEffect, useRef, useState } from "react"
+import { fetchLLMChat, fetchChatsSummary, fetchLLMRewrite } from "../../services/api.js"
+import { insertChatsSummary, insertChatContext, getCharCount } from "./chatUtilities.js"
+import { isPositionEqual, selectionValues } from "../EditorPanel/editorUtilities"
 import AssistantHeader from "./AssistantHeader"
 import TextBox from "./TextBox"
 import ChatBox from "./ChatBox"
 import ContextBox from "./ContextBox"
-import SuggestionBox from "./SuggestionBox"
-import{ generateGroqChat, generateSuggestion, insertChatContext, getCharCount, insertChatsSummary }from "./groq"
-import { useEffect, useRef, useState } from "react"
+import RewriteBox from "./RewriteBox.jsx"
 import "./AssistantPanel.css"
-import { isPositionEqual } from "../EditorPanel/editorUtilities"
 
-const CHAR_LIMIT = 5000;
+
+const CHAR_LIMIT = 1500;
 
 export default function AssistantPanel({selection}) {
     const selectionPosition = useRef({from: 0, to: 0});
     const selectionChange = useRef(false);
     const [chats, setChats] = useState([]);
 
-    const [suggestions, setSuggestions] = useState([]);
+    const [rewrites, setRewrites] = useState([]);
     const [mode, setMode] = useState("CHAT");
     const [style, setStyle] = useState("Default");
     const [tone, setTone,] = useState("Default");
@@ -28,56 +30,49 @@ export default function AssistantPanel({selection}) {
             selectionChange.current = true;
         }
     },[chats])
-    
     useEffect(() => {
-        async function addGroqChat() {
+        async function addLLMChat() {
             if(chats.length === 0 || chats.at(-1).role !== 'user') return;
             if(selectionChange.current) {
                 insertChatContext(chats, selection);
                 selectionChange.current = false;
             }
             if(getCharCount(chats) > CHAR_LIMIT) {
-                await insertChatsSummary(chats);
+                const summary = await fetchChatsSummary(chats)
+                insertChatsSummary(summary, chats);
             }
 
-            const chat = await generateGroqChat(chats);
+            const chat = await fetchLLMChat(chats)
             setChats(c => [...c, {role: "assistant", content: chat}]);
         }
 
-        addGroqChat();
-                
+        addLLMChat();
     },[chats])
-
     function addUserChat(userChat) {
         setChats(c => [...c, {role: "user", content: userChat}])
     }
 
-    function handleSetMode(e) {
-        setMode(e.target.textContent);
-    }
-
-    function handleStyle(e) {
-        setStyle(e.target.textContent);
-    }
-
-    function handleTone(e) {
-        setTone(e.target.textContent);
-    }
-
-    function handleDeleteSuggestion(index) {
-        setSuggestions(s => s.filter((_, i) => index !== i));
-    }
-
-    async function handleGenerateSuggestion() {
+    async function handleGenerateRewrite() {
         if(!selection) {
             alert("Please highlight a text");
             return;
-        };
+        }; 
+        const settings = {style: style, tone: tone};
+        const rewrite = await fetchLLMRewrite(settings, selectionValues(selection))
 
-        const setting = {style: style, tone: tone};
-        const suggestion = await generateSuggestion(setting, selection);
-
-        setSuggestions(s => [{style: style, tone: tone, text: suggestion}, ...s])
+        setRewrites(r => [{style: style, tone: tone, text: rewrite}, ...r])
+    }
+    function handleDeleteRewrite(index) {
+        setRewrites(r => r.filter((_, i) => index !== i));
+    }
+    function handleSetMode(e) {
+        setMode(e.target.textContent);
+    }
+    function handleStyle(e) {
+        setStyle(e.target.textContent);
+    }
+    function handleTone(e) {
+        setTone(e.target.textContent);
     }
 
     return (
@@ -92,9 +87,9 @@ export default function AssistantPanel({selection}) {
                 <ContextBox selection={selection} 
                             handleStyle={handleStyle}
                             handleTone={handleTone}
-                            handleGenerateSuggestion={handleGenerateSuggestion}/>
-                <SuggestionBox suggestions={suggestions} 
-                                handleDeleteSuggestion={handleDeleteSuggestion}/>
+                            handleGenerateRewrite={handleGenerateRewrite}/>
+                <RewriteBox rewrites={rewrites} 
+                            handleDeleteRewrite={handleDeleteRewrite}/>
               </>}
         </div>
     )
