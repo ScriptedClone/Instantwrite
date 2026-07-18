@@ -21,7 +21,8 @@
     "@tiptap/react": "^3.26.1",
     "groq-sdk": "^1.2.1",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "react-router": "^8.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.2",
