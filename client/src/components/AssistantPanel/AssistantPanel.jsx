@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { fetchLLMChat, fetchChatsSummary, fetchLLMRewrite } from "../../services/api.js"
+import { getLLMChat, getChatsSummary, getLLMRewrite } from "../../services/api.js"
 import { insertChatsSummary, insertChatContext, getCharCount } from "./chatUtilities.js"
 import { isPositionEqual, selectionValues } from "../EditorPanel/editorUtilities"
 import AssistantHeader from "./AssistantHeader"
@@ -8,7 +8,6 @@ import ChatBox from "./ChatBox"
 import ContextBox from "./ContextBox"
 import RewriteBox from "./RewriteBox.jsx"
 import "./AssistantPanel.css"
-
 
 const CHAR_LIMIT = 1500;
 
@@ -38,11 +37,11 @@ export default function AssistantPanel({selection}) {
                 selectionChange.current = false;
             }
             if(getCharCount(chats) > CHAR_LIMIT) {
-                const summary = await fetchChatsSummary(chats)
+                const summary = await getChatsSummary(chats)
                 insertChatsSummary(summary, chats);
             }
 
-            const chat = await fetchLLMChat(chats)
+            const chat = await getLLMChat(chats)
             setChats(c => [...c, {role: "assistant", content: chat}]);
         }
 
@@ -58,7 +57,7 @@ export default function AssistantPanel({selection}) {
             return;
         }; 
         const settings = {style: style, tone: tone};
-        const rewrite = await fetchLLMRewrite(settings, selectionValues(selection))
+        const rewrite = await getLLMRewrite(settings, selectionValues(selection))
 
         setRewrites(r => [{style: style, tone: tone, text: rewrite}, ...r])
     }

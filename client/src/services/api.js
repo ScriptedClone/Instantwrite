@@ -1,5 +1,4 @@
-export async function fetchLLMChat(chats) {+
-        console.log("fetch start")
+export async function getLLMChat(chats) {
         const res = await fetch('/api/v1/llm/chat', {
             method: "POST",
             headers: { "Content-Type": "application/json"},
@@ -9,7 +8,7 @@ export async function fetchLLMChat(chats) {+
         return await res.json();
 }
 
-export async function fetchChatsSummary(chats) {
+export async function getChatsSummary(chats) {
     const res = await fetch('/api/v1/llm/summarize', {
         method: "POST",
         headers: { "Content-Type": "application/json"},
@@ -19,7 +18,7 @@ export async function fetchChatsSummary(chats) {
     return await res.json();
 }
 
-export async function fetchLLMRewrite(settings, selection) {
+export async function getLLMRewrite(settings, selection) {
     const res = await fetch('/api/v1/llm/rewrite', {
         method: "POST",
         headers: { "Content-Type": "application/json"},
