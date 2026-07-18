@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from 'express';
-import { getProject, putProject} from "./src/services/tree.js";
+import { getProject, putProject } from "./src/services/tree.js";
+import { createUser } from "./src/services/auth.js";
 import { generateLLMChat, generateChatsSummary, generateRewrite} from './src/services/groq.js';
 
 const app = express();
@@ -10,6 +11,18 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Server is running')
+})
+
+app.post('/api/v1/users', async (req, res) => {
+    const {email, username, password} = req.body
+
+    try {
+        await createUser(username, email, password);
+        res.sendStatus(201)
+    } catch (error) {
+        console.error(error)
+        res.sendStatus(500)
+    }
 })
 
 app.get('/api/v1/project/:id', async (req, res) => {

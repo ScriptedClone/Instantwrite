@@ -1,10 +1,20 @@
 DROP TABLE IF EXISTS node;
 DROP TABLE IF EXISTS tree;
+DROP TABLE IF EXISTS users;
 DROP TYPE IF EXISTS node_type;
 CREATE TYPE node_type AS ENUM ('text', 'folder');
 
+CREATE TABLE users(
+    user_id SERIAL PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
 CREATE TABLE tree(
     tree_id TEXT PRIMARY KEY,
+    user_id SERIAL REFERENCES users(user_id),
     name TEXT NOT NULL
 );
 

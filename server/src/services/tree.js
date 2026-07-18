@@ -1,7 +1,5 @@
 import { convertRowsToFileTree } from '../helpers/treeHelpers.js'
-import { Pool } from 'pg'
-
-const db = new Pool({ connectionString: process.env.DATABASE_URL})
+import { db } from '../const/DBconnection.js'
 
 export async function getProject(id) {
     const project = await db.query(`
@@ -25,12 +23,12 @@ export async function putProject(treeId, tree, nodeMap) {
             for(const [index, childId] of childrenId.entries()){
                 await client.query(`INSERT INTO node (node_id, parent_id, tree_id, index, type, name, content)
                                     VALUES($1, $2, $3, $4, $5, $6, $7)`,[childId, 
-                                                                           parentId, 
-                                                                           treeId, 
-                                                                           index, 
-                                                                           nodeMap[childId].type,
-                                                                           nodeMap[childId].name, 
-                                                                           nodeMap[childId].tiptapContent ?? null])
+                                                                         parentId, 
+                                                                         treeId, 
+                                                                         index, 
+                                                                         nodeMap[childId].type,
+                                                                         nodeMap[childId].name, 
+                                                                         nodeMap[childId].tiptapContent ?? null])
             }
         }
         await client.query('COMMIT');
