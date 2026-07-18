@@ -153,7 +153,6 @@ function addFolderNode(folderId, tree) {
  * @returns a new tree object with deleted node.
  */
 function deleteNode(nodeId, tree) {
-    const keys = Object.keys(tree);
     const newTree = copyTree(tree); 
     const node = nodeMap[nodeId]
 
@@ -164,14 +163,14 @@ function deleteNode(nodeId, tree) {
     if (node.type === "text") {
         delete nodeMap[nodeId];
     }
- 
-    // Delete node where it lives in tree.
+
+    // find and remove where node lives as child.
+    const keys = Object.keys(newTree);
     let i = 0;
     let j = 0;
     let key;
     while(i < keys.length) {
         key = keys[i]
-        
         while(j < newTree[key].length) {
             if(newTree[key][j] === nodeId) {
                 newTree[key] = newTree[key].filter((nodeid) => {
