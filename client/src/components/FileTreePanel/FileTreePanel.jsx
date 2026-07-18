@@ -2,31 +2,30 @@ import { useState, useRef } from "react";
 import { isSortable } from "@dnd-kit/react/sortable";
 import { nodeMap,
          moveNode,
-         syncFileTreeToDisk, 
          addDocumentNode, 
          addFolderNode, 
          deleteNode,
-         renameNode} from "../../storage/fileTree.js"
+         renameNode} from "../../data/fileTree.js"
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers"
 import FileTree from "./FileTree.jsx";
 import FileTreeHeader from "./FileTreeHeader.jsx";
 import { TreeActionsContext } from "./TreeActionsContext.js";
+import { useTree } from "./hooks/useTree.jsx";
 import './FileTreePanel.css'
+
+const ROOT_FOLDER_ID = 0;
 
 export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename }) {
 
-    /**  Store tree from local storage in memory and react on structural changes. */
-    const [tree, setTree] = useState(()=> {
-        const localTree = JSON.parse(localStorage.getItem("tree"));
-        return localTree;
-    });
+    /**  Store tree from database and react on structural changes. */
+    const { tree, setTree } = useTree("dev1")
 
     /** Store previous tree on drag start. */
-    const previousTree = useRef(tree);
+    const previousTree = useRef(null);
 
     /** Stores user selected folder node id. */
-    const [folderNodeId, setFolderNodeId] = useState(0);
+    const [folderNodeId, setFolderNodeId] = useState(ROOT_FOLDER_ID);
 
     /**
      * handles header button clicks which adds a folder or document or save the 
@@ -35,7 +34,7 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
      * @param {} button "document", "folder", "save"
      * @returns 
      */
-    function handleHeaderBtn(button) {
+    async function handleHeaderBtn(button) {
         if(button === "document") {
             setTree(addDocumentNode(folderNodeId, tree));
         }
@@ -45,7 +44,7 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
         }
 
         if(button === "save") {
-            syncFileTreeToDisk(tree);
+            //await putProject('dev1', tree, nodeMap );
         }
     }
 

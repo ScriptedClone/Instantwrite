@@ -1,6 +1,7 @@
-import express from 'express';
 import "dotenv/config";
-import { generateLLMChat, generateChatsSummary, generateRewrite} from './services/groq.js';
+import express from 'express';
+import { getProject} from "./src/services/tree.js";
+import { generateLLMChat, generateChatsSummary, generateRewrite} from './src/services/groq.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,6 +10,13 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Server is running')
+})
+
+app.get('/api/v1/project/:id', async (req, res) => {
+    const { id } = req.params
+    const { tree, nodeMap } = await getProject(id);
+
+    res.json({ tree, nodeMap })
 })
 
 app.post('/api/v1/llm/chat', async (req, res) => {

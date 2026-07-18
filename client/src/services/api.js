@@ -30,3 +30,8 @@ export async function getLLMRewrite(settings, selection) {
 
     return await res.json();
 }
+
+export async function getProject(id) {
+    const res = await fetch(`/api/v1/project/${id}`)
+    return await res.json();
+}
