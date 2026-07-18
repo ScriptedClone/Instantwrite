@@ -35,3 +35,14 @@ export async function getProject(id) {
     const res = await fetch(`/api/v1/project/${id}`)
     return await res.json();
 }
+
+export async function putProject(id, tree, nodeMap) {
+    const put = await fetch(`/api/v1/project/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            tree,
+            nodeMap,
+        }),
+    })
+}

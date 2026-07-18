@@ -13,6 +13,7 @@ import FileTreeHeader from "./FileTreeHeader.jsx";
 import { TreeActionsContext } from "./TreeActionsContext.js";
 import { useTree } from "./hooks/useTree.jsx";
 import './FileTreePanel.css'
+import { putProject } from '../../services/api.js';
 
 const ROOT_FOLDER_ID = 0;
 
@@ -44,7 +45,7 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
         }
 
         if(button === "save") {
-            //await putProject('dev1', tree, nodeMap );
+            await putProject('dev1', tree, nodeMap)
         }
     }
 
