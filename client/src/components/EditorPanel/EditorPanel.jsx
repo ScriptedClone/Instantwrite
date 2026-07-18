@@ -2,7 +2,7 @@ import { extensions } from "./extensions.js"
 import { EditorContent, useEditor } from "@tiptap/react"
 import { } from "react";
 import './EditorPanel.css'
-import { nodeMap } from "../../storage/fileTree.js";
+import { nodeMap } from "../../data/fileTree.js";
 import EditorTitle from "./EditorTitle.jsx";
 import Editor from "./Editor.jsx";
 

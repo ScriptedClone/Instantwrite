@@ -1,18 +1,11 @@
-import { nodeMapSeed, treeSeed } from './seed'
-
-/**
- * Seed local storage.
- */
-if (!localStorage.getItem("tree") && !localStorage.getItem("nodeMap")) {
-    localStorage.setItem("tree", JSON.stringify(treeSeed));
-    localStorage.setItem("nodeMap", JSON.stringify(nodeMapSeed))
-}
+//import { nodeMapSeed, treeSeed } from './seed'
+import { getProject } from '../services/api';
 
 /**
  * This is a hashmap that contains node id as key and the node itself
  * as value.
  */
-let nodeMap = JSON.parse(localStorage.getItem("nodeMap"));
+let { nodeMap } = await getProject('dev1')
 
 /**
  * Copies contents of tree and returns it as a new object.
@@ -25,41 +18,6 @@ function copyTree(tree) {
         newTree[key] = [...tree[key]];
     }
     return newTree;
-}
-
-/**
- * Writes tree and nodemap on local storage.
- * @param {*} tree
- */
-function syncFileTreeToDisk(tree) {
-    localStorage.setItem("tree", JSON.stringify(tree));
-    localStorage.setItem("nodeMap", JSON.stringify(nodeMap));
-}
-
-
-/**
- * Checks if target node is descendant of source. This is used as
- * an accept condition for sortable node components.
- * @param {*} sourceId is the id of the node being dragged.
- * @param {*} nodeId is the id of the node target destination. 
- * @returns true if nodeId is a descendant. 
- */
-function isNodeDescendant(sourceId, nodeId, tree) {
-    const children = tree[sourceId];
-
-    for(let i = 0; i < children.length; i++) {
-        const node = nodeMap[children[i]];
-        
-        if(node.type === "folder" && sourceId !== node.id) {
-            if(isNodeDescendant(node.id, nodeId, tree)) {
-                return true
-            }
-        }
-
-        if(children[i] === nodeId)  return true;
-    }
-
-    return false
 }
 
 /**
@@ -109,6 +67,56 @@ function createFolderNode(name) {
 }
 
 /**
+ * This is a recursive function that deletes a folder node and 
+ * all its descendants in nodemap.
+ * 
+ * The folder's id entry is also deleted on the tree.
+ * 
+ * @param {*} folderId folder unique identifier.
+ * @param {*} tree A hashmap that uses folder id as key and an array of its children's id as value.
+ */
+function deleteFolder(folderId, tree) {
+    const folderChildren = tree[folderId]
+
+    // delete children in nodemap
+    for(let i = 0; i < folderChildren.length; i++) {
+        const childId = folderChildren[i]
+        
+        if(nodeMap[childId].type === "folder") deleteFolder(childId, tree)
+            
+        delete nodeMap[childId];
+    }
+
+    delete nodeMap[folderId]; // delete the folder's id entry in node map.
+    delete tree[folderId]; // delete the folder's id entry in tree.
+}
+
+/**
+ * Checks if target node is descendant of source. This is used as
+ * an accept condition for sortable node components.
+ * @param {*} sourceId is the id of the node being dragged.
+ * @param {*} nodeId is the id of the node target destination. 
+ * @returns true if nodeId is a descendant. 
+ */
+function isNodeDescendant(sourceId, nodeId, tree) {
+    const children = tree[sourceId];
+
+    for(let i = 0; i < children.length; i++) {
+        const node = nodeMap[children[i]];
+        
+        if(node.type === "folder" && sourceId !== node.id) {
+            if(isNodeDescendant(node.id, nodeId, tree)) {
+                return true
+            }
+        }
+
+        if(children[i] === nodeId)  return true;
+    }
+
+    return false
+}
+
+/**
  * Add document node inside a folder using its id.
  * @param {*} folderId is the id of the folder to add a new document.
  */
@@ -135,26 +143,7 @@ function addFolderNode(folderId, tree) {
     return newTree;
 }
 
-/**
- * Delete the folder and its children
- * @param {*} folderId folder unique identifier.
- * @param {*} tree A hashmap that uses folder id as key and an array of its children's id as value.
- */
-function deleteFolder(folderId, tree) {
-    const folderChildren = tree[folderId]
 
-    // delete children in nodemap
-    for(let i = 0; i < folderChildren.length; i++) {
-        const childId = folderChildren[i]
-        
-        if(nodeMap[childId].type === "folder") deleteFolder(childId, tree)
-            
-        delete nodeMap[childId];
-    }
-
-    delete nodeMap[folderId]; // delete the folder's id entry in node map.
-    delete tree[folderId]; // delete the folder's id entry in tree.
-}
 
 /**
  * Deletes node using id in tree and nodemap.
@@ -251,5 +240,4 @@ export { nodeMap,
          deleteNode, 
          addDocumentNode, 
          addFolderNode, 
-         syncFileTreeToDisk,
          isNodeDescendant}

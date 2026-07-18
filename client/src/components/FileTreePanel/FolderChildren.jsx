@@ -1,4 +1,4 @@
-import { nodeMap } from "../../storage/fileTree"
+import { nodeMap } from "../../data/fileTree"
 import renameIcon from "../../assets/renameIcon.png"
 import deleteIcon from "../../assets/deleteIcon.png"
 import Folder from "./Folder"
@@ -11,7 +11,7 @@ import Document from "./Document"
 export default function FolderChildren({folderId, tree, depth}) {
     return (
         <ul>
-            {tree[folderId].map((childId, index) => {
+            {tree && tree[folderId].map((childId, index) => {
                 if(nodeMap[childId].type === "folder") {
                     return <Folder key={childId}
                                    folderId={folderId}

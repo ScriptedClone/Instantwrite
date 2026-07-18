@@ -72,6 +72,12 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
         onSelectFolder: setFolderNodeId,
     }
     
+    /**
+     * Updates tree in memory on drag end.,
+     * 
+     * @param {*} e 
+     * @returns 
+     */
     function handleOnDragEnd(e) {
         const { source, target } = e.operation;
         if(e.canceled || !target) {
