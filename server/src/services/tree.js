@@ -1,9 +1,9 @@
 import { convertRowsToFileTree } from '../helpers/treeHelpers.js'
-import { db } from '../const/DBconnection.js'
+import { db } from '../config/database.js'
 
 export async function getProject(id) {
     const project = await db.query(`
-        SELECT * FROM node
+        SELECT * FROM nodes
         WHERE tree_id = $1`, 
         [id]
     )
@@ -15,13 +15,13 @@ export async function putProject(treeId, tree, nodeMap) {
 
     try {
         await client.query('BEGIN');
-        await client.query(`DELETE FROM node WHERE tree_id = $1`, [treeId]);
-        await client.query(`INSERT INTO node (node_id, parent_id, tree_id, index, type, name, content)
+        await client.query(`DELETE FROM nodes WHERE tree_id = $1`, [treeId]);
+        await client.query(`INSERT INTO nodes (node_id, parent_id, tree_id, index, type, name, content)
                             VALUES(0, null, $1, null, 'folder', 'root', null)`, [treeId]);
          
         for(const [parentId, childrenId] of Object.entries(tree)) {
             for(const [index, childId] of childrenId.entries()){
-                await client.query(`INSERT INTO node (node_id, parent_id, tree_id, index, type, name, content)
+                await client.query(`INSERT INTO nodes (node_id, parent_id, tree_id, index, type, name, content)
                                     VALUES($1, $2, $3, $4, $5, $6, $7)`,[childId, 
                                                                          parentId, 
                                                                          treeId, 
