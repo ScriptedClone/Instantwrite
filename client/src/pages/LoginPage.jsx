@@ -6,16 +6,13 @@ export default function LoginPage() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target));
-        const res = await postSession(data)
-
-        if(res.ok) {
-            nav('/');
-        } else {
-            const error = await res.json()
-            const errorMessage = error?.message;
-
-            alert(errorMessage)
+        try {
+            const data = Object.fromEntries(new FormData(e.target));
+            const res = await postSession(data)
+            
+            nav('/')
+        } catch (error){
+            alert(error.message)
         }
     }
 

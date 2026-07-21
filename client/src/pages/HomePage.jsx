@@ -4,10 +4,12 @@ import { deleteSession } from "../services/api";
 export default function HomePage() {
     async function handleLogout(e) {
         e.preventDefault();
-        const res = await deleteSession();
 
-        if(res.ok) {
-            alert('session destroyed');
+        try {
+            const res = await deleteSession();
+            alert(res.message);
+        } catch ( error ) {
+            alert(error.message)
         }
     }
 

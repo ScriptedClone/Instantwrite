@@ -21,10 +21,10 @@ app.post('/api/v1/users', async (req, res) => {
     try {
         await createUser(username, email, password);
         await createSession(username, req);
-        res.sendStatus(201)
-    } catch (error) {
+        res.status(201).json({message: 'signup success'});
+    } catch (error) {;
         console.error(error)
-        res.sendStatus(500)
+        res.status(500).json({message: 'server error, status: 500'});
     }
 })
 
@@ -57,7 +57,7 @@ app.delete('/api/v1/sessions', async (req, res) => {
             res.status(500).json({message: 'log-out failed, please try again'})
             return;
         }
-        res.sendStatus(200);
+        res.status(200).json({message: 'session deleted'});
     })
 })
 

@@ -6,11 +6,13 @@ export default function SignupPage() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target));
-        const res = await postUser(data)
-
-        if(res.ok) {
-            nav('/');
+        try {
+            const data = Object.fromEntries(new FormData(e.target));
+            const res = await postUser(data)
+            
+            nav('/')
+        } catch (error){
+            alert(error.message)
         }
     }
 

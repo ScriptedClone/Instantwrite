@@ -1,25 +1,36 @@
-export async function getLLMChat(chats) {
-        const res = await fetch('/api/v1/llm/chat', {
-            method: "POST",
-            headers: { "Content-Type": "application/json"},
-            body: JSON.stringify(chats),
-        })
+async function request(url, options) {
+    const res = await fetch(url, options);
 
-        return await res.json();
+    if(!res.ok) {
+        const error = await res.json();
+        throw new Error(error?.message || `Request failed: ${res.status}` )
+    }
+
+    // If respose has no body.
+    if(res.status == 204 || res.headers.get('content-length') === 0) return;
+    
+    return res.json();
 }
 
-export async function getChatsSummary(chats) {
-    const res = await fetch('/api/v1/llm/summarize', {
+
+export async function getLLMChat(chats) {
+    return await request('/api/v1/llm/chat', {
         method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(chats),
     })
+}
 
-    return await res.json();
+export async function getChatsSummary(chats) {
+    return await request('/api/v1/llm/summarize', {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(chats),
+    })
 }
 
 export async function getLLMRewrite(settings, selection) {
-    const res = await fetch('/api/v1/llm/rewrite', {
+    return await request('/api/v1/llm/rewrite', {
         method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify({
@@ -27,17 +38,14 @@ export async function getLLMRewrite(settings, selection) {
             selection,
         }),
     })
-
-    return await res.json();
 }
 
 export async function getProject(id) {
-    const res = await fetch(`/api/v1/project/${id}`)
-    return await res.json();
+    return await request(`/api/v1/project/${id}`)
 }
 
 export async function putProject(id, tree, nodeMap) {
-    const put = await fetch(`/api/v1/project/${id}`, {
+    await request(`/api/v1/project/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify({
@@ -48,7 +56,7 @@ export async function putProject(id, tree, nodeMap) {
 }
 
 export async function postUser(data) {
-    return await fetch('/api/v1/users', {
+    return await request('/api/v1/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -56,7 +64,7 @@ export async function postUser(data) {
 }
 
 export async function postSession(data) {
-    return await fetch('/api/v1/sessions', {
+    return await request('/api/v1/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -64,7 +72,7 @@ export async function postSession(data) {
 }
 
 export async function deleteSession() {
-    return await fetch('/api/v1/sessions', { 
+    return await request('/api/v1/sessions', { 
         method:'DELETE' 
     })
 }
