@@ -46,3 +46,25 @@ export async function putProject(id, tree, nodeMap) {
         }),
     })
 }
+
+export async function postUser(data) {
+    return await fetch('/api/v1/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+}
+
+export async function postSession(data) {
+    return await fetch('/api/v1/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+}
+
+export async function deleteSession() {
+    return await fetch('/api/v1/sessions', { 
+        method:'DELETE' 
+    })
+}
