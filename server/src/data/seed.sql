@@ -1,28 +1,49 @@
-DROP TABLE IF EXISTS node;
-DROP TABLE IF EXISTS tree;
+DROP TABLE IF EXISTS nodes;
+DROP TABLE IF EXISTS trees;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS sessions;
+DROP TYPE IF EXISTS node_type;
 DROP TYPE IF EXISTS node_type;
 CREATE TYPE node_type AS ENUM ('text', 'folder');
 
-CREATE TABLE tree(
+CREATE TABLE sessions (
+  "sid" varchar NOT NULL COLLATE "default",
+  "sess" json NOT NULL,
+  "expire" timestamp(6) NOT NULL
+)
+WITH (OIDS=FALSE);
+ALTER TABLE "sessions" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
+CREATE INDEX "IDX_session_expire" ON "sessions" ("expire");
+
+CREATE TABLE users(
+    user_id SERIAL PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE trees(
     tree_id TEXT PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id),
     name TEXT NOT NULL
 );
 
 
-CREATE TABLE node(
+CREATE TABLE nodes(
     node_id TEXT PRIMARY KEY,
-    parent_id TEXT REFERENCES node(node_id) DEFERRABLE INITIALLY DEFERRED, 
-    tree_id TEXT REFERENCES tree(tree_id),
+    parent_id TEXT REFERENCES nodes(node_id) DEFERRABLE INITIALLY DEFERRED, 
+    tree_id TEXT REFERENCES trees(tree_id),
     type node_type NOT NULL,
     index SMALLINT,
     name TEXT NOT NULL,
     content JSONB
 );
 
-INSERT INTO tree (tree_id, name)
+INSERT INTO trees (tree_id, name)
 VALUES ('dev1', 'for development');
 
-INSERT INTO node (node_id, parent_id, tree_id, type, index, name, content)
+INSERT INTO nodes (node_id, parent_id, tree_id, type, index, name, content)
 VALUES
 ('0', NULL, 'dev1', 'folder', NULL, 'root', NULL),
 ('1', '0', 'dev1', 'folder', 0, 'Chapters', NULL),
