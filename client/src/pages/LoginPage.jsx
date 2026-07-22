@@ -1,30 +1,9 @@
-import { Link, useNavigate } from "react-router"
-import { postSession } from "../features/auth/services/authAPI.js";
+import LoginForm from "../features/auth/LoginForm"
 
 export default function LoginPage() {
-    const nav = useNavigate()
-
-    async function handleSubmit(e) {
-        e.preventDefault();
-        try {
-            const data = Object.fromEntries(new FormData(e.target));
-            const res = await postSession(data)
-            
-            nav('/')
-        } catch (error){
-            alert(error.message)
-        }
-    }
-
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <input type="text" name="email" placeholder="Email" autoComplete="email"/>
-            </div>
-            <div>
-                <input type="password" name="password" placeholder="password" autoComplete="new-password"/>
-            </div>
-            <button>Login</button>
-        </form>
+        <>
+            <LoginForm />
+        </>
     )
 }
