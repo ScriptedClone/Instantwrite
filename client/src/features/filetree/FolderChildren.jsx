@@ -1,8 +1,8 @@
-import { nodeMap } from "../../data/fileTree"
-import renameIcon from "../../assets/renameIcon.png"
-import deleteIcon from "../../assets/deleteIcon.png"
-import Folder from "./Folder"
-import Document from "./Document"
+import { nodeMap } from "./fileTree.js"
+import renameIcon from "./assets/renameIcon.png"
+import deleteIcon from "./assets/deleteIcon.png"
+import Folder from "./Folder.jsx"
+import Document from "./Document.jsx"
 
 /**
  * This is a recursive component that builds the nested list. The

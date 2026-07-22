@@ -5,15 +5,15 @@ import { nodeMap,
          addDocumentNode, 
          addFolderNode, 
          deleteNode,
-         renameNode} from "../../data/fileTree.js"
+         renameNode} from "./fileTree.js"
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers"
 import FileTree from "./FileTree.jsx";
 import FileTreeHeader from "./FileTreeHeader.jsx";
-import { TreeActionsContext } from "./TreeActionsContext.js";
+import { TreeActionsContext } from "./context/TreeActionsContext.js";
 import { useTree } from "./hooks/useTree.jsx";
 import './FileTreePanel.css'
-import { putProject } from '../../services/api.js';
+import { putProject } from './services/projectAPI.js';
 
 const ROOT_FOLDER_ID = 0;
 

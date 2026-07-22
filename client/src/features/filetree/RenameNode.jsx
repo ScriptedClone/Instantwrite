@@ -1,5 +1,5 @@
 import { useContext, useRef } from "react";
-import { TreeActionsContext } from "./TreeActionsContext.js";
+import { TreeActionsContext } from "./context/TreeActionsContext.js";
 
 export default function RenameNode({node, handleRenameToggle}) {
     const { onRename } = useContext(TreeActionsContext)

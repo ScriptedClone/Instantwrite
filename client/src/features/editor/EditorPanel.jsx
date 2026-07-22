@@ -1,8 +1,8 @@
-import { extensions } from "./extensions.js"
+import { extensions } from "./services/extensions.js"
 import { EditorContent, useEditor } from "@tiptap/react"
 import { } from "react";
 import './EditorPanel.css'
-import { nodeMap } from "../../data/fileTree.js";
+import { nodeMap } from "../filetree/fileTree.js";
 import EditorTitle from "./EditorTitle.jsx";
 import Editor from "./Editor.jsx";
 

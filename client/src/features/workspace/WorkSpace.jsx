@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { nodeMap } from "../data/fileTree.js";
-import AssistantPanel from "./AssistantPanel/AssistantPanel.jsx"
-import EditorPanel from "./EditorPanel/EditorPanel.jsx"
-import FileTreePanel from "./FileTreePanel/FileTreePanel.jsx"
+import { nodeMap } from "../filetree/fileTree.js";
+import AssistantPanel from "../assistant/AssistantPanel.jsx"
+import EditorPanel from "../editor/EditorPanel.jsx"
+import FileTreePanel from "../filetree/FileTreePanel.jsx"
 
-export default function PanelHolder() {
+export default function WorkSpace() {
 
     /**
      * The current document object in Tiptap JSON format from editor.

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getProject } from "../../../services/api";
+import { getProject } from "../services/projectAPI.js";
 
 export function useTree(projectId) {
     const [ tree, setTree ] = useState()

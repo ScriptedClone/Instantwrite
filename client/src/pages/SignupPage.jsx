@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router"
-import { postUser } from "../services/api";
+import { postUser } from "../features/auth/services/authAPI.js";
 
 export default function SignupPage() {
     const nav = useNavigate()

@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
-import { isNodeDescendant } from "../../data/fileTree.js"
-import { TreeActionsContext } from "./TreeActionsContext.js";
+import { isNodeDescendant } from "./fileTree.js"
+import { TreeActionsContext } from "./context/TreeActionsContext.js";
 import RenameNode from "./RenameNode.jsx";
 import useDocumentDnd from "./hooks/useDocumentDnd.jsx";
 

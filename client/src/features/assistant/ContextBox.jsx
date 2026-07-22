@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { selectionValues } from "../EditorPanel/editorUtilities";
+import { selectionValues } from "../editor/services/editorUtilities.js";
 
 export default function ContextBox({selection, handleStyle, handleTone, handleGenerateRewrite}) {
     const textSelected = selectionValues(selection)?.textSelected;

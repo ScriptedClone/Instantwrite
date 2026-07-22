@@ -1,4 +1,4 @@
-import { extensions } from "./extensions.js"
+import { extensions } from "./services/extensions.js"
 import { EditorContent, useEditor } from "@tiptap/react"
 import { useEffect } from "react";
 

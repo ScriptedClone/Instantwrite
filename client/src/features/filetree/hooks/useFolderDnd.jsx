@@ -1,4 +1,4 @@
-import { isNodeDescendant } from "../../../data/fileTree"
+import { isNodeDescendant } from "../fileTree.js"
 import { useSortable } from "@dnd-kit/react/sortable";
 import { useDroppable } from "@dnd-kit/react";
 

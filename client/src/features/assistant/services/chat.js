@@ -1,4 +1,4 @@
-import { selectionValues } from "../EditorPanel/editorUtilities";
+import { selectionValues } from "../../editor/services/editorUtilities.js";
 
 /**
  * Inserts chat summary on latest user chat object. The summary extends from 

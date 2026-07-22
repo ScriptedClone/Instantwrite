@@ -1,5 +1,5 @@
 //import { nodeMapSeed, treeSeed } from './seed'
-import { getProject } from '../services/api';
+import { getProject } from './services/projectAPI.js';
 
 /**
  * This is a hashmap that contains node id as key and the node itself
