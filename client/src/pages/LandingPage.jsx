@@ -1,7 +1,7 @@
 import { Link } from "react-router"
 import { deleteSession } from "../features/auth/services/authAPI.js";
 
-export default function HomePage() {
+export default function LandingPage() {
     async function handleLogout(e) {
         e.preventDefault();
 
