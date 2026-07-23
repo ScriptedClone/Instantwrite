@@ -5,13 +5,13 @@ import RenameNode from "./RenameNode.jsx";
 import useFolderDnd from "./hooks/useFolderDnd.jsx";
 
 
-export default function Folder({folderId, tree, node, index, 
+export default function Folder({folderId, node, index, 
                                 depth, renameIcon, deleteIcon}) {
     
     const { onDelete, onSelectFolder } = useContext(TreeActionsContext)
     const [isRenaming, setIsRenaming] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const { ref } = useFolderDnd({node, index, folderId, depth, tree})
+    const { ref } = useFolderDnd({node, index, folderId, depth})
 
     function handleRenameToggle(e) {
         setIsRenaming(!isRenaming)
@@ -37,9 +37,7 @@ export default function Folder({folderId, tree, node, index,
                 {">"}
             </span>
             
-            {(isRenaming) 
-            ? <RenameNode node={node} handleRenameToggle={handleRenameToggle}/> 
-            : node.name}
+            {(isRenaming) ? <RenameNode node={node} handleRenameToggle={handleRenameToggle}/> : node.name}
 
             <button className="deleteBtn">
                 <img src={deleteIcon} 
@@ -63,7 +61,6 @@ export default function Folder({folderId, tree, node, index,
             </button>
 
             {isOpen && <FolderChildren folderId={node.id}
-                                       tree={tree}
                                        depth={depth + 1}/>} 
         </li>
     )

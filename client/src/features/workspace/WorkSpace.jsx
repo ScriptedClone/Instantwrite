@@ -1,92 +1,76 @@
-import { useState, useEffect } from "react";
-import { nodeMap } from "../filetree/fileTree.js";
+import { useState, useEffect, useContext, useRef} from "react";
+import { ProjectContext } from "./context/ProjectContext.js";
+import { storeLastActiveDoc } from "./workspace.js";
+import useProject from "./hooks/useProject.jsx";
+import useDocument from "./hooks/useDocument.jsx"
 import AssistantPanel from "../assistant/AssistantPanel.jsx"
 import EditorPanel from "../editor/EditorPanel.jsx"
 import FileTreePanel from "../filetree/FileTreePanel.jsx"
 
-export default function WorkSpace() {
+export default function Workspace() {
+    const { state: projectState, actions: projectActions } = useProject('dev1');
+    const { loading, nodeMapRef } = projectState;
+    const { updateNodeContent } = projectActions;
+
+    const { state: docState, actions: docActions } = useDocument(null);
+    const { selectedDoc, docNodeId, docName } = docState;
+    const { setDoc, renameDoc } = docActions;
 
     /**
-     * The current document object in Tiptap JSON format from editor.
+     * Reference to document object in Tiptap JSON format from editor.
+     * 
      */
     const [editorDoc, setEditorDoc] = useState();
 
     /**
-     * The selected document object in Tiptap JSON format from nodeMap.
-     */
-    const [selectedDoc, setSelectedDoc] = useState();
-
-    /**
      * Text selection event from editor.
+     * 
      */
-    const [selection, setSelection] = useState(null);
+    const [editorSelection, setEditorSelection] = useState(null);
 
-    /**
-     * The current document node's unique identifier in nodeMap.
-     */
-    const [docNodeId, setDocNodeId] = useState();
-
-    /**
-     * The current document name.
-     */
-    const [docName, setDocName] = useState();
-    
-    /**
-     * Update nodeMap on editor text update using editorDoc.
+    /** 
+     * Update nodeMap on editor text update using editorDoc. 
+     * 
      */
     useEffect(() => {
-        if(!editorDoc) return;
-        nodeMap[docNodeId].tiptapContent = editorDoc
+        if(!editorDoc || loading) return;
+        updateNodeContent(docNodeId, editorDoc)
     },[editorDoc])
 
     /**
      * Saves selected document's id to local storage
      * get last active document on editor mount. 
+     * 
      */
     useEffect(() => {
-        if(docNodeId) {
-            localStorage.setItem("prevDocId", docNodeId);
-        }
-        
+        if(docNodeId) storeLastActiveDoc(docNodeId);
     }, [docNodeId])
 
     /**
-     * Set current document name. 
+     * Initializes document value if previous document id exists
+     * on mount to restore previously open document on editor.
+     * 
      */
     useEffect(() => {
-        setDocName(nodeMap[docNodeId]?.name);
-    }, [docNodeId])
+        if(loading) return;
 
-    /**
-     * Initializes the following react states if previous document id exists
-     * on mount. This is done to restore previously open document on the
-     * editor.
-     */
-    useEffect(() => {
         const prevDocId = localStorage.getItem("prevDocId");
-
-        if(prevDocId) {
-            setDocNodeId(nodeMap[prevDocId]?.id)
-            setDocName(nodeMap[prevDocId]?.name)
-            setSelectedDoc(nodeMap[prevDocId]?.tiptapContent)
-        };        
-    }, [])
+        if(prevDocId) setDoc(prevDocId, nodeMapRef);
+    }, [loading])
 
     /**
-     * Event handler when selecting a document from file panel. Updates selected 
-     * doc using passed id for nodeMap lookup and updates nodeId.
+     * Event handler the updates document to the selected document from
+     * file tree panel.
      * 
      * @param {*} id is the user selected document node's Id. 
      */
     function handleSelectedDoc(id) {
-        const nodeDoc = nodeMap[id].tiptapContent;
-
-        setSelectedDoc(s => nodeDoc);
-        setDocNodeId(id);
+        setDoc(id, nodeMapRef)
     }
 
     /**
      * Updates editorDoc by tracking document changes on editor component.
+     * 
      * @param {*} currentDoc 
      */
     function handleEditorTxtUpdate(currentDoc) {
@@ -101,7 +85,7 @@ export default function WorkSpace() {
      */
     function handleDocumentRename(id) {
         if(docNodeId === id) {
-            setDocName(nodeMap[id].name)
+            renameDoc(id, nodeMapRef);
         }
     }
 
@@ -110,22 +94,28 @@ export default function WorkSpace() {
      * 
      * @param {*} selection the selection object from Tiptap editor.
      */
-    function handleSelection(selection) {
-        setSelection(selection)
+    function handleEditorSelection(selection) {
+        setEditorSelection(selection)
     }
 
     return (
-        <div className="panelHolder">
-            <FileTreePanel handleSelectedDoc={handleSelectedDoc}
-                           handleDocumentRename={handleDocumentRename}/>
+        <>
+            {!loading &&
+                <div className="panelHolder">
+                    <ProjectContext.Provider value={{ projectState, projectActions }}>
+                        <FileTreePanel handleSelectedDoc={handleSelectedDoc}
+                                       handleDocumentRename={handleDocumentRename}/>
+                    </ProjectContext.Provider>
 
-            <EditorPanel selectedDoc={selectedDoc}
-                         docName={docName}
-                         handleEditorTxtUpdate={handleEditorTxtUpdate}
-                         handleSelection={handleSelection}/>
-                         
-            <AssistantPanel selection={selection}/>
-        </div>
+                    <EditorPanel selectedDoc={selectedDoc}
+                                 docName={docName}
+                                 handleEditorTxtUpdate={handleEditorTxtUpdate}
+                                 handleSelection={handleEditorSelection}/>
+                                
+                    <AssistantPanel selection={editorSelection}/>
+                </div>
+            }
+        </>
     )
 }
 

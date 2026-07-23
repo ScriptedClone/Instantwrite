@@ -5,12 +5,12 @@ import RenameNode from "./RenameNode.jsx";
 import useDocumentDnd from "./hooks/useDocumentDnd.jsx";
 
 
-export default function Document({folderId, tree, node, index, 
+export default function Document({folderId, node, index, 
                                   depth, renameIcon, deleteIcon}) {
 
     const { onDelete, onSelectDoc } = useContext(TreeActionsContext)
     const [isRenaming, setIsRenaming] = useState(false);
-    const { ref } = useDocumentDnd({node, index, folderId, depth, tree});
+    const { ref } = useDocumentDnd({node, index, folderId, depth});
     
     function handleRenameToggle() {
         setIsRenaming(!isRenaming)

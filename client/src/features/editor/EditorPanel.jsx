@@ -1,10 +1,8 @@
 import { extensions } from "./services/extensions.js"
 import { EditorContent, useEditor } from "@tiptap/react"
-import { } from "react";
-import './EditorPanel.css'
-import { nodeMap } from "../filetree/fileTree.js";
 import EditorTitle from "./EditorTitle.jsx";
 import Editor from "./Editor.jsx";
+import './EditorPanel.css'
 
 export default function EditorPanel({handleEditorTxtUpdate, 
                                      handleSelection, 

@@ -1,3 +1,5 @@
+import { useContext } from "react"
+import { ProjectContext } from "../../workspace/context/ProjectContext.js"
 import { isNodeDescendant } from "../fileTree.js"
 import { useSortable } from "@dnd-kit/react/sortable";
 import { useDroppable } from "@dnd-kit/react";
@@ -9,11 +11,13 @@ import { useDroppable } from "@dnd-kit/react";
  * @param {*} props properties of this folder.
  * @returns a callback ref to attach to folder element.
  */
-export default function useFolderDnd({node, index, folderId, depth, tree}) {
-    
+export default function useFolderDnd({node, index, folderId, depth}) {
+    const { projectState } = useContext(ProjectContext);
+    const { tree, nodeMapRef } = projectState;
+
     /** evaluates if the folder using this hook is empty or not. */
     const isEmpty = tree[node.id].length === 0;
-
+    
     /** Sortable ref from DND-kit */
     const {ref: sortable} = useSortable({
         id: node.id,
@@ -24,7 +28,7 @@ export default function useFolderDnd({node, index, folderId, depth, tree}) {
         accept: (source) => {
             if(source.type !== "folder") return true;
 
-            return !isNodeDescendant(source.id, node.id, tree)
+            return !isNodeDescendant(source.id, node.id, tree, nodeMapRef.current)
         }
     })
 

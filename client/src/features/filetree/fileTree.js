@@ -1,12 +1,3 @@
-//import { nodeMapSeed, treeSeed } from './seed'
-import { getProject } from './services/projectAPI.js';
-
-/**
- * This is a hashmap that contains node id as key and the node itself
- * as value.
- */
-let { nodeMap } = await getProject('dev1')
-
 /**
  * Copies contents of tree and returns it as a new object.
  * @param {*} tree 
@@ -25,7 +16,7 @@ function copyTree(tree) {
  * @param {*} name optional argument to set document name.
  * @returns id of created node.
  */
-function createDocNode(name) {
+function createDocNode(name, nodeMap) {
     const node = {
         id: crypto.randomUUID(),
         type:"text",
@@ -46,7 +37,7 @@ function createDocNode(name) {
         }
     }
 
-    nodeMap = {...nodeMap, [node.id]:node}
+    nodeMap[node.id] = node
     return node.id
 }
 
@@ -55,14 +46,14 @@ function createDocNode(name) {
  * @param {*} name optional argument to set folder name.
  * @returns folder node.
  */
-function createFolderNode(name) {
+function createFolderNode(name, nodeMap) {
     const node = {
         id: crypto.randomUUID(),
         type: "folder",
         name: (name)? name : "New folder"
     }
 
-    nodeMap = {...nodeMap, [node.id]:node}
+    nodeMap[node.id] = node
     return node
 }
 
@@ -75,14 +66,14 @@ function createFolderNode(name) {
  * @param {*} folderId folder unique identifier.
  * @param {*} tree A hashmap that uses folder id as key and an array of its children's id as value.
  */
-function deleteFolder(folderId, tree) {
+function deleteFolder(folderId, tree, nodeMap) {
     const folderChildren = tree[folderId]
 
     // delete children in nodemap
     for(let i = 0; i < folderChildren.length; i++) {
         const childId = folderChildren[i]
         
-        if(nodeMap[childId].type === "folder") deleteFolder(childId, tree)
+        if(nodeMap[childId].type === "folder") deleteFolder(childId, tree, nodeMap)
             
         delete nodeMap[childId];
     }
@@ -98,14 +89,14 @@ function deleteFolder(folderId, tree) {
  * @param {*} nodeId is the id of the node target destination. 
  * @returns true if nodeId is a descendant. 
  */
-function isNodeDescendant(sourceId, nodeId, tree) {
+function isNodeDescendant(sourceId, nodeId, tree, nodeMap) {
     const children = tree[sourceId];
 
     for(let i = 0; i < children.length; i++) {
         const node = nodeMap[children[i]];
         
         if(node.type === "folder" && sourceId !== node.id) {
-            if(isNodeDescendant(node.id, nodeId, tree)) {
+            if(isNodeDescendant(node.id, nodeId, tree, nodeMap)) {
                 return true
             }
         }
@@ -120,10 +111,10 @@ function isNodeDescendant(sourceId, nodeId, tree) {
  * Add document node inside a folder using its id.
  * @param {*} folderId is the id of the folder to add a new document.
  */
-function addDocumentNode(folderId, tree) {
+function addDocumentNode(folderId, tree, nodeMap) {
     const newTree = copyTree(tree)
 
-    newTree[folderId] = [...newTree[folderId], createDocNode()]
+    newTree[folderId] = [...newTree[folderId], createDocNode(undefined, nodeMap)]
     
     return newTree;
 }
@@ -133,8 +124,8 @@ function addDocumentNode(folderId, tree) {
  * of folder keys inside tree.
  * @param {*} folderId is the id of the folder to add a new folder.
  */
-function addFolderNode(folderId, tree) {
-    const node = createFolderNode();
+function addFolderNode(folderId, tree, nodeMap) {
+    const node = createFolderNode(undefined, nodeMap);
     let newTree = copyTree(tree);
 
     newTree[folderId] = [...newTree[folderId], node.id]
@@ -152,12 +143,12 @@ function addFolderNode(folderId, tree) {
  * @param {*} tree A hashmap that uses folder id as key and an array of its children's id as value.
  * @returns a new tree object with deleted node.
  */
-function deleteNode(nodeId, tree) {
+function deleteNode(nodeId, tree, nodeMap) {
     const newTree = copyTree(tree); 
     const node = nodeMap[nodeId]
 
     if(node.type === "folder") {
-        deleteFolder(nodeId, newTree)
+        deleteFolder(nodeId, newTree, nodeMap)
     }
 
     if (node.type === "text") {
@@ -196,7 +187,7 @@ function deleteNode(nodeId, tree) {
  * @param {*} tree A hashmap that uses folder id as key and an array of its children's id as value.
  * @returns a new tree object.
  */
-function renameNode(newName, nodeId, tree) {
+function renameNode(newName, nodeId, tree, nodeMap) {
     const newTree = copyTree(tree);
     nodeMap[nodeId].name = newName;
 
@@ -210,10 +201,10 @@ function renameNode(newName, nodeId, tree) {
  * @param {*} initialGroup initial folder group.
  * @param {*} index new index of node id.
  * @param {*} group new folder group.
- * @param {*} tree map of folders and its children.
  * @param {*} id the node being moved.
+ * @param {*} tree map of folders and its children.
  */
-function moveNode(initialIndex, initialGroup, index, group, tree, id) {
+function moveNode(initialIndex, initialGroup, index, group, id, tree) {
     let newTree = copyTree(tree);
 
     if(initialGroup === group) {
@@ -233,8 +224,7 @@ function moveNode(initialIndex, initialGroup, index, group, tree, id) {
     }
 }
 
-export { nodeMap,
-         moveNode,
+export { moveNode,
          renameNode,
          deleteNode, 
          addDocumentNode, 
