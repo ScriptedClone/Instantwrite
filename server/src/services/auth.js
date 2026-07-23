@@ -24,10 +24,13 @@ export function validateLogin({email, password}) {
 export async function createUser(username, email, password) {
     const passwordHash = await bcrypt.hash(password, saltRounds)
     
-    await db.query(`
+    const result = await db.query(`
         INSERT INTO users(name, email, password_hash)
-        VALUES($1, $2, $3)`,[username, email, passwordHash]
+        VALUES($1, $2, $3)
+        RETURNING user_id`,[username, email, passwordHash]
     );
+
+    return result.rows[0].user_id;
 }
 
 export async function getUser(email) {
@@ -45,8 +48,8 @@ export async function matchPassword(user, password) {
     return await bcrypt.compare(password, user.rows[0].password_hash)
 }
 
-export async function createSession(name, req) {
-    req.session.authentication = true;
-    req.session.name = name;
+export async function createSession(user_id, req) {
+    req.session.auth = true;
+    req.session.user_id = user_id;
     req.session.cookie.maxAge = sessionExpire;
 }

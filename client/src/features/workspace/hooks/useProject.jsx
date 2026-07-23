@@ -61,7 +61,7 @@ export default function useProject(projectId) {
 
 
     return {
-        state:{ tree, nodeMapRef, loading },
+        state:{ tree, nodeMapRef, loading, error },
         actions: { 
             updateNodeContent, 
             addDocument, 
@@ -70,7 +70,6 @@ export default function useProject(projectId) {
             deleteFile,
             moveFile, 
             restoreTree
-        },
-        error
+        }
     }
 }

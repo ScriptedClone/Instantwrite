@@ -9,7 +9,7 @@ import FileTreePanel from "../filetree/FileTreePanel.jsx"
 
 export default function Workspace() {
     const { state: projectState, actions: projectActions } = useProject('dev1');
-    const { loading, nodeMapRef } = projectState;
+    const { nodeMapRef, loading, error } = projectState;
     const { updateNodeContent } = projectActions;
 
     const { state: docState, actions: docActions } = useDocument(null);
@@ -52,7 +52,7 @@ export default function Workspace() {
      * 
      */
     useEffect(() => {
-        if(loading) return;
+        if(loading || error) return;
 
         const prevDocId = localStorage.getItem("prevDocId");
         if(prevDocId) setDoc(prevDocId, nodeMapRef);
@@ -100,7 +100,7 @@ export default function Workspace() {
 
     return (
         <>
-            {!loading &&
+            {(!loading && !error) &&
                 <div className="panelHolder">
                     <ProjectContext.Provider value={{ projectState, projectActions }}>
                         <FileTreePanel handleSelectedDoc={handleSelectedDoc}

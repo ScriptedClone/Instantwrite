@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from 'express';
+import { sessionValidation } from "./src/middleware/sessionValidation.js";
 import { sessionMiddleware } from "./src/config/session.js";
 import { getProject, putProject } from "./src/services/tree.js";
 import { createSession, createUser, getUser, matchPassword, validateLogin } from "./src/services/auth.js";
@@ -19,8 +20,8 @@ app.post('/api/v1/users', async (req, res) => {
     const {email, username, password} = req.body
 
     try {
-        await createUser(username, email, password);
-        await createSession(username, req);
+        const user_id = await createUser(username, email, password);
+        await createSession(user_id, req);
         res.status(201).json({message: 'signup success'});
     } catch (error) {;
         console.error(error)
@@ -43,7 +44,7 @@ app.post('/api/v1/sessions', async (req, res) => {
     } 
 
     if(await matchPassword(user, password)) {
-        await createSession(user.rows[0].name, req);
+        await createSession(user.rows[0].user_id, req);
         res.status(200).json({message: 'login successful'})
     } else {
         res.status(401).json({message: 'password does not match'})
@@ -61,6 +62,7 @@ app.delete('/api/v1/sessions', async (req, res) => {
     })
 })
 
+app.use(sessionValidation)
 app.get('/api/v1/project/:id', async (req, res) => {
     const { id } = req.params
     const { tree, nodeMap } = await getProject(id);
