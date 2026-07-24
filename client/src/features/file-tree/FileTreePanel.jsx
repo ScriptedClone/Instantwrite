@@ -1,8 +1,8 @@
 import { useState, useRef, useContext } from "react";
 import { DragDropProvider } from "@dnd-kit/react";
 import { TreeActionsContext } from "./context/TreeActionsContext.js";
-import { ProjectContext } from "../workspace/context/ProjectContext.js";
-import { putProject } from '../workspace/services/projectAPI.js';
+import { ProjectContext } from "../work-space/context/ProjectContext.js";
+import { putProject } from '../work-space/services/projectAPI.js';
 import { isSortable } from "@dnd-kit/react/sortable";
 import FileTree from "./FileTree.jsx";
 import FileTreeHeader from "./FileTreeHeader.jsx";

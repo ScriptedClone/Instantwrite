@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { ProjectContext } from "../workspace/context/ProjectContext.js"
+import { ProjectContext } from "../work-space/context/ProjectContext.js"
 import renameIcon from "./assets/renameIcon.png"
 import deleteIcon from "./assets/deleteIcon.png"
 import Folder from "./Folder.jsx"

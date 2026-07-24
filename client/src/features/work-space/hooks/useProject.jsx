@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getProject } from "../services/projectAPI";
-import { addDocumentNode, addFolderNode, moveNode, renameNode, deleteNode } from "../../filetree/fileTree";
+import { addDocumentNode, addFolderNode, moveNode, renameNode, deleteNode } from "../../file-tree/fileTree";
 
 export default function useProject(projectId) {
     /**  Store tree from database and react on structural changes. */

@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext, useRef} from "react";
 import { ProjectContext } from "./context/ProjectContext.js";
-import { storeLastActiveDoc } from "./workspace.js";
+import { storeLastActiveDoc } from "./workSpace.js";
 import useProject from "./hooks/useProject.jsx";
 import useDocument from "./hooks/useDocument.jsx"
 import AssistantPanel from "../assistant/AssistantPanel.jsx"
 import EditorPanel from "../editor/EditorPanel.jsx"
-import FileTreePanel from "../filetree/FileTreePanel.jsx"
+import FileTreePanel from "../file-tree/FileTreePanel.jsx"
 
 export default function Workspace() {
     const { state: projectState, actions: projectActions } = useProject('dev1');

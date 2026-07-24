@@ -3,7 +3,6 @@ DROP TABLE IF EXISTS trees;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS sessions;
 DROP TYPE IF EXISTS node_type;
-DROP TYPE IF EXISTS node_type;
 CREATE TYPE node_type AS ENUM ('text', 'folder');
 
 CREATE TABLE sessions (

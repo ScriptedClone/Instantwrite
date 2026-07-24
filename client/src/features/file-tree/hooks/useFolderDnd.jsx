@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { ProjectContext } from "../../workspace/context/ProjectContext.js"
+import { ProjectContext } from "../../work-space/context/ProjectContext.js"
 import { isNodeDescendant } from "../fileTree.js"
 import { useSortable } from "@dnd-kit/react/sortable";
 import { useDroppable } from "@dnd-kit/react";
