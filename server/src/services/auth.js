@@ -20,17 +20,36 @@ export function validateLogin({email, password}) {
     return loginValidator.validate({email, password});
 }
 
-
 export async function createUser(username, email, password) {
     const passwordHash = await bcrypt.hash(password, saltRounds)
-    
-    const result = await db.query(`
-        INSERT INTO users(name, email, password_hash)
-        VALUES($1, $2, $3)
-        RETURNING user_id`,[username, email, passwordHash]
-    );
+    const client = await db.connect();
+    let userId;
 
-    return result.rows[0].user_id;
+    try {
+        await client.query('BEGIN');
+        const res = await client.query(`
+            INSERT INTO users(name, email, password_hash)
+            VALUES($1, $2, $3)
+            RETURNING user_id`,
+            [username, email, passwordHash]
+        )
+
+        userId = res.rows[0].user_id;
+        await client.query(`
+            INSERT INTO trees(user_id, name)
+            values($1, $2)
+            RETURNING tree_id`,
+            [userId, 'untitled']
+        )
+        await client.query('COMMIT');
+
+        return userId;
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
 }
 
 export async function getUser(email) {
