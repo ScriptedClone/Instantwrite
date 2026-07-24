@@ -3,7 +3,6 @@ import EditorPage from "./pages/EditorPage.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
-import './App.css'
 
 export default function App() {
     return (

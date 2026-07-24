@@ -9,13 +9,21 @@ body {
     grid-template-rows: 4% 96%;
 }
 
-.panelHolder {
-    display: grid;
-    grid-template-columns: 0.5fr 2fr 0.75fr;
+#header * {
+    margin: 0;
 }
 
 #header {
     background-color: hsl(0, 1%, 40%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.panelHolder {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 0.75fr;
 }
 
 .fileTreePanel {
