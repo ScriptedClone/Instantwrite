@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from 'express';
 import { sessionValidation } from "./src/middleware/sessionValidation.js";
 import { sessionMiddleware } from "./src/config/session.js";
-import { getProject, putProject } from "./src/services/tree.js";
+import { getProject, getProjects, putProject } from "./src/services/tree.js";
 import { createSession, createUser, getUser, matchPassword, validateLogin } from "./src/services/auth.js";
 import { generateLLMChat, generateChatsSummary, generateRewrite} from './src/services/groq.js';
 
@@ -63,6 +63,12 @@ app.delete('/api/v1/sessions', async (req, res) => {
 })
 
 app.use(sessionValidation)
+app.get('/api/v1/project', async (req, res) => {
+    const projects = await getProjects(req.session.user_id)
+
+    res.status(200).json(projects)
+})
+
 app.get('/api/v1/project/:id', async (req, res) => {
     const { id } = req.params
     const { tree, nodeMap } = await getProject(id);

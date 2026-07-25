@@ -58,8 +58,6 @@ export default function useProject(projectId) {
         setTree(previousTree);
     }
 
-
-
     return {
         state:{ tree, nodeMapRef, loading, error },
         actions: { 

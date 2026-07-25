@@ -1,4 +1,4 @@
-import { convertRowsToFileTree } from '../helpers/treeHelpers.js'
+import { convertProjectsRows, convertRowsToFileTree, getFolderRoot } from '../helpers/treeHelpers.js'
 import { db } from '../config/database.js'
 
 export async function getProject(id) {
@@ -10,14 +10,25 @@ export async function getProject(id) {
     return convertRowsToFileTree(project.rows);
 }
 
+export async function getProjects(userId){
+    const projects = await db.query(`
+        SELECT * FROM trees
+        WHERE user_id = $1`,
+        [userId]
+    )
+
+    return convertProjectsRows(projects.rows)
+}
+
 export async function putProject(treeId, tree, nodeMap) {
     const client = await db.connect();
+    const rootId = getFolderRoot(nodeMap);
 
     try {
         await client.query('BEGIN');
         await client.query(`DELETE FROM nodes WHERE tree_id = $1`, [treeId]);
         await client.query(`INSERT INTO nodes (node_id, parent_id, tree_id, index, type, name, content)
-                            VALUES(0, null, $1, null, 'folder', 'root', null)`, [treeId]);
+                            VALUES($1, null, $2, null, 'folder', 'root', null)`, [rootId, treeId]);
          
         for(const [parentId, childrenId] of Object.entries(tree)) {
             for(const [index, childId] of childrenId.entries()){

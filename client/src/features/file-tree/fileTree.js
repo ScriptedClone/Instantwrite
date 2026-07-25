@@ -224,9 +224,19 @@ function moveNode(initialIndex, initialGroup, index, group, id, tree) {
     }
 }
 
+function getFolderRoot(nodeMap) {
+    const nodes = Object.values(nodeMap);
+    
+    for(let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        if(node.name === 'root') return node.id;
+    }
+}
+
 export { moveNode,
          renameNode,
          deleteNode, 
          addDocumentNode, 
          addFolderNode, 
-         isNodeDescendant}
+         isNodeDescendant,
+         getFolderRoot}

@@ -19,6 +19,7 @@ export default function LandingPage() {
                 <Link to="/signup">to signup</Link><br/>
                 <Link to="/login">to login</Link><br/>
                 <Link to="/editor">to editor</Link><br/>
+                <Link to="/home">to home</Link><br/>
                 <button onClick={handleLogout}>Logout</button>
             </div>
         </>

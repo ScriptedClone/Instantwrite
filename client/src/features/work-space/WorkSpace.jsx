@@ -7,8 +7,8 @@ import AssistantPanel from "../assistant/AssistantPanel.jsx"
 import EditorPanel from "../editor/EditorPanel.jsx"
 import FileTreePanel from "../file-tree/FileTreePanel.jsx"
 
-export default function Workspace() {
-    const { state: projectState, actions: projectActions } = useProject('dev1');
+export default function Workspace({projectId}) {
+    const { state: projectState, actions: projectActions } = useProject(projectId);
     const { nodeMapRef, loading, error } = projectState;
     const { updateNodeContent } = projectActions;
 
@@ -102,7 +102,7 @@ export default function Workspace() {
         <>
             {(!loading && !error) &&
                 <div className="panelHolder">
-                    <ProjectContext.Provider value={{ projectState, projectActions }}>
+                    <ProjectContext.Provider value={{ projectState, projectActions, projectId }}>
                         <FileTreePanel handleSelectedDoc={handleSelectedDoc}
                                        handleDocumentRename={handleDocumentRename}/>
                     </ProjectContext.Provider>

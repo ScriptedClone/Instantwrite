@@ -3,6 +3,7 @@ import EditorPage from "./pages/EditorPage.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import HomePage from "./pages/HomePage.jsx";
 
 export default function App() {
     return (
@@ -11,7 +12,8 @@ export default function App() {
                 <Route path="/" element={<LandingPage />}/>
                 <Route path="/signup" element={<SignupPage />}/>
                 <Route path="/login" element={<LoginPage />}/>
-                <Route path="/editor" element={<EditorPage />}/>
+                <Route path="/editor/:projectId" element={<EditorPage />}/>
+                <Route path="/home" element={<HomePage />}/>
             </Routes>
         </>
     )

@@ -4,14 +4,13 @@ import { TreeActionsContext } from "./context/TreeActionsContext.js";
 import { ProjectContext } from "../work-space/context/ProjectContext.js";
 import { putProject } from '../work-space/services/projectAPI.js';
 import { isSortable } from "@dnd-kit/react/sortable";
+import { getFolderRoot } from "./fileTree.js";
 import FileTree from "./FileTree.jsx";
 import FileTreeHeader from "./FileTreeHeader.jsx";
 import './FileTreePanel.css'
 
-const ROOT_FOLDER_ID = 0;
-
 export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename }) {
-    const { projectState, projectActions } = useContext(ProjectContext);
+    const { projectState, projectActions, projectId } = useContext(ProjectContext);
     const { tree, nodeMapRef } = projectState;
     const { addDocument, addFolder, renameFile, deleteFile, moveFile, restoreTree} = projectActions
 
@@ -19,7 +18,7 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
     const previousTree = useRef(null);
 
     /** Stores user selected folder node id. */
-    const [currentFolder, setCurrentFolder] = useState(ROOT_FOLDER_ID);
+    const [currentFolder, setCurrentFolder] = useState(getFolderRoot(nodeMapRef.current));
 
     /**
      * handles header button clicks which adds a folder or document or save the 
@@ -31,7 +30,7 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
     async function handleHeaderBtn(button) {
         if(button === "document") addDocument(currentFolder);
         if(button === "folder")  addFolder(currentFolder)
-        if(button === "save") await putProject('dev1', tree, nodeMapRef.current)
+        if(button === "save") await putProject(projectId, tree, nodeMapRef.current)
     }
 
     /**
