@@ -1,7 +1,10 @@
-import ProjectList from "../features/projects-list/ProjectsList"
+import Home from "../features/home/Home"
+import "./css/home.css"
 
 export default function HomePage() {
     return (
-        <ProjectList />
+        <div className="homePage">
+            <Home />
+        </div>
     )
 }

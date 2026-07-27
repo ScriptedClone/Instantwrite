@@ -1,0 +1,15 @@
+body {
+    height: 100vh;
+    margin: 0;
+}
+
+.homePage{
+    display: grid;
+    height: 100vh;
+    grid-template-rows: 5% 95%;
+}
+.editorPage{
+    display: grid;
+    height: 100vh;
+    grid-template-rows: 5% 95%;
+}

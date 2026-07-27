@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from 'express';
 import { sessionValidation } from "./src/middleware/sessionValidation.js";
 import { sessionMiddleware } from "./src/config/session.js";
-import { getProject, getProjects, putProject } from "./src/services/tree.js";
+import { createProject, getProject, getProjects, putProject, deleteProject } from "./src/services/tree.js";
 import { createSession, createUser, getUser, matchPassword, validateLogin } from "./src/services/auth.js";
 import { generateLLMChat, generateChatsSummary, generateRewrite} from './src/services/groq.js';
 
@@ -74,6 +74,28 @@ app.get('/api/v1/project/:id', async (req, res) => {
     const { tree, nodeMap } = await getProject(id);
 
     res.json({ tree, nodeMap })
+})
+
+app.post('/api/v1/project', async (req, res) => {
+    const { projectName } = req.body
+
+    try {
+        const { id, name } = await createProject(projectName, req.session.user_id);
+        res.status(201).json({message: "project created succesfully", project: { id, name }})
+    } catch (error) {
+        res.status(500).json({message: error})
+    }
+})
+
+app.delete('/api/v1/project/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await deleteProject(id, req.session.user_id);
+        res.status(200).json({ message: "project deleted successfully"});
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 })
 
 app.put('/api/v1/project/:id', async (req, res) => {

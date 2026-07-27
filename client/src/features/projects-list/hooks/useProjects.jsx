@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
-import { getProjects } from "../services/projectAPI";
+import { createProject, deleteProject, getProjects } from "../services/projectAPI";
+import { PROJECT_CREATED, PROJECT_DELETED } from "../../../const/events";
 
 export default function useProjects(){
     const [projects, setProjects] = useState(null);
@@ -12,7 +13,6 @@ export default function useProjects(){
 
             try {
                 const projects = await getProjects()
-                console.log(projects)
                 setProjects(projects);
             } catch (error) {
                 setError(error);
@@ -24,8 +24,28 @@ export default function useProjects(){
         loadProjects()
     },[])
 
+
+    async function handleCreateProject(projectName) {
+        try {
+            const result = await createProject(projectName);
+            setProjects((p) => [...p, result.project]);
+        } catch (error) {
+            setError(error);
+        }
+    }
+
+    async function handleDeleteProject(deletedId) {
+        console.log("delete")
+        try {
+            await deleteProject(deletedId);
+            setProjects((p) => p.filter((project) => project.id !== deletedId));
+        } catch (error) {
+            setError(error);
+        }
+    }
+    
     return({
         projectsState: { projects, loading, error },
-        actions: {}
+        projectActions: { handleCreateProject, handleDeleteProject}
     })
 }

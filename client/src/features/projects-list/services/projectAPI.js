@@ -5,3 +5,19 @@ export async function getProjects() {
 
     return result
 }
+
+export async function createProject(projectName) {
+    const projectId = await request('/api/v1/project', {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({projectName}),
+    })
+
+    return projectId;
+}
+
+export async function deleteProject(projectId) {
+    await request(`/api/v1/project/${projectId}`, {
+        method: "DELETE",
+    });
+}
