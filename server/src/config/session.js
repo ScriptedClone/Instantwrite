@@ -10,7 +10,7 @@ const pgStore = new pgSession({
     tableName: 'sessions',
 })
 
-export const sessionMiddleware = session({
+export const sessionConfig = session({
     secret: node_session_secret,
     store: pgStore,
     resave: false,
