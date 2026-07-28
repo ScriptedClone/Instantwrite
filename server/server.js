@@ -3,7 +3,7 @@ import express from 'express';
 import { sessionValidation } from "./src/middleware/sessionValidation.js";
 import { sessionMiddleware } from "./src/config/session.js";
 import { createProject, getProject, getProjects, putProject, deleteProject } from "./src/services/tree.js";
-import { createSession, createUser, getUser, matchPassword, validateLogin } from "./src/services/auth.js";
+import { createSession, createUser, validateLogin, validateSignup, authUser } from "./src/services/auth.js";
 import { generateLLMChat, generateChatsSummary, generateRewrite} from './src/services/groq.js';
 
 const app = express();
@@ -20,36 +20,28 @@ app.post('/api/v1/users', async (req, res) => {
     const {email, username, password} = req.body
 
     try {
+        validateSignup({username, email, password});
         const user_id = await createUser(username, email, password);
         await createSession(user_id, req);
+
         res.status(201).json({message: 'signup success'});
-    } catch (error) {;
-        console.error(error)
-        res.status(500).json({message: 'server error, status: 500'});
+    } catch (error) {
+        res.status(error.status || 500).json({message: error.message || "server error"});
     }
 })
 
 app.post('/api/v1/sessions', async (req, res) => {
     const { email, password } = req.body;
-    const result = validateLogin({email, password})
-    if(result.error) {
-        res.status(400).json(result.error.details[0]);
-        return;
-    }
-    
-    const user = await getUser(email, password);
-    if(user.rows.length !== 1) {
-        res.status(404).json({message: 'user does not exist'});
-        return;
-    } 
 
-    if(await matchPassword(user, password)) {
+    try {
+        validateLogin({email, password})
+        const user = await authUser(email, password);
         await createSession(user.rows[0].user_id, req);
-        res.status(200).json({message: 'login successful'})
-    } else {
-        res.status(401).json({message: 'password does not match'})
-    }
 
+        res.status(200).json({message: 'login successful'})
+    } catch (error) {
+        res.status(error.status || 500).json({message: error.message})
+    }
 })
 
 app.delete('/api/v1/sessions', async (req, res) => {

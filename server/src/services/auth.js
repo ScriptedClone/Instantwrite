@@ -8,16 +8,44 @@ const loginValidator = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required()
 })
+const signupValidator = Joi.object({
+    username: Joi.string().min(3).max(20).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().required()
+})
 
 /**
- * Check if user and password is valid. Returns false if validations
- * fails, true if it passes.
+ * Check if user and password is valid. Throws if email or password
+ * is invalid.
  * 
  * @param {*} param0 the user's email and password
- * @returns bool
  */
 export function validateLogin({email, password}) {
-    return loginValidator.validate({email, password});
+    const result  = loginValidator.validate({email, password});
+
+    if(result.error) {
+        const error = new Error(result.error.details[0].message)
+        error.status = 400
+
+        throw error;
+    }
+}
+
+/**
+ * Validates username, email, and password againt Joi schema. Throws
+ * if invalid. 
+ * 
+ * @param {*} param0 the account's username, email, password
+ */
+export function validateSignup({username, email, password}) {
+    const result = signupValidator.validate({username, email, password})
+
+    if(result.error) {
+        const error = new Error(result.error.details[0].message)
+        error.status = 400
+
+        throw error;
+    }
 }
 
 export async function createUser(username, email, password) {
@@ -55,13 +83,21 @@ export async function createUser(username, email, password) {
         return userId;
     } catch (error) {
         await client.query('ROLLBACK');
+
+        if(error.code === '23505') {
+            const dbError = new Error('email already in use');
+            dbError.status = 409;
+            
+            throw dbError
+        }
+
         throw error;
     } finally {
         client.release();
     }
 }
 
-export async function getUser(email) {
+export async function authUser(email, password) {
     const user = await db.query(`
         SELECT *
         FROM users
@@ -69,11 +105,22 @@ export async function getUser(email) {
         [email]
     )
 
-    return user;
-}
+    if(user.rows.length !== 1) {
+        const error = new Error('user does not exist');
+        error.status = 404;
 
-export async function matchPassword(user, password) {
-    return await bcrypt.compare(password, user.rows[0].password_hash)
+        throw error;
+    }
+
+    if(await bcrypt.compare(password, user.rows[0].password_hash)) {
+        return user;
+    } 
+    else {
+        const error = new Error('password does not match')
+        error.status = 401;
+        
+        throw error;
+    }
 }
 
 export async function createSession(user_id, req) {
