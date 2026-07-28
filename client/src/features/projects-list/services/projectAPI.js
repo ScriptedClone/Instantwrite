@@ -21,3 +21,11 @@ export async function deleteProject(projectId) {
         method: "DELETE",
     });
 }
+
+export async function renameProject(projectName, projectId) {
+    await request(`/api/v1/project/${projectId}`, {
+        method: "PATCH",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({projectName})
+    })
+}

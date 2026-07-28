@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from 'express';
 import { sessionValidation } from "./src/middleware/sessionValidation.js";
 import { sessionMiddleware } from "./src/config/session.js";
-import { createProject, getProject, getProjects, putProject, deleteProject } from "./src/services/tree.js";
+import { createProject, getProject, getProjects, putProject, deleteProject, renameProject } from "./src/services/tree.js";
 import { createSession, createUser, validateLogin, validateSignup, authUser } from "./src/services/auth.js";
 import { generateLLMChat, generateChatsSummary, generateRewrite} from './src/services/groq.js';
 
@@ -101,6 +101,19 @@ app.put('/api/v1/project/:id', async (req, res) => {
         console.error(error)
         res.sendStatus(500);
     } 
+})
+
+app.patch('/api/v1/project/:id', async (req, res) => {
+    const { id }  = req.params;
+    const { projectName } = req.body;
+    
+    try {
+        await renameProject(projectName, id, req.session.user_id);
+        res.status(200).json({message: "project renamed succesfully"})
+    } catch (error) {
+        console.log(error)
+        res.status(error.status || 500).json({message: error.message || 'server error'})
+    }
 })
 
 app.post('/api/v1/llm/chat', async (req, res) => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { createProject, deleteProject, getProjects } from "../services/projectAPI";
+import { createProject, deleteProject, getProjects, renameProject } from "../services/projectAPI";
 import { PROJECT_CREATED, PROJECT_DELETED } from "../../../const/events";
 
 export default function useProjects(){
@@ -43,9 +43,24 @@ export default function useProjects(){
             setError(error);
         }
     }
+
+    async function handleRenameProject(projectName, projectId) {
+            try {
+                await renameProject(projectName, projectId)
+                setProjects((p) => p.map((project) => 
+                    project.id === projectId ? { ...project, name: projectName } : project
+                ));
+            } catch (error) {
+                setError(error);
+            }
+    }
     
     return({
         projectsState: { projects, loading, error },
-        projectActions: { handleCreateProject, handleDeleteProject}
+        projectActions: { 
+            handleCreateProject, 
+            handleDeleteProject,
+            handleRenameProject
+        }
     })
 }

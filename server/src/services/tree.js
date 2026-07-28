@@ -84,7 +84,7 @@ export async function createProject(name, userId){
 
 export async function deleteProject(id, userId) {
     const client = await db.connect();
-    console.log(userId)
+
     try {
         await client.query('BEGIN');
 
@@ -106,5 +106,22 @@ export async function deleteProject(id, userId) {
         throw error;
     } finally {
         client.release();
+    }
+}
+
+export async function renameProject(newName, treeId, userId) {
+    const result = await db.query(`
+        UPDATE trees
+        SET name = $1
+        WHERE tree_id = $2 
+        AND user_id = $3`,
+        [newName, treeId, userId]
+    )
+
+    if (result.rowCount !== 1) {
+        const error = new Error('Tree not found');
+        error.status = 404;
+        
+        throw error;
     }
 }
