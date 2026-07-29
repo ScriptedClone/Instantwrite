@@ -43,7 +43,7 @@ export default function ContextBox({selection, handleStyle, handleTone, handleGe
                      onClick={ (e) => {
                         e.stopPropagation(e) // stop firing handlestyle.
                         handleTone(e)
-                }}>
+                    }}>
                     <button onClick={(e) => {
                         e.stopPropagation();
                         handleDropDownToggle(e)
