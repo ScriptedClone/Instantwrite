@@ -6,6 +6,7 @@ import useDocument from "./hooks/useDocument.jsx"
 import AssistantPanel from "../assistant/AssistantPanel.jsx"
 import EditorPanel from "../editor/EditorPanel.jsx"
 import FileTreePanel from "../file-tree/FileTreePanel.jsx"
+import "./workSpace.css"
 
 export default function Workspace({projectId}) {
     const { state: projectState, actions: projectActions } = useProject(projectId);

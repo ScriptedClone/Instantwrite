@@ -1,0 +1,19 @@
+.panelHolder {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 0.75fr;
+}
+
+.fileTreePanel {
+    background-color: hsl(0, 1%, 30%);
+}
+
+.editorPanel {
+    background-color: hsl(0, 1%, 35%);
+}
+
+.assistantPanel {
+    background-color: hsl(0, 1%, 30%);
+    min-width: 0;
+    min-height: 0;
+}
+
