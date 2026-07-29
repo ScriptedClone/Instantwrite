@@ -10,7 +10,7 @@ export default function LoginForm() {
             const data = Object.fromEntries(new FormData(e.target));
             const res = await postSession(data)
             
-            nav('/')
+            nav('/home')
         } catch (error){
             alert(error.message)
         }

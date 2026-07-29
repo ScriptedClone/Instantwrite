@@ -14,6 +14,7 @@ export default function Header({page, handleIsCreating }) {
         try {
             const res = await deleteSession();
             alert(res.message);
+            nav("/");
         } catch ( error ) {
             alert(error.message)
         }
