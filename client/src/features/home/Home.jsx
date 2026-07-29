@@ -3,6 +3,7 @@ import ProjectNamePrompt from "../projects-list/ProjectNamePrompt";
 import ProjectsList from "../projects-list/ProjectsList"
 import useProjects from "../projects-list/hooks/useProjects";
 import Header from "../../components/Header"
+import "./home.css"
 
 export default function Home(){
     const [isCreating, setIsCreating] = useState(false);

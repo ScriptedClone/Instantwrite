@@ -1,12 +1,12 @@
+:root{
+    --primary-dark: #1E1E1E;
+    --accent-dark: hsl(0, 0%, 8%);
+    --text-dark: #F2EFEA;
+}
+
 body {
     height: 100vh;
     margin: 0;
-}
-
-.homePage{
-    display: grid;
-    height: 100vh;
-    grid-template-rows: 5% 95%;
 }
 .editorPage{
     display: grid;

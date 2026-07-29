@@ -1,0 +1,6 @@
+.homePage {
+    background-image: url('./assets/unsplash-bg2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}

@@ -24,11 +24,15 @@ export default function Header({page, handleIsCreating }) {
             {(page === "editor") && 
                 <div id="header">
                     <div className="column1">
-                        <button onClick={() => nav('/home')}>{"<"}</button>
+                        <button className="headerBtn"
+                                onClick={() => nav('/home')}
+                        >
+                            {"<"}
+                        </button>
                     </div>
 
                     <div className="column2">
-                        <h2>Welcome to Instantwrite</h2>
+                        <h2>Instantwrite</h2>
                     </div>
 
 
@@ -41,15 +45,23 @@ export default function Header({page, handleIsCreating }) {
             {(page === "home") &&
                 <div id="header">
                     <div className="column1">
-                        <button onClick={() => handleIsCreating(true)}>+ new</button>
+                        <button className="headerBtn"
+                                onClick={() => handleIsCreating(true)}
+                        >
+                            + project
+                        </button>
                     </div>
 
                     <div className="column2">
-                        <h2>Welcome to Instantwrite</h2>
+                        <h2>Instantwrite</h2>
                     </div>
 
                     <div className="column3">
-                        <button onClick={handleLogout}>Logout</button>
+                        <button className="headerBtn" 
+                                onClick={handleLogout}
+                        >
+                            Logout
+                        </button>
                     </div>
                 </div>
             }
