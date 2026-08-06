@@ -1,11 +1,10 @@
 import { useNavigate } from 'react-router'
 import { useEffect } from 'react';
-import { PROJECT_CREATED } from '../const/events';
-import './header.css'
 import { createProject } from '../features/projects-list/services/projectAPI';
 import { deleteSession } from '../features/auth/services/authAPI';
+import './header.css'
 
-export default function Header({page, handleIsCreating }) {
+export default function Header({page, projectName, handleIsCreating }) {
     const nav = useNavigate();
 
     async function handleLogout(e) {
@@ -33,7 +32,7 @@ export default function Header({page, handleIsCreating }) {
                     </div>
 
                     <div className="column2">
-                        <h2>Instantwrite</h2>
+                        <h2>{projectName}</h2>
                     </div>
 
 
