@@ -5,7 +5,7 @@ import "./css/editor.css"
 
 export default function EditorPage() {
     const { projectId } = useParams();
-const { projectName } = useLocation().state
+    const { projectName } = useLocation().state
    
     return (
         <div className="editorPage">

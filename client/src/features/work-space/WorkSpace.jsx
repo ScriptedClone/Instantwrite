@@ -103,7 +103,7 @@ export default function Workspace({projectId}) {
         <>
             {(!loading && !error) &&
                 <div className="panelHolder">
-                    <ProjectContext.Provider value={{ projectState, projectActions, projectId }}>
+                    <ProjectContext.Provider value={{ projectState, projectActions, projectId, docState }}>
                         <FileTreePanel handleSelectedDoc={handleSelectedDoc}
                                        handleDocumentRename={handleDocumentRename}/>
                     </ProjectContext.Provider>

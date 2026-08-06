@@ -1,10 +1,40 @@
-:root{
-    --primary-dark: #1E1E1E;
-    --accent-dark: hsl(0, 0%, 8%);
-    --text-dark: #F2EFEA;
+:root {
+  --primary-dark: #191919;
+  --secondary-dark: #1E1E1E;
+  --tertiary-dark: #252220;
+  --accent-dark: #B68E4B;
+  --text-dark: #F2EFEA;
+  --border-dark: #463D36;
+
+  --text-dark-faded:color-mix( in srgb, var(--text-dark) 50%, transparent);
+  --accent-dark-faded:color-mix( in srgb, var(--accent-dark) 10%, transparent);
+
+
+  --panelHeader-btn-max-width: 85px;
+  --panelHeader-btn-min-width: 80px;
+  --panelHeader-btn-height: 35px;
+
+  --panelHeader-btn-icon-width: 24px;
+  --panelHeader-btn-icon-height: 24px;
+
+  --editor-panel-padding: 10px;
+  --editor-header-margin: 0px 5px 16px;
+  --editor-paragraph-font-size: 1.5rem;
+  --editor-paragraph-margin: 0px 5px 16px;
+
+
+  --fileTree-icon-width: 16px;
+  --fileTree-icon-height: 16px;
+
+  --assistant-dropdown-width: 122px;
+  --assistant-dropdown-height: 25px;
 }
 
 body {
     height: 100vh;
     margin: 0;
+
+    font-family: 'Inter', sans-serif;
+    background-color: var(--primary-dark);
+    color: var(--text-dark);
 }

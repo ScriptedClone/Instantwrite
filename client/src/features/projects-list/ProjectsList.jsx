@@ -28,7 +28,9 @@ export default function ProjectsList({projectsState, projectActions, handleIsNam
             {!loading &&  projects.map((project) => 
                 <div key={project.id} 
                      className="projectCard"
-                     onClick={() => nav(`/editor/${project.id}`)}
+                     onClick={() => nav(`/editor/${project.id}`, {
+                        state: {projectName: project.name}
+                     })}
                 >
                     
                     <div className="projectDropDownContainer">
