@@ -17,7 +17,7 @@ export default function AssistantPanel({selection}) {
     const [chats, setChats] = useState([]);
 
     const [rewrites, setRewrites] = useState([]);
-    const [mode, setMode] = useState("CHAT");
+    const [mode, setMode] = useState("Chat");
     const [style, setStyle] = useState("Default");
     const [tone, setTone,] = useState("Default");
     
@@ -64,8 +64,8 @@ export default function AssistantPanel({selection}) {
     function handleDeleteRewrite(index) {
         setRewrites(r => r.filter((_, i) => index !== i));
     }
-    function handleSetMode(e) {
-        setMode(e.target.textContent);
+    function handleSetMode(mode) {
+        setMode(mode);
     }
     function handleStyle(e) {
         setStyle(e.target.textContent);
@@ -76,14 +76,16 @@ export default function AssistantPanel({selection}) {
 
     return (
         <div className="assistantPanel">
-            <AssistantHeader handleSetMode={handleSetMode}/>
-            {(mode === "CHAT") 
+            <AssistantHeader handleSetMode={handleSetMode} mode={mode}/>
+            {(mode === "Chat") 
             ? <>
                 <ChatBox chats={chats}/>
                 <TextBox addUserChat={addUserChat}/>
               </> 
             : <>
-                <ContextBox selection={selection} 
+                <ContextBox selection={selection}
+                            style={style}
+                            tone={tone} 
                             handleStyle={handleStyle}
                             handleTone={handleTone}
                             handleGenerateRewrite={handleGenerateRewrite}/>
