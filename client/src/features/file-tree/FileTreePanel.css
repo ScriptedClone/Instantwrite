@@ -5,6 +5,38 @@ ul {
 }
 
 li {
+.fileTreeHeader {
+    display: flex;
+    justify-content: start;
+    align-self: center;
+
+    gap: 8px;
+    margin-left: 5px;
+}
+
+.fileTreeHeaderBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    max-width: var(--panelHeader-btn-max-width);
+    min-width: var(--panelHeader-btn-min-width);
+    height: var(--panelHeader-btn-height);
+
+    border-radius: 4px;
+
+    background-color: var(--accent-dark);
+    color: var(--text-dark);
+}
+.fileTreeHeaderBtn:hover {
+    filter: brightness(1.2);
+}
+
+.fileTreeHeaderIcon {
+    width: var(--panelHeader-btn-icon-width);
+    height: var(--panelHeader-btn-icon-height);
+}
     position: relative;
     margin-left: 10px;
     border: 1px solid black;
