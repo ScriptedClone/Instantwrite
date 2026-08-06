@@ -5,6 +5,16 @@ ul {
 }
 
 li {
+    margin-left: 10px;
+}
+
+.fileTreePanel {
+    display: grid;
+    grid-template-rows: 5% 95%;
+
+    background-color: var(--secondary-dark)
+}
+
 .fileTreeHeader {
     display: flex;
     justify-content: start;
@@ -37,14 +47,38 @@ li {
     width: var(--panelHeader-btn-icon-width);
     height: var(--panelHeader-btn-icon-height);
 }
-    position: relative;
-    margin-left: 10px;
-    border: 1px solid black;
-    background-color: hsl(0, 1%, 25%);
+
+
+.fileTree {
+    height: 100%;
+
+    margin-top: 10px;
+    margin-right: 7px;
 }
 
-.folder {
-    background-color: hsl(0, 1%, 35%);
+.activeFile {
+    background-color: var(--accent-dark-faded);
+}
+
+.file {
+    position: relative;
+    display: flex;
+    gap: 5px;
+
+    border: 1px solid transparent;
+    border-radius: 4px;
+
+    padding: 6px;
+
+    cursor: pointer;
+}
+
+.fileName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    cursor: pointer;
 }
 
 .fileTree input {
@@ -57,12 +91,53 @@ li button {
     border: none;
     top: 1px;
     padding: 0;
+
+    opacity: 0;
+    visibility: hidden;
 }
 
-.deleteBtn{
-    right: 23px;
+.folderToggleActive {
+    rotate: 90deg;
+}
+
+.folderToggleIcon {
+    display: inline-block;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.hoverBtn {
+    opacity: 1;
+    visibility: visible; 
+}
+
+.hoverFile {
+    border-color: var(--border-dark);
+}
+
+.renameIcon {
+    width: var(--fileTree-icon-width);
+    height: var(--fileTree-icon-height);
+
+    cursor: pointer;
+}
+
+.deleteIcon {
+    width: var(--fileTree-icon-width);
+    height: var(--fileTree-icon-height);
+
+    cursor: pointer;
 }
 
 .renameBtn {
-    right: 0;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.deleteBtn{
+    right: 33px;
+    top: 50%;
+    transform: translateY(-50%);
 }
