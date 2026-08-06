@@ -9,6 +9,7 @@
   --text-dark-faded:color-mix( in srgb, var(--text-dark) 50%, transparent);
   --accent-dark-faded:color-mix( in srgb, var(--accent-dark) 10%, transparent);
 
+  --accent-dark-bright:color-mix( in srgb, var(--accent-dark) 90%, white);
 
   --panelHeader-btn-max-width: 85px;
   --panelHeader-btn-min-width: 80px;

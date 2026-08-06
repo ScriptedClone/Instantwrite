@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router"
 import { postUser } from "./services/authAPI"
+import './auth.css'
 
 export default function SignupForm() {
     const nav = useNavigate()
@@ -18,18 +19,33 @@ export default function SignupForm() {
 
     return (
 
-        <form onSubmit={handleSubmit}>
-            <div>
-                <input type="text" name="username" placeholder="Username" autoComplete="username"/>
-            </div>
-            <div>
-                <input type="text" name="email" placeholder="Email" autoComplete="email"/>
-            </div>
-            <div>
-                <input type="password" name="password" placeholder="password" autoComplete="new-password"/>
-            </div>
-            <button>Submit</button>
-        </form>
+        <div className="authContainer">
+            
+            <form className="authForm" onSubmit={handleSubmit}>
+                <h1>Create your account</h1>
+
+                <div className="authInputContainer">
+                    <span className="authInputTitle">username</span>
+                    <input className="authInput" type="text" name="username" placeholder="enter username" autoComplete="username"/>
+                </div>
+
+                <div className="authInputContainer">
+                    <span className="authInputTitle">email</span>
+                    <input className="authInput" type="text" name="email" placeholder="enter email" autoComplete="email"/>
+                </div>
+
+                <div className="authInputContainer">
+                    <span className="authInputTitle">password</span>
+                    <input className="authInput" type="password" name="password" placeholder="enter password" autoComplete="new-password"/>
+                </div>
+                
+                <button className="authSubmit">Signup</button>
+                
+
+                <span className="authRedirectToLogin">Already have an account? <Link to="/login">login</Link></span>
+
+            </form>
+        </div>
 
     )
 }
