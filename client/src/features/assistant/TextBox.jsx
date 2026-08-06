@@ -9,9 +9,9 @@ export default function TextBox({addUserChat}) {
     }
 
     return(
-        <div className="textBox">
-            <textarea ref={textareaEl} placeholder="enter message..."/>
-            <button onClick={handleSendClick}>send</button>
+        <div className="textBoxContainer">
+            <textarea className="textBoxInput" ref={textareaEl} placeholder="enter message..."/>
+            <button className="textBoxSubmit" onClick={handleSendClick}>submit</button>
         </div>
     );
 }

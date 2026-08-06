@@ -122,26 +122,117 @@
 }
 
 .contextBox {
+    display: flex;
+    flex-direction: column;
+
     position: relative;
     grid-row: 2;
-    background-color: hsl(0, 1%, 40%);
-    padding: 10px;
+    
+    width: 93%;
+    min-height: 100px;
+    max-height: 300px;
+    padding: 20px;
+    margin: 10px auto 0;
+
+    border: 1px solid var(--border-dark);
+    border-radius: 12px;
+
+    background-color: var(--primary-dark);
+    box-sizing: border-box;
 }
 
-.contextBox > button {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
+.context {
+    flex: 1 1 auto;
+
+    width: 95%;
+    margin: 0 auto;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 6; 
+    -webkit-box-orient: vertical;
+
+    font-size: 0.90rem;
+    color: var(--text-dark-faded);
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    box-sizing: border-box;
 }
 
 .dropDownContainer {
     position: relative;
+    flex-shrink: 0;
 
     display: flex;
     gap: 5px;
 
-    margin-top: 5px;
+    margin-top: 28px;
 }
+
+.dropDownTitle {
+    position: absolute;
+    bottom: 28px;
+    padding-left: 5px;
+
+    font-size: 0.70rem;
+}
+
+.dropDownBtn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: var(--assistant-dropdown-width);
+    height: var(--assistant-dropdown-height);
+
+    padding: 5;
+
+    border: 1px solid var(--border-dark);
+    border-radius: 4px;
+
+    background-color: transparent;
+    color: var(--text-dark);
+
+    box-sizing: border-box;
+
+    cursor: pointer;
+}
+.dropDownBtn:hover {
+    background-color: var(--secondary-dark);
+}
+.activeDropDown {
+    background-color: var(--secondary-dark);
+}
+
+.dropDownIcon {
+    width: 18px;
+    height: 18px;
+}
+
+.dropDownToggle {
+    transform: rotate(90deg) scaleY(1.25);
+    font-weight: bold;
+}
+
+.dropDownSubmit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+
+
+    width: var(--assistant-dropdown-width);
+    height: var(--assistant-dropdown-height);
+
+    border-radius: 4px;
+
+    background-color: var(--accent-dark);
+    color: var(--text-dark);
+}
+.dropDownSubmit:hover {
+    filter: brightness(1.2);
+}
+
 .dropDownContent {
     position: absolute;
     top: 25px;
@@ -149,7 +240,6 @@
 
     display: flex;
     flex-direction: column;
-    gap: 5px;
 
     background-color: white;
 
@@ -171,29 +261,44 @@
     flex-direction: column;
     flex-grow: 1;
     gap: 10px;
-
+    
     margin-top: 10px;
     margin: 10px 10px 0;
 
     overflow-y: auto;
 }
 
-.exampleRewrites {
+.rewriteExamples {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 
-    padding: 10px;
+    width: 97%;
+    padding: 15px 20px 10px;
+    margin: 10px auto 0;
 
-    border-radius: 10px;
-    background-color: hsl(0, 1%, 40%);
+    border: 1px solid var(--border-dark);
+    border-radius: 12px;
+
+    background-color: var(--primary-dark);
+    box-sizing: border-box;
 }
 
-.exampleRewrites * {
-    margin-top: 5px;
+.rewriteHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 3px;
 }
 
-.exampleRewrites button {
-    position: absolute;
+.rewriteDeleteBtn {
+    background-color: transparent;
+    border: none;
+}
 
-    top: -5px;
-    right: 0;
+.rewriteDeleteBtnIcon {
+    width: 18px;
+    height: 18px;
 }

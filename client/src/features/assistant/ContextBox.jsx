@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { selectionValues } from "../editor/services/editorUtilities.js";
+import styleIcon from "./assets/googleStyleIcon.png"
+import toneIcon from "./assets/icons8ToneIcon.png"
+import generateIcon from "./assets/googleGenerateIcon.png"
 
-export default function ContextBox({selection, handleStyle, handleTone, handleGenerateRewrite}) {
+export default function ContextBox({selection, style, tone, handleStyle, handleTone, handleGenerateRewrite}) {
     const textSelected = selectionValues(selection)?.textSelected;
     const [isStyleOpen, setIsStyleOpen] = useState(false)
     const [isToneOpen, setIsToneOpen] = useState(false)
 
-    function handleDropDownToggle(e) {
-        let button = e.target.textContent;
-
+    function handleDropDownToggle(button) {
         if(button === "style") {
             setIsStyleOpen(!isStyleOpen);
             setIsToneOpen(false);
@@ -22,14 +23,21 @@ export default function ContextBox({selection, handleStyle, handleTone, handleGe
     
     return(
         <div className="contextBox">
-            <p>{(textSelected)? textSelected : "highlight a text to rewrite"}</p>
+            <p className="context">{(textSelected)? textSelected : "highlight a text to rewrite"}</p>
 
             <div className="dropDownContainer" onClick={handleStyle}>
                 <div className="dropDown">
-                    <button onClick={(e) => {
-                        e.stopPropagation();
-                        handleDropDownToggle(e)
-                    }}>style</button>
+                    <span className="dropDownTitle">style</span>
+
+                    <button className={`dropDownBtn ${(isStyleOpen) ? 'activeDropDown' : ''}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDropDownToggle("style")
+                    }}>
+                        <img className="dropDownIcon" src={styleIcon}/>
+                        <span>{style}</span>
+                        <span className="dropDownToggle">{">"}</span>
+                    </button>
 
                     {isStyleOpen && 
                     <div className="dropDownContent">
@@ -43,11 +51,18 @@ export default function ContextBox({selection, handleStyle, handleTone, handleGe
                      onClick={ (e) => {
                         e.stopPropagation(e) // stop firing handlestyle.
                         handleTone(e)
-                    }}>
-                    <button onClick={(e) => {
+                }}>
+                    <span className="dropDownTitle">tone</span>
+
+                    <button className={`dropDownBtn ${(isToneOpen) ? 'activeDropDown' : ''}`}
+                            onClick={(e) => {
                         e.stopPropagation();
-                        handleDropDownToggle(e)
-                    }}>tone</button>
+                        handleDropDownToggle("tone")
+                    }}>
+                        <img className="dropDownIcon" src={toneIcon}/>
+                        <span>{tone}</span>
+                        <span className="dropDownToggle">{">"}</span>
+                    </button>
 
                     {isToneOpen && 
                     <div className="dropDownContent">
@@ -57,10 +72,16 @@ export default function ContextBox({selection, handleStyle, handleTone, handleGe
                         <button>Eerie</button>
                         <button>Mysterious</button>
                     </div>}
-                </div>                   
+                </div>          
+
+                <button className="dropDownSubmit" onClick={(e) => {
+                    e.stopPropagation();
+                    handleGenerateRewrite();
+                }}>
+                    <img className="dropDownIcon" src={generateIcon}/>
+                    <span>Generate</span>
+                </button>         
             </div>
-            
-            <button onClick={handleGenerateRewrite}>Generate</button>
         </div>
     )
 }
