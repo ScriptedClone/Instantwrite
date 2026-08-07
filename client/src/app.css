@@ -29,6 +29,10 @@
 
   --assistant-dropdown-width: 122px;
   --assistant-dropdown-height: 25px;
+
+  --landing-hero-btn-max-width: 100px;
+
+  --landing-hero-btn-height: 35px;
 }
 
 body {

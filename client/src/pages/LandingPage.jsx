@@ -1,12 +1,13 @@
 import { Link } from "react-router"
+import Landing from "../features/landing/Landing"
+import './css/landing.css'
 
 export default function LandingPage() {
     return (
-        <>
-            <div>
-                <Link to="/signup">to signup</Link><br/>
-                <Link to="/login">to login</Link><br/>
+
+            <div className="landingPage">
+                <Landing />
             </div>
-        </>
+
     )
 }

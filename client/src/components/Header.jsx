@@ -65,6 +65,22 @@ export default function Header({page, projectName, handleIsCreating }) {
                     </div>
                 </div>
             }
+
+            {(page === "landing") &&
+                <div id="header">
+                    <div className="column1">
+
+                    </div>
+
+                    <div className="column2">
+                        <h2>Instantwrite</h2>
+                    </div>
+
+                    <div className="column3">
+    
+                    </div>
+                </div>
+            }
         </>
     )
 }
