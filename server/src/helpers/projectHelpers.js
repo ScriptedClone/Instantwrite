@@ -20,7 +20,7 @@ export function convertRowsToFileMap(rows) {
                 folderChildMap[row.parent_id][row.index] = nodeId;
             }
         }
-        if(row.type === 'text') {
+        if(row.type === 'document') {
            folderChildMap[row.parent_id][row.index] = nodeId;
            nodeMap[nodeId] = {id: nodeId, type: row.type, name: row.name, tiptapContent: row.content}
         }
@@ -30,7 +30,7 @@ export function convertRowsToFileMap(rows) {
 }
 
 /**
- * This function extrats tree_id and name from data queried
+ * This function extrats project_id and name from data queried
  * from database.
  * 
  * @param {*} rows 
@@ -40,7 +40,7 @@ export function convertProjectsRows(rows){
     const projects = []
 
     rows.forEach((row) => {
-        const id = row.tree_id;
+        const id = row.project_id;
         const name = row.name
 
         projects.push({id, name})

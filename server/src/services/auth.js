@@ -52,7 +52,7 @@ export async function createUser(username, email, password) {
     const passwordHash = await bcrypt.hash(password, saltRounds)
     const client = await db.connect();
     let userId;
-    let treeId;
+    let projectId;
     let res;
 
     try {
@@ -66,17 +66,17 @@ export async function createUser(username, email, password) {
 
         userId = res.rows[0].user_id;
         res = await client.query(`
-            INSERT INTO trees(user_id, name)
+            INSERT INTO projects(user_id, name)
             values($1, $2)
-            RETURNING tree_id`,
+            RETURNING project_id`,
             [userId, 'untitled']
         )
 
-        treeId = res.rows[0].tree_id;
+        projectId = res.rows[0].project_id;
         await client.query(`
-            INSERT INTO nodes (node_id, parent_id, tree_id, type, index, name, content)
+            INSERT INTO nodes (node_id, parent_id, project_id, type, index, name, content)
             VALUES (gen_random_uuid(), NULL, $1, 'folder', NULL, 'root', NULL)`,
-            [treeId]
+            [projectId]
         )
         await client.query('COMMIT');
 

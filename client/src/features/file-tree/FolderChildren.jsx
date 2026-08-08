@@ -27,7 +27,7 @@ export default function FolderChildren({folderId, depth}) {
                                    deleteIcon={deleteIcon}/>
                 }
 
-                if(nodeMapRef.current[childId].type === "text") {
+                if(nodeMapRef.current[childId].type === "document") {
                     return <Document key={childId} 
                                      folderId={folderId}
                                      node={nodeMapRef.current[childId]}

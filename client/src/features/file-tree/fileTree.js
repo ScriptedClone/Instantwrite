@@ -19,7 +19,7 @@ function copyfolderChildMap(folderChildMap) {
 function createDocNode(name, nodeMap) {
     const node = {
         id: crypto.randomUUID(),
-        type:"text",
+        type:"document",
         name: (name)? name : "Untitled",
         tiptapContent: {
             type: "doc",
@@ -139,7 +139,7 @@ function addFolderNode(folderId, folderChildMap, nodeMap) {
 /**
  * Deletes node using id in folderChildMap and nodemap.
  * 
- * @param {*} nodeId Node unique identifier. Can be of type folder or text.
+ * @param {*} nodeId Node unique identifier. Can be of type folder or document.
  * @param {*} folderChildMap A hashmap that uses folder id as key and an array of its children's id as value.
  * @returns a new folderChildMap object with deleted node.
  */
@@ -151,7 +151,7 @@ function deleteNode(nodeId, folderChildMap, nodeMap) {
         deleteFolder(nodeId, newfolderChildMap, nodeMap)
     }
 
-    if (node.type === "text") {
+    if (node.type === "document") {
         delete nodeMap[nodeId];
     }
 
