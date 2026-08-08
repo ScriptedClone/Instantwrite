@@ -34,7 +34,7 @@ export default function LoginForm() {
 
                 <button className="authSubmit">Login</button>
                 
-                <span className="authRedirectToLogin">Need an account? <Link to="/signup">login</Link></span>
+                <span className="authRedirectToLogin">Need an account? <Link to="/signup">signup</Link></span>
             </form>
         </div>
 
