@@ -1,12 +1,17 @@
-//folderTree
-export const treeSeed = {
+/**
+ * Example response body for GET /project/:id
+ *
+ * Shows the project data from src/models/seed.sql after the backend
+ * transforms it into the folderChildMap/nodeMap shape sent to the frontend.
+ */
+
+export const folderChildMapSeed = {
   "0": ["1", "7", "12", "13"],
   "1": ["2", "4", "5", "6"],
   "2": ["3"],
   "7": ["8", "9", "10", "11"]
 }
 
-//nodemap
 export const nodeMapSeed = {
   "0": { id: "0", type: "folder", name: "root" },
   "1": { id: "1", type: "folder", name: "Chapters" },
