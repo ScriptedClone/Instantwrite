@@ -1,6 +1,4 @@
 import { useNavigate } from 'react-router'
-import { useEffect } from 'react';
-import { createProject } from '../features/projects-list/services/projectAPI';
 import { deleteSession } from '../features/auth/services/authAPI';
 import './header.css'
 

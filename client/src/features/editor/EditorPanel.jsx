@@ -1,5 +1,3 @@
-import { extensions } from "./services/extensions.js"
-import { EditorContent, useEditor } from "@tiptap/react"
 import EditorTitle from "./EditorTitle.jsx";
 import Editor from "./Editor.jsx";
 import './EditorPanel.css'

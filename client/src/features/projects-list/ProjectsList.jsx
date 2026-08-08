@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router"
-import { deleteProject } from "./services/projectAPI";
 import dropDownIcon from "../../assets/dropDownIcon.png"
 import deleteIcon from "../../assets/deleteIcon.png"
 import renameIcon from "../../assets/renameIcon.png"

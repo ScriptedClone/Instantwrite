@@ -1,5 +1,4 @@
 import { useState, useContext } from "react";
-import { isNodeDescendant } from "./fileTree.js"
 import { ProjectContext } from "../work-space/context/ProjectContext.js";
 import { TreeActionsContext } from "./context/TreeActionsContext.js";
 import { FileHoverContext } from "./context/FileHoverContext.js";

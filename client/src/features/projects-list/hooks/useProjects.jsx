@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { createProject, deleteProject, getProjects, renameProject } from "../services/projectAPI";
-import { PROJECT_CREATED, PROJECT_DELETED } from "../../../const/events";
 
 export default function useProjects(){
     const [projects, setProjects] = useState(null);

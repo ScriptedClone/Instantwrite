@@ -1,4 +1,3 @@
-import { Link } from "react-router"
 import Landing from "../features/landing/Landing"
 import './css/landing.css'
 
