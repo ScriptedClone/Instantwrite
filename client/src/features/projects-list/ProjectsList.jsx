@@ -12,7 +12,6 @@ export default function ProjectsList({projectsState, projectActions, handleIsNam
     const nav = useNavigate();
 
     const [dropDownId, setDropDownId] = useState(null);
-
     /**
      * This is used to toggle dropdown of individual project cards. It works by setting
      * dropDownId to selected card and is set to null if selected again. 

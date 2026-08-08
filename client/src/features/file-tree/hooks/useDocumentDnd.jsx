@@ -5,14 +5,14 @@ import { useSortable } from "@dnd-kit/react/sortable";
 
 /**
  * This hook is responsible for drag and drop logic between documents 
- * in file tree.
+ * in file folderChildMap.
  * 
  * @param {*} props properties of this document.
  * @returns a callback ref to attach to document element.
  */
 export default function useDocumentDnd({node, index, folderId, depth}) {
     const { projectState } = useContext(ProjectContext);
-    const { tree, nodeMapRef } = projectState;
+    const { folderChildMap, nodeMapRef } = projectState;
 
     /** Sortable ref from DND-kit */
     const { ref } = useSortable({
@@ -24,7 +24,7 @@ export default function useDocumentDnd({node, index, folderId, depth}) {
         accept: (source) => {
             if(source.type !== "folder") return true;
 
-            return !isNodeDescendant(source.id, node.id, tree, nodeMapRef.current)
+            return !isNodeDescendant(source.id, node.id, folderChildMap, nodeMapRef.current)
         }
     })
 

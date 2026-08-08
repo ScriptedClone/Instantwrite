@@ -11,18 +11,18 @@ import './FileTreePanel.css'
 
 export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename }) {
     const { projectState, projectActions, projectId } = useContext(ProjectContext);
-    const { tree, nodeMapRef } = projectState;
-    const { addDocument, addFolder, renameFile, deleteFile, moveFile, restoreTree} = projectActions
+    const { folderChildMap, nodeMapRef } = projectState;
+    const { addDocument, addFolder, renameFile, deleteFile, moveFile, restorefolderChildMap} = projectActions;
 
-    /** Store previous tree on drag start. */
-    const previousTree = useRef(null);
+    /** Store previous folderChildMap on drag start. */
+    const previousfolderChildMap = useRef(null);
 
     /** Stores user selected folder node id. */
     const [currentFolder, setCurrentFolder] = useState(getFolderRoot(nodeMapRef.current));
 
     /**
      * handles header button clicks which adds a folder or document or save the 
-     * current file tree to local storage.
+     * current folderChildMap to local storage.
      * 
      * @param {} button "document", "folder", "save"
      * @returns 
@@ -30,11 +30,11 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
     async function handleHeaderBtn(button) {
         if(button === "document") addDocument(currentFolder);
         if(button === "folder")  addFolder(currentFolder)
-        if(button === "save") await putProject(projectId, tree, nodeMapRef.current)
+        if(button === "save") await putProject(projectId, folderChildMap, nodeMapRef.current)
     }
 
     /**
-     * Renames a node on tree and passes the id of node that was renamed
+     * Renames a node on folderChildMap and passes the id of node that was renamed
      * to handler to check if the current document on the editor is the node
      * that is renamed.
      * 
@@ -58,7 +58,7 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
     function handleFileDragEnd(event) {
         const { source, target } = event.operation;
         if(event.canceled || !target) {
-            restoreTree(previousTree.current);
+            restorefolderChildMap(previousfolderChildMap.current);
             return;
         }
         if(isSortable(target)) {
@@ -73,7 +73,7 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
         const {id: key} = target;
         const group = key.slice(0, key.indexOf("|"))
         if(source.id === group) {
-            restoreTree(previousTree.current);
+            restorefolderChildMap(previousfolderChildMap.current);
             return;
         }
 
@@ -85,7 +85,7 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
             <FileTreeHeader handleHeaderBtn={handleHeaderBtn}/>
             <DragDropProvider
                 onDragStart={() => {
-                    previousTree.current = tree;
+                    previousfolderChildMap.current = folderChildMap;
                 }}
 
                 onDragOver={(event) => {

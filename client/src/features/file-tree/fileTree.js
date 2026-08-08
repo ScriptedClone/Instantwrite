@@ -1,14 +1,14 @@
 /**
- * Copies contents of tree and returns it as a new object.
- * @param {*} tree 
+ * Copies contents of folderChildMap and returns it as a new object. 
+ * @param {*} folderChildMap 
  * @returns 
  */
-function copyTree(tree) {
-    const newTree = {};
-    for (const key of Object.keys(tree)) {
-        newTree[key] = [...tree[key]];
+function copyfolderChildMap(folderChildMap) {
+    const newfolderChildMap = {};
+    for (const key of Object.keys(folderChildMap)) {
+        newfolderChildMap[key] = [...folderChildMap[key]];
     }
-    return newTree;
+    return newfolderChildMap;
 }
 
 /**
@@ -61,25 +61,25 @@ function createFolderNode(name, nodeMap) {
  * This is a recursive function that deletes a folder node and 
  * all its descendants in nodemap.
  * 
- * The folder's id entry is also deleted on the tree.
+ * The folder's id entry is also deleted on the folderChildMap.
  * 
  * @param {*} folderId folder unique identifier.
- * @param {*} tree A hashmap that uses folder id as key and an array of its children's id as value.
+ * @param {*} folderChildMap A hashmap that uses folder id as key and an array of its children's id as value.
  */
-function deleteFolder(folderId, tree, nodeMap) {
-    const folderChildren = tree[folderId]
+function deleteFolder(folderId, folderChildMap, nodeMap) {
+    const folderChildren = folderChildMap[folderId]
 
     // delete children in nodemap
     for(let i = 0; i < folderChildren.length; i++) {
         const childId = folderChildren[i]
         
-        if(nodeMap[childId].type === "folder") deleteFolder(childId, tree, nodeMap)
+        if(nodeMap[childId].type === "folder") deleteFolder(childId, folderChildMap, nodeMap)
             
         delete nodeMap[childId];
     }
 
     delete nodeMap[folderId]; // delete the folder's id entry in node map.
-    delete tree[folderId]; // delete the folder's id entry in tree.
+    delete folderChildMap[folderId]; // delete the folder's id entry in folderChildMap.
 }
 
 /**
@@ -89,14 +89,14 @@ function deleteFolder(folderId, tree, nodeMap) {
  * @param {*} nodeId is the id of the node target destination. 
  * @returns true if nodeId is a descendant. 
  */
-function isNodeDescendant(sourceId, nodeId, tree, nodeMap) {
-    const children = tree[sourceId];
+function isNodeDescendant(sourceId, nodeId, folderChildMap, nodeMap) {
+    const children = folderChildMap[sourceId];
 
     for(let i = 0; i < children.length; i++) {
         const node = nodeMap[children[i]];
         
         if(node.type === "folder" && sourceId !== node.id) {
-            if(isNodeDescendant(node.id, nodeId, tree, nodeMap)) {
+            if(isNodeDescendant(node.id, nodeId, folderChildMap, nodeMap)) {
                 return true
             }
         }
@@ -111,44 +111,44 @@ function isNodeDescendant(sourceId, nodeId, tree, nodeMap) {
  * Add document node inside a folder using its id.
  * @param {*} folderId is the id of the folder to add a new document.
  */
-function addDocumentNode(folderId, tree, nodeMap) {
-    const newTree = copyTree(tree)
+function addDocumentNode(folderId, folderChildMap, nodeMap) {
+    const newfolderChildMap = copyfolderChildMap(folderChildMap)
 
-    newTree[folderId] = [...newTree[folderId], createDocNode(undefined, nodeMap)]
+    newfolderChildMap[folderId] = [...newfolderChildMap[folderId], createDocNode(undefined, nodeMap)]
     
-    return newTree;
+    return newfolderChildMap;
 }
 
 /**
  * Add folder node inside a folder using its id and updates list 
- * of folder keys inside tree.
+ * of folder keys inside folderChildMap.
  * @param {*} folderId is the id of the folder to add a new folder.
  */
-function addFolderNode(folderId, tree, nodeMap) {
+function addFolderNode(folderId, folderChildMap, nodeMap) {
     const node = createFolderNode(undefined, nodeMap);
-    let newTree = copyTree(tree);
+    let newfolderChildMap = copyfolderChildMap(folderChildMap);
 
-    newTree[folderId] = [...newTree[folderId], node.id]
-    newTree = {...newTree, [node.id]: []}
+    newfolderChildMap[folderId] = [...newfolderChildMap[folderId], node.id]
+    newfolderChildMap = {...newfolderChildMap, [node.id]: []}
 
-    return newTree;
+    return newfolderChildMap;
 }
 
 
 
 /**
- * Deletes node using id in tree and nodemap.
+ * Deletes node using id in folderChildMap and nodemap.
  * 
  * @param {*} nodeId Node unique identifier. Can be of type folder or text.
- * @param {*} tree A hashmap that uses folder id as key and an array of its children's id as value.
- * @returns a new tree object with deleted node.
+ * @param {*} folderChildMap A hashmap that uses folder id as key and an array of its children's id as value.
+ * @returns a new folderChildMap object with deleted node.
  */
-function deleteNode(nodeId, tree, nodeMap) {
-    const newTree = copyTree(tree); 
+function deleteNode(nodeId, folderChildMap, nodeMap) {
+    const newfolderChildMap = copyfolderChildMap(folderChildMap); 
     const node = nodeMap[nodeId]
 
     if(node.type === "folder") {
-        deleteFolder(nodeId, newTree, nodeMap)
+        deleteFolder(nodeId, newfolderChildMap, nodeMap)
     }
 
     if (node.type === "text") {
@@ -156,18 +156,18 @@ function deleteNode(nodeId, tree, nodeMap) {
     }
 
     // find and remove where node lives as child.
-    const keys = Object.keys(newTree);
+    const keys = Object.keys(newfolderChildMap);
     let i = 0;
     let j = 0;
     let key;
     while(i < keys.length) {
         key = keys[i]
-        while(j < newTree[key].length) {
-            if(newTree[key][j] === nodeId) {
-                newTree[key] = newTree[key].filter((nodeid) => {
+        while(j < newfolderChildMap[key].length) {
+            if(newfolderChildMap[key][j] === nodeId) {
+                newfolderChildMap[key] = newfolderChildMap[key].filter((nodeid) => {
                     return nodeid !== nodeId;
                 })
-                return newTree;
+                return newfolderChildMap;
             }
             
             j++;
@@ -180,18 +180,18 @@ function deleteNode(nodeId, tree, nodeMap) {
 
 /**
  * Renames node using its id in nodemap. Returns a new
- * tree reference for React.
+ * folderChildMap reference for React.
  * 
  * @param {*} newName is the value for the node's new name.
  * @param {*} nodeId id of the node being renamed.
- * @param {*} tree A hashmap that uses folder id as key and an array of its children's id as value.
- * @returns a new tree object.
+ * @param {*} folderChildMap A hashmap that uses folder id as key and an array of its children's id as value.
+ * @returns a new folderChildMap object.
  */
-function renameNode(newName, nodeId, tree, nodeMap) {
-    const newTree = copyTree(tree);
+function renameNode(newName, nodeId, folderChildMap, nodeMap) {
+    const newfolderChildMap = copyfolderChildMap(folderChildMap);
     nodeMap[nodeId].name = newName;
 
-    return newTree;
+    return newfolderChildMap;
 }
 
 /**
@@ -202,25 +202,25 @@ function renameNode(newName, nodeId, tree, nodeMap) {
  * @param {*} index new index of node id.
  * @param {*} group new folder group.
  * @param {*} id the node being moved.
- * @param {*} tree map of folders and its children.
+ * @param {*} folderChildMap map of folders and its children.
  */
-function moveNode(initialIndex, initialGroup, index, group, id, tree) {
-    let newTree = copyTree(tree);
+function moveNode(initialIndex, initialGroup, index, group, id, folderChildMap) {
+    let newfolderChildMap = copyfolderChildMap(folderChildMap);
 
     if(initialGroup === group) {
         if(index < initialIndex) {
-            newTree[group] = newTree[group].toSpliced(index, 0, id);
-            newTree[group] = newTree[group].toSpliced(initialIndex + 1, 1);
-            return newTree;
+            newfolderChildMap[group] = newfolderChildMap[group].toSpliced(index, 0, id);
+            newfolderChildMap[group] = newfolderChildMap[group].toSpliced(initialIndex + 1, 1);
+            return newfolderChildMap;
         } else {
-            newTree[group] = newTree[group].toSpliced(index + 1, 0, id);
-            newTree[group] = newTree[group].toSpliced(initialIndex, 1);
-            return newTree;
+            newfolderChildMap[group] = newfolderChildMap[group].toSpliced(index + 1, 0, id);
+            newfolderChildMap[group] = newfolderChildMap[group].toSpliced(initialIndex, 1);
+            return newfolderChildMap;
         }
     } else {
-        newTree[initialGroup] = newTree[initialGroup].toSpliced(initialIndex, 1);
-        newTree[group] = newTree[group].toSpliced(index, 0, id);
-        return newTree
+        newfolderChildMap[initialGroup] = newfolderChildMap[initialGroup].toSpliced(initialIndex, 1);
+        newfolderChildMap[group] = newfolderChildMap[group].toSpliced(index, 0, id);
+        return newfolderChildMap
     }
 }
 

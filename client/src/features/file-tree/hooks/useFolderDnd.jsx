@@ -6,17 +6,17 @@ import { useDroppable } from "@dnd-kit/react";
 
 /**
  * This hook is responsible for drag and drop logic between folders 
- * in file tree.
+ * in file folderChildMap.
  * 
  * @param {*} props properties of this folder.
  * @returns a callback ref to attach to folder element.
  */
 export default function useFolderDnd({node, index, folderId, depth}) {
     const { projectState } = useContext(ProjectContext);
-    const { tree, nodeMapRef } = projectState;
+    const { folderChildMap, nodeMapRef } = projectState;
 
     /** evaluates if the folder using this hook is empty or not. */
-    const isEmpty = tree[node.id].length === 0;
+    const isEmpty = folderChildMap[node.id].length === 0;
     
     /** Sortable ref from DND-kit */
     const {ref: sortable} = useSortable({
@@ -28,7 +28,7 @@ export default function useFolderDnd({node, index, folderId, depth}) {
         accept: (source) => {
             if(source.type !== "folder") return true;
 
-            return !isNodeDescendant(source.id, node.id, tree, nodeMapRef.current)
+            return !isNodeDescendant(source.id, node.id, folderChildMap, nodeMapRef.current)
         }
     })
 

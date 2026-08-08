@@ -1,4 +1,4 @@
-import { convertProjectsRows, convertRowsToFileTree, getFolderRoot } from '../helpers/treeHelpers.js'
+import { convertProjectsRows, convertRowsToFileMap, getFolderRoot } from '../helpers/projectHelpers.js'
 import { db } from '../config/database.js'
 
 export async function getProject(id) {
@@ -7,7 +7,7 @@ export async function getProject(id) {
         WHERE tree_id = $1`, 
         [id]
     )
-    return convertRowsToFileTree(project.rows);
+    return convertRowsToFileMap(project.rows);
 }
 
 export async function getProjects(userId){

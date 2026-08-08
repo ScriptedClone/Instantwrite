@@ -35,7 +35,6 @@ export default function useProjects(){
     }
 
     async function handleDeleteProject(deletedId) {
-        console.log("delete")
         try {
             await deleteProject(deletedId);
             setProjects((p) => p.filter((project) => project.id !== deletedId));

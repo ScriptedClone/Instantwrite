@@ -3,8 +3,8 @@ import { getProject } from "../services/projectAPI";
 import { addDocumentNode, addFolderNode, moveNode, renameNode, deleteNode } from "../../file-tree/fileTree";
 
 export default function useProject(projectId) {
-    /**  Store tree from database and react on structural changes. */
-    const [tree, setTree] = useState(null);
+    /**  Store folderChildMap built on backend react on structural changes. */
+    const [folderChildMap, setfolderChildMap] = useState(null);
 
     /** This is a hashmap that contains node id as key and the node itself as value. */ 
     const nodeMapRef = useRef(null)
@@ -17,9 +17,9 @@ export default function useProject(projectId) {
             setError(null);
 
             try {
-                const { tree, nodeMap: ref} = await getProject(projectId);
+                const { folderChildMap, nodeMap: ref} = await getProject(projectId);
                 nodeMapRef.current = ref
-                setTree(tree) 
+                setfolderChildMap(folderChildMap) 
             } catch (error) {
                 setError(error);
             } finally {
@@ -35,31 +35,31 @@ export default function useProject(projectId) {
     }
 
     function addDocument(currentFolder) {
-        setTree(addDocumentNode(currentFolder, tree, nodeMapRef.current));
+        setfolderChildMap(addDocumentNode(currentFolder, folderChildMap, nodeMapRef.current));
     }
 
     function addFolder(currentFolder) {
-        setTree(addFolderNode(currentFolder, tree, nodeMapRef.current));
+        setfolderChildMap(addFolderNode(currentFolder, folderChildMap, nodeMapRef.current));
     }
 
     function renameFile(name, nodeId) {
-        setTree(renameNode(name, nodeId, tree, nodeMapRef.current));
+        setfolderChildMap(renameNode(name, nodeId, folderChildMap, nodeMapRef.current));
     }
 
     function deleteFile(nodeId){
-        setTree(deleteNode(nodeId, tree, nodeMapRef.current));
+        setfolderChildMap(deleteNode(nodeId, folderChildMap, nodeMapRef.current));
     }
 
     function moveFile(initialIndex, initialGroup, index, group, id) {
-        setTree(moveNode(initialIndex, initialGroup, index, group, id, tree));
+        setfolderChildMap(moveNode(initialIndex, initialGroup, index, group, id, folderChildMap));
     }
 
-    function restoreTree(previousTree) {
-        setTree(previousTree);
+    function restorefolderChildMap(previousfolderChildMap) {
+        setfolderChildMap(previousfolderChildMap);
     }
 
     return {
-        state:{ tree, nodeMapRef, loading, error },
+        state:{ folderChildMap, nodeMapRef, loading, error },
         actions: { 
             updateNodeContent, 
             addDocument, 
@@ -67,7 +67,7 @@ export default function useProject(projectId) {
             renameFile, 
             deleteFile,
             moveFile, 
-            restoreTree
+            restorefolderChildMap
         }
     }
 }

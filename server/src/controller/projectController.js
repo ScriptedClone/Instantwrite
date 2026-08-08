@@ -2,9 +2,9 @@ import * as projectService from "../services/project.js"
 
 export async function getProject(req, res) {
     const { id } = req.params
-    const { tree, nodeMap } = await projectService.getProject(id);
+    const { folderChildMap, nodeMap } = await projectService.getProject(id);
 
-    res.json({ tree, nodeMap })
+    res.json({ folderChildMap, nodeMap })
 }
 
 export async function getProjects(req, res) {
@@ -39,10 +39,10 @@ export async function deleteProject(req, res) {
 
 export async function putProject(req, res) {
     const { id } = req.params;
-    const { tree, nodeMap } = req.body;
+    const { folderChildMap, nodeMap } = req.body;
 
     try {
-        await projectService.putProject(id, tree, nodeMap);
+        await projectService.putProject(id, folderChildMap, nodeMap);
         res.sendStatus(204);
     } catch (error) { 
         console.error(error)

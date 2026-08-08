@@ -12,11 +12,11 @@ import Document from "./Document.jsx"
  */
 export default function FolderChildren({folderId, depth}) {
     const { projectState } = useContext(ProjectContext);
-    const { tree, nodeMapRef } = projectState;
+    const { folderChildMap, nodeMapRef } = projectState;
 
     return (
         <ul>
-            {tree && tree[folderId].map((childId, index) => {
+            {folderChildMap && folderChildMap[folderId].map((childId, index) => {
                 if(nodeMapRef.current[childId].type === "folder") {
                     return <Folder key={childId}
                                    folderId={folderId}
