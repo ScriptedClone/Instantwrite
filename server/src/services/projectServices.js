@@ -38,12 +38,26 @@ export async function getProjects(userId){
     return convertProjectsRows(projects.rows)
 }
 
-export async function putProject(projectId, project, nodeMap) {
+export async function putProject(projectId, userId, project, nodeMap) {
     const client = await db.connect();
     const rootId = getFolderRoot(nodeMap);
 
     try {
         await client.query('BEGIN');
+
+        const { rows } = await client.query(`
+            SELECT project_id FROM projects 
+            WHERE project_id = $1 
+            AND user_id = $2`,
+            [projectId, userId]
+        );
+
+        if(rows.length === 0) {
+            const error = new Error('project not found')
+            error.status = 404;
+            throw error;
+        }
+
         await client.query(`DELETE FROM nodes WHERE project_id = $1`, [projectId]);
         await client.query(`INSERT INTO nodes (node_id, parent_id, project_id, index, type, name, content)
                             VALUES($1, null, $2, null, 'folder', 'root', null)`, [rootId, projectId]);

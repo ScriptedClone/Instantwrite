@@ -47,11 +47,11 @@ export async function putProject(req, res) {
     const { folderChildMap, nodeMap } = req.body;
 
     try {
-        await projectService.putProject(projectId, folderChildMap, nodeMap);
-        res.sendStatus(204);
+        await projectService.putProject(projectId, req.session.user_id, folderChildMap, nodeMap);
+        res.status(200).json({message: "project saved succesfully"});
     } catch (error) { 
         console.error(error)
-        res.sendStatus(500);
+        res.status(error.status || 500).json({ message: error.message || "server error"});
     } 
 }
 
