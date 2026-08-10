@@ -100,22 +100,34 @@ export async function createProject(name, userId){
     }
 }
 
-export async function deleteProject(id, userId) {
+export async function deleteProject(projectId, userId) {
     const client = await db.connect();
 
     try {
         await client.query('BEGIN');
 
+        const { rows } = await client.query(`
+            SELECT project_id FROM projects 
+            WHERE project_id = $1 
+            AND user_id = $2`,
+            [projectId, userId]
+        );
+
+        if(rows.length === 0) {
+            const error = new Error('project not found')
+            error.status = 404;
+            throw error;
+        }
+
         await client.query(`
             DELETE FROM nodes 
             WHERE project_id = $1`, 
-            [id]
+            [projectId]
         );
         await client.query(`
             DELETE FROM projects 
-            WHERE project_id = $1 
-            AND user_id = $2`, 
-            [id, userId]
+            WHERE project_id = $1`, 
+            [projectId, userId]
         );
 
         await client.query('COMMIT');

@@ -1,4 +1,4 @@
-import * as authService from "../services/auth.js"
+import * as authService from "../services/authServices.js"
 
 export async function createUser(req, res) {
     const {email, username, password} = req.body

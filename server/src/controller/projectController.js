@@ -1,4 +1,4 @@
-import * as projectService from "../services/project.js"
+import * as projectService from "../services/projectServices.js"
 
 export async function getProject(req, res) {
     const projectId = req.params.id
@@ -31,23 +31,23 @@ export async function createProject(req, res) {
 }
 
 export async function deleteProject(req, res) {
-    const { id } = req.params;
+    const projectId = req.params.id;
 
     try {
-        await projectService.deleteProject(id, req.session.user_id);
+        await projectService.deleteProject(projectId, req.session.user_id);
         res.status(200).json({ message: "project deleted successfully"});
     } catch (error) {
         console.error(error)
-        res.status(500).json({ message: error.message });
+        res.status(error.status || 500).json({ message: error.message || "server error"});
     }
 }
 
 export async function putProject(req, res) {
-    const { id } = req.params;
+    const projectId = req.params.id;
     const { folderChildMap, nodeMap } = req.body;
 
     try {
-        await projectService.putProject(id, folderChildMap, nodeMap);
+        await projectService.putProject(projectId, folderChildMap, nodeMap);
         res.sendStatus(204);
     } catch (error) { 
         console.error(error)

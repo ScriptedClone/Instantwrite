@@ -1,4 +1,4 @@
-import * as llmService from '../services/groq.js'
+import * as llmService from '../services/groqServices.js'
 
 export async function generateLLMChat(req, res) {
     const chats = req.body;
