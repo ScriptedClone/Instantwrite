@@ -1,10 +1,8 @@
 import * as projectService from "../services/project.js"
 
 export async function getProject(req, res) {
-    const { id } = req.params
-    const { folderChildMap, nodeMap } = await projectService.getProject(id);
-
-    res.json({ folderChildMap, nodeMap })
+    const projectId = req.params.id
+        const { folderChildMap, nodeMap } = await projectService.getProject(projectId, req.session.user_id);
 }
 
 export async function getProjects(req, res) {

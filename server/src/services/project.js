@@ -3,9 +3,19 @@ import { db } from '../config/database.js'
 
 export async function getProject(id) {
     const project = await db.query(`
-        SELECT * FROM nodes
-        WHERE project_id = $1`, 
-        [id]
+        SELECT 
+            n.node_id,
+            n.parent_id,
+            n.name,
+            n.type,
+            n.index,
+            n.content
+        FROM nodes n
+        JOIN projects p
+        ON n.project_id = p.project_id
+        WHERE p.project_id = $1 
+        AND p.user_id = $2`, 
+        [projectId, userId]
     )
     return convertRowsToFileMap(project.rows);
 }
