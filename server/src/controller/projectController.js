@@ -2,7 +2,14 @@ import * as projectService from "../services/project.js"
 
 export async function getProject(req, res) {
     const projectId = req.params.id
+    
+    try {
         const { folderChildMap, nodeMap } = await projectService.getProject(projectId, req.session.user_id);
+        res.status(200).json({ message: "project found from database", folderChildMap, nodeMap });
+    } catch (error) {
+        console.error(error)
+        res.status(error.status || 500 ).json({message: error.message || "server error"})
+    }
 }
 
 export async function getProjects(req, res) {

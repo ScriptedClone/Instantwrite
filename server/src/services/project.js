@@ -1,7 +1,7 @@
 import { convertProjectsRows, convertRowsToFileMap, getFolderRoot } from '../helpers/projectHelpers.js'
 import { db } from '../config/database.js'
 
-export async function getProject(id) {
+export async function getProject(projectId, userId) {
     const project = await db.query(`
         SELECT 
             n.node_id,
@@ -17,6 +17,14 @@ export async function getProject(id) {
         AND p.user_id = $2`, 
         [projectId, userId]
     )
+
+    if(project.rowCount === 0) {
+        const error = new Error('project does not exist');
+        error.status = 404;
+
+        throw error
+    } 
+    
     return convertRowsToFileMap(project.rows);
 }
 
