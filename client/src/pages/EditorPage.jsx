@@ -5,7 +5,7 @@ import "./css/editor.css"
 
 export default function EditorPage() {
     const { projectId } = useParams();
-    const { projectName } = useLocation().state
+    const projectName = useLocation().state?.projectName || "project not found"
    
     return (
         <div className="editorPage">
