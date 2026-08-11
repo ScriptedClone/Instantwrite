@@ -9,8 +9,23 @@ export default function TextBox({addUserChat}) {
         el.style.height = "auto"; // reset scrollHeight.
         el.style.height = el.scrollHeight + "px";
     }
+
+    function sendMessage() {
+        if(textareaEl.current.value === "") {
+            alert('please enter a text');
+            return;
+        };
+
         addUserChat(textareaEl.current.value);
         textareaEl.current.value = "";
+        resizeTextBox() // reset textbox after clear
+    }
+
+    function handleOnEnter (e) {
+        if(e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage()
+        }
     }
 
     return(
@@ -18,6 +33,7 @@ export default function TextBox({addUserChat}) {
             <textarea ref={textareaEl} 
                       className="textBoxInput" 
                       placeholder="enter message..." 
+                      onKeyDown={handleOnEnter}
                       onInput={resizeTextBox}
             />
         </div>
