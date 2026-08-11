@@ -15,11 +15,45 @@ const groq = new Groq({apiKey: key});
  * @returns response object from groq API.
  */
 export async function fetchModelResponse(messages, model, temperature) {
-    return groq.chat.completions.create({
-        messages: messages,
-        model: model,
-        temperature: temperature,
-    })
+    try {
+        return await groq.chat.completions.create({
+            messages,
+            model,
+            temperature,
+        });
+    } catch (APIError) {
+        if (APIError instanceof Groq.RateLimitError) {
+            const error = new Error('AI service is busy, please try again shortly');
+            error.status = 429;
+            error.cause = APIError;
+            throw error;
+        }
+        
+        if (APIError instanceof Groq.AuthenticationError) {
+            const error = new Error('AI service is temporarily unavailable');
+            error.status = 502;
+            error.cause = APIError;
+            throw error;
+        }
+
+        if (APIError instanceof Groq.APIConnectionError) {
+            const error = new Error('Could not reach AI service');
+            error.status = 502;
+            error.cause = APIError;
+            throw error;
+        }
+
+        // catch 4xx/5xx cases
+        if (APIError instanceof Groq.APIError) {
+            const error = new Error('AI service returned an error');
+            error.status = APIError.status >= 500 ? 502 : 400;
+            error.cause = APIError;
+            throw error;
+        }
+
+        // unexpected errors not from groq sdk
+        throw APIError;
+    }
 }
 
 /**
