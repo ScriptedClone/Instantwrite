@@ -106,7 +106,7 @@ export async function authUser(email, password) {
     )
 
     if(user.rows.length !== 1) {
-        const error = new Error('user does not exist');
+        const error = new Error('invalid email or password');
         error.status = 404;
 
         throw error;
@@ -116,7 +116,7 @@ export async function authUser(email, password) {
         return user;
     } 
     else {
-        const error = new Error('password does not match')
+        const error = new Error('invalid email or password')
         error.status = 401;
         
         throw error;
