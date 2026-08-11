@@ -3,7 +3,7 @@ import { createUserPrompt, createSystemPrompt, rebuildChat } from '../helpers/gr
 import { SYSTEM_PROMPT, CONTEXT_PROMPT } from '../const/prompts.js';
 import { MODELS } from '../const/models.js';
 
-const key = process.env.VITE_GROQ_API_KEY
+const key = process.env.GROQ_API_KEY
 const groq = new Groq({apiKey: key});
 
 /**
