@@ -141,7 +141,7 @@ export async function deleteProject(projectId, userId) {
         await client.query(`
             DELETE FROM projects 
             WHERE project_id = $1`, 
-            [projectId, userId]
+            [projectId]
         );
 
         await client.query('COMMIT');
