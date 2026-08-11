@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from 'express';
 import { sessionConfig } from "./src/config/session.js";
 import { sessionValidation } from "./src/middleware/sessionValidation.js";
+import { errorHandler } from "./src/middleware/errorHandler.js";
 import authRoutes from "./src/routes/authRoutes.js"
 import projectRoutes from "./src/routes/projectRoutes.js"
 import llmRoutes from "./src/routes/llmRoutes.js"
@@ -18,6 +19,7 @@ app.use(sessionConfig);
 app.use('/api/v1', authRoutes);
 app.use('/api/v1', sessionValidation, projectRoutes);
 app.use('/api/v1', sessionValidation, llmRoutes);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`);
