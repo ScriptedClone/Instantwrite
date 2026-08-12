@@ -82,10 +82,13 @@
     flex-direction: row-reverse;
 }
 .user p{
+    max-width: 60%;
     padding: 8px 10px;
     border-radius: 8px;
+
+    overflow-wrap: break-word;
+
     background-color: var(--accent-dark);
-    max-width: 60%;
 }
 
 .textBoxContainer {
