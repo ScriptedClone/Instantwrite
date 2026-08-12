@@ -1,3 +1,4 @@
+import { EMPTY_DOCUMENT_NODE } from '../const/defaultNodeContent.js';
 import { db } from '../config/database.js'
 import bcrypt from 'bcrypt'
 import Joi from "joi";
@@ -69,14 +70,20 @@ export async function createUser(username, email, password) {
             INSERT INTO projects(user_id, name)
             values($1, $2)
             RETURNING project_id`,
-            [userId, 'untitled']
+            [userId, 'Untitled Project']
         )
 
         projectId = res.rows[0].project_id;
         await client.query(`
+            WITH root_folder AS (
+                INSERT INTO nodes (node_id, parent_id, project_id, type, index, name, content)
+                VALUES (gen_random_uuid(), NULL, $1, 'folder', NULL, 'root', NULL)
+                returning node_id
+            )
             INSERT INTO nodes (node_id, parent_id, project_id, type, index, name, content)
-            VALUES (gen_random_uuid(), NULL, $1, 'folder', NULL, 'root', NULL)`,
-            [projectId]
+            SELECT gen_random_uuid(), node_id, $1, 'document', 0, 'Untitled Document', $2
+            FROM root_folder`,
+            [projectId, EMPTY_DOCUMENT_NODE]
         )
         await client.query('COMMIT');
 
