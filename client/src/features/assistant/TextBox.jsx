@@ -21,6 +21,10 @@ export default function TextBox({addUserChat}) {
         resizeTextBox() // reset textbox after clear
     }
 
+    function handleTextBoxSend () {
+        sendMessage()
+    }
+
     function handleOnEnter (e) {
         if(e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -36,6 +40,14 @@ export default function TextBox({addUserChat}) {
                       onKeyDown={handleOnEnter}
                       onInput={resizeTextBox}
             />
+            
+            <button className="textBoxSendBtn">
+                <img src={chatSendIcon}
+                    className="textBoxSendIcon" 
+                    onClick={handleTextBoxSend}
+                />
+            </button>
+
         </div>
     );
 }

@@ -120,12 +120,22 @@
     box-sizing: border-box;
 }
 
-.textBoxSubmit {
-    border-radius: 4px;
-    padding: 4px 6px;
+.textBoxSendBtn {
+    background: none;
 
-    background-color: var(--accent-dark);
-    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+
+    border: none;
+    outline: none;
+}
+.textBoxSendIcon {
+    transform: rotate(-90deg);
+    
+    cursor: pointer;
+}
+.textBoxSendIcon:hover {
+   filter: brightness(150%);
 }
 
 .contextBox {
