@@ -1,7 +1,12 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
+import chatSendIcon from "./assets/googleChatSendIcon.png" 
 
 export default function TextBox({addUserChat}) {
     const textareaEl = useRef(null);
+
+    useEffect(() => {
+        textareaEl.current?.focus();
+    }, []);
 
     function resizeTextBox() {
         const el = textareaEl.current;
