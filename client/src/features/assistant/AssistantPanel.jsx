@@ -17,7 +17,7 @@ export default function AssistantPanel({selection}) {
     const [chats, setChats] = useState([]);
 
     const [rewrites, setRewrites] = useState([]);
-    const [mode, setMode] = useState("Chat");
+    const [mode, setMode] = useState("Rewrite");
     const [style, setStyle] = useState("Default");
     const [tone, setTone,] = useState("Default");
     
