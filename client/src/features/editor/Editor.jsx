@@ -6,6 +6,7 @@ export default function Editor({handleEditorTxtUpdate, handleSelection, selected
     const editor = useEditor({
         extensions: extensions,
         content: "",
+        autofocus: true,
     })
 
     /** Set editor to selected document in file tree */
