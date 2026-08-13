@@ -233,10 +233,26 @@ function getFolderRoot(nodeMap) {
     }
 }
 
+/**
+ * This is used in workspace component to find a document node to 
+ * display when there is no last active document.
+ * 
+ * @param {*} nodeMap hashmap of project nodes keyed by node id.
+ * @returns id of the first document node found, or null if none exists.
+ */
+function findFirstDocumentNode(nodeMap) {
+    for(const id in nodeMap) {
+        if(nodeMap[id].type === "document") return id;
+    }
+
+    return null;
+}
+
 export { moveNode,
          renameNode,
          deleteNode, 
          addDocumentNode, 
          addFolderNode, 
          isNodeDescendant,
-         getFolderRoot}
+         getFolderRoot,
+         findFirstDocumentNode}

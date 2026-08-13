@@ -1,12 +1,14 @@
 import { useState, useEffect, useContext, useRef} from "react";
 import { ProjectContext } from "./context/ProjectContext.js";
 import { storeLastActiveDoc } from "./workSpace.js";
+import { findFirstDocumentNode } from "../file-tree/fileTree.js";
 import useProject from "./hooks/useProject.jsx";
 import useDocument from "./hooks/useDocument.jsx"
 import AssistantPanel from "../assistant/AssistantPanel.jsx"
 import EditorPanel from "../editor/EditorPanel.jsx"
 import FileTreePanel from "../file-tree/FileTreePanel.jsx"
 import "./workSpace.css"
+
 
 export default function Workspace({projectId}) {
     const { state: projectState, actions: projectActions } = useProject(projectId);
@@ -48,15 +50,25 @@ export default function Workspace({projectId}) {
     }, [docNodeId])
 
     /**
-     * Initializes document value if previous document id exists
-     * on mount to restore previously open document on editor.
+     * This useEffect is responsible for initializing useDocument
+     * state when useProject hook finish loading.
      * 
      */
     useEffect(() => {
         if(loading || error) return;
 
         const prevDocId = localStorage.getItem("prevDocId");
-        if(prevDocId) setDoc(prevDocId, nodeMapRef);
+        if(prevDocId in nodeMapRef.current) {
+            setDoc(prevDocId, nodeMapRef);
+            return
+        } else {
+            // remove stale id if it exists
+            localStorage.removeItem("prevDocId");
+        }
+
+        const nodeId = findFirstDocumentNode(nodeMapRef.current)
+        setDoc(nodeId, nodeMapRef)
+
     }, [loading])
 
     /**
