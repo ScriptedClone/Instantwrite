@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { selectionValues } from "../editor/services/editorUtilities.js";
+import { selectionValues } from "../../util/tiptapEditor.js";
 import styleIcon from "./assets/googleStyleIcon.png"
 import toneIcon from "./assets/icons8ToneIcon.png"
 import generateIcon from "./assets/googleGenerateIcon.png"

@@ -1,4 +1,4 @@
-import { selectionValues } from "../../editor/services/editorUtilities.js";
+import { selectionValues } from "../../util/tiptapEditor.js";
 
 /**
  * Inserts chat summary on latest user chat object. The summary extends from 
