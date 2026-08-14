@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from 'express';
+import path from 'path';
 import { sessionConfig } from "./src/config/session.js";
 import { sessionValidation } from "./src/middleware/sessionValidation.js";
 import { errorHandler } from "./src/middleware/errorHandler.js";
@@ -9,16 +10,22 @@ import llmRoutes from "./src/routes/llmRoutes.js"
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-app.get('/', (req, res) => {
-    res.send('Server is running')
-})
+const clientBuildApplication = path.join(import.meta.dirname, '../client/dist');
 
 app.use(express.json());
 app.use(sessionConfig);
+app.use(express.static(clientBuildApplication));
+
+// Endpoints
 app.use('/api/v1', authRoutes);
 app.use('/api/v1', sessionValidation, projectRoutes);
 app.use('/api/v1', sessionValidation, llmRoutes);
+
+// Serve built React SPA
+app.use('/*application', (req, res) => {
+    res.sendFile(path.join(clientBuildApplication, 'index.html'));
+})
+
 app.use(errorHandler);
 
 app.listen(PORT, () => {
