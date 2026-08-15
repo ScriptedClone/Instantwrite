@@ -48,7 +48,8 @@ export default function Header({page, projectName, handleIsCreating }) {
                         <button className="headerBtn"
                                 onClick={() => handleIsCreating(true)}
                         >
-                            + project
+                            <span className="createBtnIcon">+</span>
+                            <span className="createBtnText">project</span>
                         </button>
                     </div>
 
