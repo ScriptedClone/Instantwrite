@@ -13,6 +13,10 @@
 
   --accent-dark-bright:color-mix( in srgb, var(--accent-dark) 90%, white);
 
+  --header-btn-max-width: 90px;
+  --header-btn-min-width: 80px;
+  --header-btn-height: 35px;
+
   --panelHeader-btn-max-width: 85px;
   --panelHeader-btn-min-width: 80px;
   --panelHeader-btn-height: 35px;
