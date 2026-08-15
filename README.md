@@ -1,5 +1,5 @@
 # Instantwrite 
-![landing-screenshot](./landing-screenshot.png)
+![landing-screenshot](./landingScreenshot.png)
 
 <p align="center">
   <strong>An application for authors to write, organize, and refine their stories in one place.</strong>
