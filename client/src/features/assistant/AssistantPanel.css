@@ -180,6 +180,8 @@
     text-overflow: ellipsis;
 
     box-sizing: border-box;
+
+    cursor: default;
 }
 
 .dropDownContainer {
