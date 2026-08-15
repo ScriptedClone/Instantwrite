@@ -8,9 +8,9 @@
   --danger-primary: #EF4444;
   --danger-secondary: #301B1B;
 
+  --primary-dark-faded:#3D3D3D;
   --text-dark-faded:color-mix( in srgb, var(--text-dark) 50%, transparent);
-  --accent-dark-faded:color-mix( in srgb, var(--accent-dark) 10%, transparent);
-
+  --accent-dark-faded:color-mix( in srgb, var(--accent-dark) 20%, transparent);
   --accent-dark-bright:color-mix( in srgb, var(--accent-dark) 90%, white);
 
   --header-btn-max-width: 90px;
@@ -28,7 +28,6 @@
   --editor-header-margin: 0px 5px 16px;
   --editor-paragraph-font-size: 1.5rem;
   --editor-paragraph-margin: 0px 5px 16px;
-
 
   --fileTree-icon-width: 16px;
   --fileTree-icon-height: 16px;

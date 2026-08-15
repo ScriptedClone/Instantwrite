@@ -66,7 +66,7 @@
 }
 
 .projectDropDownIcon:hover {
-    background-color: var(--accent-dark);
+    background-color: var(--primary-dark-faded);
 }
 
 .projectDropDownContent {

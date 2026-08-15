@@ -225,10 +225,10 @@
     cursor: pointer;
 }
 .dropDownBtn:hover {
-    background-color: var(--secondary-dark);
+    background-color: var(--primary-dark-faded);
 }
 .activeDropDown {
-    background-color: var(--secondary-dark);
+    background-color: var(--primary-dark-faded);
 }
 
 .dropDownIcon {

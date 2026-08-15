@@ -44,7 +44,6 @@
     border-radius: 6px;
     padding: 6px 12px;
 
-
     font-size: 1.05rem;
     color: var(--text-dark);
 
@@ -74,6 +73,9 @@
 }
 
 .headerBtn:hover {
+    background-color: var(--primary-dark-faded);
+}
+
 .logoutBtn:hover {
     color: var(--danger-primary);
     background-color: var(--danger-secondary);
