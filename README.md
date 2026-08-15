@@ -1,5 +1,5 @@
 # Instantwrite 
-![landing-screenshot](./landing%20screenshot.png)
+![landing-screenshot](./landing-screenshot.png)
 
 <p align="center">
   <strong>An application for authors to write, organize, and refine their stories in one place.</strong>
@@ -11,7 +11,7 @@
 * [Tech Stack](#Tech-Stack)
 * [Project Structure](#Project-Structure)
 * [Getting Started](#Getting-Started)
-* [What's Next](#What's-Next)
+* [What's Next](#Whats-Next)
 * [Limitations](#Limitations)
 * [Known Issues](#Known-Issues)
 * [Author](#Author)
@@ -67,7 +67,7 @@ REST API design, backend architecture, as well as React for responsive user inte
 | --- | --- | --- |
 | **UI Library** | [React](https://react.dev/) | Component-based user interface. |
 | **Page Routing** | [React Router](https://reactrouter.com/) | Client-side page routing. |
-| **Text Editor** | [Tiptap](https://tiptap.dev/)  | Rich text editor and implmented to provide context to LLM. |
+| **Text Editor** | [Tiptap](https://tiptap.dev/)  | Rich text editor. Also provide context to LLM. |
 | **Drag and Drop** | [DND-kit](https://dndkit.com/) | File tree drag-and-drop interactions. |
 
 ### Back-end
@@ -157,6 +157,8 @@ npm install
 ```
 
 ### 2. Configure Environment Variables
+Create a .env file under /server
+
 ```
 GROQ_API_KEY=your_groq_api_key 
 DATABASE_URL=your_database_url
