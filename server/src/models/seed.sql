@@ -1,5 +1,20 @@
+-- Development account
+-- EMAIL: dev@email.com
+-- PASSWORD: 123456
+
+INSERT INTO users (email, name, password_hash)
+VALUES (
+    'dev@email.com',
+    'Development',
+    '$2b$12$WznwoQa8rysNSsGpV/RWL.VAik9awaLuK8Mk0G.o/aF8I77ddpL12'
+);
+
 INSERT INTO projects (project_id, user_id, name)
-VALUES ('11111111-1111-1111-1111-111111111111', 2,'Elrer');
+VALUES (
+    '11111111-1111-1111-1111-111111111111',
+    (SELECT user_id FROM users WHERE email = 'dev@email.com'),
+    'Elrer'
+);
 
 INSERT INTO nodes (node_id, parent_id, project_id, type, index, name, content)
 VALUES
