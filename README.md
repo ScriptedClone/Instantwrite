@@ -23,7 +23,7 @@ entire projects organized. Built with [Tiptap](https://tiptap.dev/) for text edi
 for a responsive drag and drop functionality for file-tree, and [Groq](https://groq.com/) to power LLM tools.
 
 This is my first personal project with the goal of not just creating a full-stack application, but writing maintainable source code,
-REST API design, backend architecture, as well as React for responsive user interfaces.
+REST API design, backend architecture, as well as learning React for responsive user interfaces.
 
 ---
 
