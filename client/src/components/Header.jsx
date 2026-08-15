@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router'
 import { deleteSession } from '../features/auth/services/authAPI';
+import logoutIconDefault from './assets/googleLogoutDefault.png'
+import logoutIconHover from './assets/googleLogoutHover.png'
 import './header.css'
 
 export default function Header({page, projectName, handleIsCreating }) {
@@ -55,10 +57,14 @@ export default function Header({page, projectName, handleIsCreating }) {
                     </div>
 
                     <div className="column3">
-                        <button className="headerBtn" 
+                        <button className="headerBtn logoutBtn" 
                                 onClick={handleLogout}
-                        >
-                            Logout
+                        >   
+                            <div className="logoutBtnIconWrap">
+                                <img className="logoutBtnIcon logoutBtnDefault" src={logoutIconDefault} alt='logout icon' />
+                                <img className="logoutBtnIcon logoutBtnHover" src={logoutIconHover} alt='logout icon' />
+                            </div>
+                            <span className='logoutBtnText'>logout</span>
                         </button>
                     </div>
                 </div>

@@ -5,6 +5,8 @@
   --accent-dark: #B68E4B;
   --text-dark: #F2EFEA;
   --border-dark: #463D36;
+  --danger-primary: #EF4444;
+  --danger-secondary: #301B1B;
 
   --text-dark-faded:color-mix( in srgb, var(--text-dark) 50%, transparent);
   --accent-dark-faded:color-mix( in srgb, var(--accent-dark) 10%, transparent);
@@ -26,6 +28,9 @@
 
   --fileTree-icon-width: 16px;
   --fileTree-icon-height: 16px;
+
+  --navbar-icon-width: 16px;
+  --navbar-icon-height: 16px;
 
   --assistant-dropdown-height: 25px;
 

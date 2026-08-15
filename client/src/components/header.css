@@ -31,6 +31,15 @@
 .headerBtn {
     background: none;
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+
+    width: var(--header-btn-max-width);
+    min-width: var(--header-btn-min-width);
+    height: var(--header-btn-height);
+
     border: 1px solid transparent;
     border-radius: 6px;
     padding: 6px 12px;
@@ -40,9 +49,38 @@
     color: var(--text-dark);
 
     cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.05s ease;
+}
+
+.logoutBtnIconWrap {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}
+.logoutBtnIcon {
+    grid-area: 1 / 1; /* Stack default/hover icon on top of each other */
+    width: var(--navbar-icon-width);
+    height: var(--navbar-icon-height);
+    padding-bottom: 3px;
+}
+
+.logoutBtnDefault {
+    opacity: 1;
+    transition: opacity 0.1s ease;
+}
+.logoutBtnHover {
+    opacity: 0;
+    transition: opacity 0.1s ease;
 }
 
 .headerBtn:hover {
-    background-color: var(--accent-dark);
+.logoutBtn:hover {
+    color: var(--danger-primary);
+    background-color: var(--danger-secondary);
+}
+.logoutBtn:hover .logoutBtnHover {
+    opacity: 1;
+}
+.logoutBtn:hover .logoutBtnDefault {
+    opacity: 0;
 }
