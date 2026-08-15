@@ -39,6 +39,8 @@
 
     background-color: transparent;
     color: var(--text-dark);
+
+    cursor: pointer;
 }
 .assistantHeaderBtn:hover:not(.activeBtn) {
     background-color: var(--accent-dark-faded);
@@ -253,6 +255,8 @@
 
     background-color: var(--accent-dark);
     color: var(--text-dark);
+
+    cursor: pointer;
 }
 .dropDownSubmit:hover {
     filter: brightness(1.2);

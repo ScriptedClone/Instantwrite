@@ -38,6 +38,8 @@ li {
 
     background-color: var(--accent-dark);
     color: var(--text-dark);
+
+    cursor: pointer;
 }
 .fileTreeHeaderBtn:hover {
     filter: brightness(1.2);
