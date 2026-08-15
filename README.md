@@ -1,6 +1,9 @@
 # Instantwrite 
 ![landing-screenshot](./landing%20screenshot.png)
 
+<p align="center">
+  <strong>An application for authors to write, organize, and refine their stories in one place.</strong>
+</p>
 
 ---
 
@@ -19,12 +22,12 @@
 ---
 
 ## About
-**Instantwrite** is an application for aspiring authors to help them write their stories easier with LLM-powered tools and a file-tree 
-to organize their stories. Users can 
+**Instantwrite** is a writing app for aspiring authors, combining LLM-powered writing tools with a file-tree system to keep
+entire projects organized. Built with [Tiptap](https://tiptap.dev/) for text editing, [DND kit](https://dndkit.com/) 
+for a responsive drag and drop functionality for file-tree, and [Groq](https://groq.com/) to power LLM tools.
 
-The app uses [DND kit](https://dndkit.com/) for a responsive file-tree, [Tiptap](https://tiptap.dev/) for text editor, and [Groq](https://groq.com/) for LLM related features.
-
-This my first personal project to help me learn React and build a full-stack application.
+This is my first personal project with the goal of not just creating a full-stack application, but writing maintainable source code,
+REST API design, backend architecture, as well as React for responsive user interfaces.
 
 ---
 
@@ -166,7 +169,7 @@ NODE_SESSION_SECRET=your_session_secret
 
 ### 3. Populate database
 * Open pgadmin, open query workspace and paste database table setup on [/server/models/schema.sql](./server/src/models/schema.sql). 
-* Paste the seed data as well on [server/models/seed.sql](./server/src/models/seed.sql).
+* Paste the seed data from [server/models/seed.sql](./server/src/models/seed.sql).
 
 ### 4. Run server
 ```
