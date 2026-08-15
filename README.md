@@ -209,6 +209,8 @@ open http://localhost:5173
 ### Platform Support
 - Desktop version using Electron.
 
+---
+
 ## Limitations
 - No automated test suites.
 - Application currently uses one Groq API key for all LLM features.
