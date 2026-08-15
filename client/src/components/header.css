@@ -36,8 +36,6 @@
     align-items: center;
     gap: 3px;
 
-    width: var(--header-btn-max-width);
-    min-width: var(--header-btn-min-width);
     height: var(--header-btn-height);
 
     border: 1px solid transparent;
