@@ -5,8 +5,6 @@
   <strong>An application for authors to write, organize, and refine their stories in one place.</strong>
 </p>
 
----
-
 ## Table of contents
 * [About](#About)
 * [Features](#Features)
@@ -18,8 +16,6 @@
 * [Known Issues](#Known-Issues)
 * [Author](#Author)
 * [License](#License)
-
----
 
 ## About
 **Instantwrite** is a writing app for aspiring authors, combining LLM-powered writing tools with a file-tree system to keep
@@ -213,8 +209,6 @@ open http://localhost:5173
 ### Platform Support
 - Desktop version using Electron.
 
----
-
 ## Limitations
 - No automated test suites.
 - Application currently uses one Groq API key for all LLM features.
@@ -227,6 +221,8 @@ open http://localhost:5173
 - Users are not redirected to login page when their session expires.
 - File-tree root folder cannot be selected when empty.
 - Loading and error states need UI handling.
+
+---
 
 ## Acknowledgements
 - [React](https://react.dev/) and [Vite](https://vite.dev/) for the frontend application.
@@ -241,8 +237,6 @@ open http://localhost:5173
 
 ## Author
 **Tracee Anrei Miasco (ScriptedClone)** 
-
----
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
