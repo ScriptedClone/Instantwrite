@@ -5,10 +5,13 @@
 
 .errorMessageContainer {
     position: absolute;
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    width: 100%;
 
     top: 50%;
     left: 50%;
