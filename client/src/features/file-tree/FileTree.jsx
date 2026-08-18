@@ -5,11 +5,15 @@ import { getFolderRoot } from "./fileTree.js"
 import FolderChildren from "./FolderChildren"
 
 export default function FileTree() {
-    const { projectState } = useContext(ProjectContext)
-    const { nodeMapRef } = projectState
-    const rootIdRef = useRef(getFolderRoot(nodeMapRef.current))
+    /** Find file-tree root node id using nodeMapRef */
+    const { projectState } = useContext(ProjectContext);
+    const { nodeMapRef } = projectState;
+    const rootIdRef = useRef(getFolderRoot(nodeMapRef.current));
 
+    /** Enable per file hover. */
     const [hoveredFileId, setHoveredFileId] = useState(false);
+    const context = { hoveredFileId, handleHoveredFileId };
+
     /** Set current folder to root when empty space is clicked in file-tree.*/
     const { onSelectFolder } = useContext(TreeActionsContext);
     

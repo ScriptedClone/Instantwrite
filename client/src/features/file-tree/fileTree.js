@@ -224,6 +224,12 @@ function moveNode(initialIndex, initialGroup, index, group, id, folderChildMap) 
     }
 }
 
+/**
+ * Find root folder node of file-tree.
+ * 
+ * @param {*} nodeMap hashmap of project nodes keyed by node id.
+ * @returns node id
+ */
 function getFolderRoot(nodeMap) {
     const nodes = Object.values(nodeMap);
     
