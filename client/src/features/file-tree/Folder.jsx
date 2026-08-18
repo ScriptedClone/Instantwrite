@@ -18,7 +18,6 @@ export default function Folder({folderId, node, index,
     const [isRenaming, setIsRenaming] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
-
     function handleRenameToggle(e) {
         setIsRenaming(!isRenaming)
     }
@@ -28,7 +27,7 @@ export default function Folder({folderId, node, index,
     }
     
     return (
-        <li className="folder"
+        <li className="folderContainer"
             key={node.id}
             ref={ref}
             onClick={(e) => {
