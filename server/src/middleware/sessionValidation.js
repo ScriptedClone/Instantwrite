@@ -1,3 +1,5 @@
+import session from "express-session";
+
 function isValidSession(req) {
     if (req.session.auth) {
         return true;
@@ -10,6 +12,6 @@ export function sessionValidation(req,res,next) {
         next();
     }
     else {
-        return res.status(401).json({message: 'invalid session'})
+        return res.status(401).json({message: "invalid session", session: false})
     }
 }
