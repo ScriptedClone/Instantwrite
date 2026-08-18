@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getProject } from "../services/projectAPI";
-import { addDocumentNode, addFolderNode, moveNode, renameNode, deleteNode } from "../../file-tree/fileTree";
+import { addDocumentNode, addFolderNode, moveNode, renameNode, deleteNode, getFolderRoot } from "../../file-tree/fileTree";
 
 export default function useProject(projectId) {
     /**  Store folderChildMap built on backend react on structural changes. */
@@ -35,10 +35,18 @@ export default function useProject(projectId) {
     }
 
     function addDocument(currentFolder) {
+        if(!folderChildMap[currentFolder]) {
+            currentFolder = getFolderRoot(nodeMapRef.current);
+        }
+
         setfolderChildMap(addDocumentNode(currentFolder, folderChildMap, nodeMapRef.current));
     }
 
     function addFolder(currentFolder) {
+        if(!folderChildMap[currentFolder]) {
+            currentFolder = getFolderRoot(nodeMapRef.current);
+        }
+
         setfolderChildMap(addFolderNode(currentFolder, folderChildMap, nodeMapRef.current));
     }
 
