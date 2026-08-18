@@ -10,16 +10,18 @@ export default function FileTree() {
     const rootIdRef = useRef(getFolderRoot(nodeMapRef.current))
 
     const [hoveredFileId, setHoveredFileId] = useState(false);
-    const context = { hoveredFileId, handleHoveredFileId }
+    /** Drag and drop operations for file-tree as root folder. */
+    const { folderChildMap } = projectState
+    const { ref } = useRootDnd({rootIdRef, nodeMapRef, folderChildMap});
 
     function handleHoveredFileId(id) {
         setHoveredFileId(id)
     }
 
     return (
-        <div className="fileTree">
+        <div className="fileTree" ref={ref} onClick={(e) => onSelectFolder(rootIdRef.current)}>
             <FileHoverContext.Provider value={context}>
-                <FolderChildren folderId={rootIdRef.current} depth={1}/> 
+                <FolderChildren folderId={rootIdRef.current} depth={ROOT_FOLDER_DEPTH}/> 
             </FileHoverContext.Provider>
         </div>
         
