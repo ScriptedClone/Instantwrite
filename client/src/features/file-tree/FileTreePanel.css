@@ -111,6 +111,10 @@ li button {
     cursor: pointer;
 }
 
+.hoverFolderDrop {
+    background-color: var(--accent-dark-faded);
+}
+
 .hoverBtn {
     opacity: 1;
     visibility: visible; 
