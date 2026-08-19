@@ -1,4 +1,8 @@
-import { request } from "../../../util/request.js";
+import { request } from "../../../util/request"
+
+export async function checkSession() {
+    return await request('/api/v1/sessions')
+}
 
 export async function postUser(data) {
     return await request('/api/v1/users', {
