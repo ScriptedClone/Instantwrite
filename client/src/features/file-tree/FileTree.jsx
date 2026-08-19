@@ -1,10 +1,8 @@
 import { useRef, useState, useContext } from "react"
-import { useSortable } from "@dnd-kit/react/sortable";
-import { useDragOperation } from "@dnd-kit/react";
 import { TreeActionsContext } from "./context/TreeActionsContext.js";
 import { ProjectContext } from "../work-space/context/ProjectContext"
 import { FileHoverContext } from "./context/FileHoverContext.js"
-import { getFolderRoot, isNodeDescendant } from "./fileTree.js"
+import { getFolderRoot } from "./fileTree.js"
 import FolderChildren from "./FolderChildren"
 import { useRootDnd } from "./hooks/useRootDnd.jsx";
 import { ROOT_FOLDER_DEPTH } from "./const/depth.js";
