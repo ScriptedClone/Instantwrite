@@ -109,9 +109,11 @@ InstantWrite/
 │       ├── assets/               # Shared assets
 │       ├── components/           # Shared UI components
 │       ├── pages/                # Route-level page components
+│       ├── routes/               # Page routing
 │       ├── util/                 # Shared utils
 │       └── features/
-│           ├── auth/             # Signup/login components
+│           ├── auth/             # Auth hook and API.
+│           ├── login-signup/     # Signup/login components
 │           ├── error-404/        # 404 page components
 │           ├── landing/          # Landing page components
 │           ├── home/             # Home page components
