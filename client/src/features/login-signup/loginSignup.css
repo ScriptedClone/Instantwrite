@@ -60,11 +60,17 @@
     border-radius: 6px;
 
     box-sizing: border-box;
+
+    cursor: pointer;
 }
 .authSubmit:hover {
     background-color: var(--accent-dark-bright);
 }
+.authSubmit:active {
+    background-color: var(--accent-dark);
+    transform: translateY(2px) scale(0.98);
+}
 
-.authRedirectContainer {
-    width: 100%;
+.authRedirectSubtitle {
+    cursor: default;
 }

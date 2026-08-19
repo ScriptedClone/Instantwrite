@@ -1,21 +1,9 @@
-import { Link, useNavigate } from "react-router"
-import { postUser } from "./services/authAPI"
-import './auth.css'
+import { Link } from "react-router"
+import useForm from "./hooks/useForm"
+import './loginSignup.css'
 
 export default function SignupForm() {
-    const nav = useNavigate()
-
-    async function handleSubmit(e) {
-        e.preventDefault();
-        try {
-            const data = Object.fromEntries(new FormData(e.target));
-            const res = await postUser(data)
-            
-            nav('/home')
-        } catch (error){
-            alert(error.message)
-        }
-    }
+    const { handleSubmit } = useForm("signup");
 
     return (
 
@@ -41,9 +29,10 @@ export default function SignupForm() {
                 
                 <button className="authSubmit">Signup</button>
                 
-
-                <span className="authRedirectToLogin">Already have an account? <Link to="/login">login</Link></span>
-
+                <div className="authRedirectContainer">
+                    <span className="authRedirectSubtitle">Already have an account? </span>
+                    <Link className="authRedirectLink" to="/login">login</Link>
+                </div>
             </form>
         </div>
 
