@@ -1,8 +1,3 @@
-.editorPanel {
-    background-color: var(--tertiary-dark);
-}
-
-
 .editorPanel *{
     padding: 0;
     margin: 0;
@@ -11,6 +6,10 @@
 .editorPanel {
     padding: 10px;
     overflow: auto;
+
+    background-color: var(--tertiary-dark);
+
+    cursor: text;
 }
 
 .EditorTitle h1{
