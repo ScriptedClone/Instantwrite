@@ -69,7 +69,7 @@ export async function generateRewrite(settings, selection) {
     const userPrompt = CONTEXT_PROMPT.EDITOR_SELECTION(textBefore, textSelected, textAfter, contextBefore, contextAfter)
 
     const prompt = [createSystemPrompt(SYSTEM_PROMPT.SUGGESTION(style, tone)), createUserPrompt(userPrompt)];
-    const res = await fetchModelResponse(prompt, MODELS.llama70b, 0.7)
+    const res = await fetchModelResponse(prompt, MODELS.gpt120b, 0.7)
 
     return res.choices[0]?.message?.content || "Error. Try again";
 }
@@ -85,7 +85,7 @@ export async function generateRewrite(settings, selection) {
 export async function generateChatsSummary(chats) {
     const selectedChats = rebuildChat(chats);
     const prompt = [createSystemPrompt(SYSTEM_PROMPT.SUMMARIZE), ...selectedChats];
-    const res = await fetchModelResponse(prompt, MODELS.llama8b, 0.3);
+    const res = await fetchModelResponse(prompt, MODELS.gpt120b, 0.3);
 
     return res.choices[0]?.message?.content || "Error. Try again.";
 }
@@ -99,7 +99,7 @@ export async function generateChatsSummary(chats) {
 export async function generateLLMChat(chats) {
     const newChats = rebuildChat(chats)
     const prompt = [createSystemPrompt(SYSTEM_PROMPT.CHAT), ...newChats]
-    const res = await fetchModelResponse(prompt, MODELS.llama8b, 1);
+    const res = await fetchModelResponse(prompt, MODELS.gpt20b, 1);
 
     return res.choices[0]?.message?.content || "Error. Try again.";
 }
