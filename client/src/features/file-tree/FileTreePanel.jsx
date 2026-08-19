@@ -22,7 +22,7 @@ export default function FileTreePanel({ handleSelectedDoc, handleDocumentRename 
 
     /**
      * handles header button clicks which adds a folder or document or save the 
-     * current folderChildMap to local storage.
+     * current folderChildMap to database.
      * 
      * @param {} button "document", "folder", "save"
      * @returns 

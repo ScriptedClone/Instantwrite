@@ -3,7 +3,7 @@ import { getProject } from "../services/projectAPI";
 import { addDocumentNode, addFolderNode, moveNode, renameNode, deleteNode, getFolderRoot } from "../../file-tree/fileTree";
 
 export default function useProject(projectId) {
-    /**  Store folderChildMap built on backend react on structural changes. */
+    /** Stores the file-tree hierarchy and triggers UI updates when it changes. */
     const [folderChildMap, setfolderChildMap] = useState(null);
 
     /** This is a hashmap that contains node id as key and the node itself as value. */ 

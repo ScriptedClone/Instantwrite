@@ -70,7 +70,7 @@ export const saveProjectLimit = rateLimit({
     legacyHeaders: false,
 });
 
-//** Limit chat completion requests to 10 per minute */
+/** Limit chat completion requests to 10 per minute */
 export const llmChatLimit = rateLimit({
     windowMs: ONE_MINUTE,
     limit: 10,
@@ -88,7 +88,7 @@ export const llmSummaryLimiter = rateLimit({
     message: { message: 'Too many messages sent, please slow down' },
 });
 
-//** Limit rewrite requests to groq 15 per minute*/
+/** Limit rewrite requests to groq 15 per minute*/
 export const llmRewriteLimit = rateLimit({
     windowMs: ONE_MINUTE, 
     limit: 15, 
