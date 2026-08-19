@@ -30,3 +30,17 @@ export async function deleteSession(req, res) {
     })
 }
 
+export async function checkSession(req, res) {
+    const isAuthenticated = req.session.auth;
+
+    if(isAuthenticated) {
+        res.status(200).json({message: 'User has active session', session: true});
+        return
+    }
+    
+    if(!isAuthenticated) {
+        res.status(200).json({message: 'User has no active session', session: false})
+        return
+    }
+}
+

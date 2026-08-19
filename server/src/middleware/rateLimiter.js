@@ -11,6 +11,15 @@ export const createUserLimit = rateLimit({
     message: { message: 'Too many accounts created from this IP, please try again later' },
 });
 
+/** Prevent excessive session check. */
+export const checkSessionLimit = rateLimit({
+    windowMs: ONE_MINUTE,
+    limit: 60,
+    standardHeaders: true,
+    legacyHeaders: false, 
+    message: { message: 'Too many requests, please try again later' },
+});
+
 /** Prevent bruteforce attacks on login. */
 export const createSessionLimit = rateLimit({
     windowMs: TEN_MINUTES,

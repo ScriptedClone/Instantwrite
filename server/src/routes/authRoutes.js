@@ -1,10 +1,12 @@
 import { Router } from 'express';
-import { createUser, createSession, deleteSession } from '../controller/authController.js';
-import { createUserLimit, createSessionLimit, deleteSessionLimit } from '../middleware/rateLimiter.js';
+import { createUser, createSession, deleteSession, checkSession } from '../controller/authController.js';
+import { createUserLimit, createSessionLimit, deleteSessionLimit, checkSessionLimit } from '../middleware/rateLimiter.js';
 
 const route = Router()
 
 route.post('/users', createUserLimit, createUser);
+
+route.get('/sessions', checkSessionLimit, checkSession)
 
 route.post('/sessions', createSessionLimit, createSession);
 
