@@ -12,6 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const clientBuildApplication = path.join(import.meta.dirname, '../client/dist');
 
+app.set('trust proxy', 1);
 app.use(express.json());
 app.use(sessionConfig);
 app.use(express.static(clientBuildApplication));
