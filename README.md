@@ -11,6 +11,7 @@
 * [Tech Stack](#Tech-Stack)
 * [Project Structure](#Project-Structure)
 * [Getting Started](#Getting-Started)
+* [Documentation](#Documentation)
 * [What's Next](#Whats-Next)
 * [Limitations](#Limitations)
 * [Known Issues](#Known-Issues)
@@ -95,6 +96,8 @@ REST API design, backend architecture, as well as learning React for responsive 
 ## Project Structure
 ```
 InstantWrite/
+├── docs/                         # Frontend/Backend documentation
+│
 ├── client/                       # React + Vite frontend
 │   │
 │   ├── index.html                # main HTML
@@ -105,10 +108,11 @@ InstantWrite/
 │       ├── main.jsx              # App entry point
 │       ├── assets/               # Shared assets
 │       ├── components/           # Shared UI components
-│       ├── util/                 # Shared utils
 │       ├── pages/                # Route-level page components
+│       ├── util/                 # Shared utils
 │       └── features/
 │           ├── auth/             # Signup/login components
+│           ├── error-404/        # 404 page components
 │           ├── landing/          # Landing page components
 │           ├── home/             # Home page components
 │           ├── projects-list/    # Display user project list
@@ -121,7 +125,6 @@ InstantWrite/
 │   │
 │   ├── package.json              # Server dependencies
 │   ├── server.js                 # Express entry point
-│   ├── docs/                     # Backend documentation/examples
 │   └── src/
 │       ├── config/               # Database and session config
 │       ├── const/                # Backend constants
@@ -131,7 +134,6 @@ InstantWrite/
 │       ├── models/               # Database schema and seed files
 │       ├── routes/               # API route definitions
 │       └── services/             # Business logic, database queries, external API calls
-
 ```
 
 ---
@@ -166,8 +168,8 @@ NODE_SESSION_SECRET=your_session_secret
 ```
 
 ### 3. Populate database
-* Open pgadmin, open query workspace and paste database table setup on [/server/models/schema.sql](./server/src/models/schema.sql). 
-* Paste the seed data from [server/models/seed.sql](./server/src/models/seed.sql).
+* Open pgadmin, open query workspace and paste database table setup on [schema.sql](./server/src/models/schema.sql). 
+* Paste the seed data from [seed.sql](./server/src/models/seed.sql).
 
 ### 4. Run server
 ```
@@ -185,6 +187,15 @@ open http://localhost:5173
 
 ---
 
+## Documentation
+- [API Reference](./docs/api-reference.md)
+- [Assistant Panel Chat](./docs/client/assistant-panel-chat.md)
+- [File Tree](./docs/client/file-tree.md)
+- [Database Design](./docs/server/database.md)
+- [Example Project Map](./docs/example-project-map.md)
+
+---
+
 ## What's next?
 
 ### Editor and Writing Workflow
@@ -197,6 +208,7 @@ open http://localhost:5173
 - Support BYOK (bring-your-own-key) API configuration for LLM features.
 - Improve existing LLM-powered writing tools and add new ones.
 - Add features that support story planning and outlining.
+- Format Chat Completion responses.
 
 ### Security and Data
 - Encrypt user project data in database.
@@ -215,16 +227,15 @@ open http://localhost:5173
 
 ## Limitations
 - No automated test suites.
-- Application currently uses one Groq API key for all LLM features.
+- Additional input validation across API request payloads.
+- Application uses one Groq API key for all LLM features.
 - Users must manually save projects for changes to persist.
-- LLM rewrites and chats are not persisted when page refreshes.
+- LLM rewrite and chat history not persisted on refresh.
 
 ## Known Issues
-- Some database error messages leak to client.
-- Additional input validation across API request payloads.
-- Users are not redirected to login page when their session expires.
-- File-tree root folder cannot be selected when empty.
-- Loading and error states need UI handling.
+- Some database error messages leak to client. Discovered during SQL syntax error.
+- Chat responses are not format-constrained and can return long unstructured markdown blocks.
+- Loading and error states UI handling.
 
 ---
 
@@ -236,6 +247,7 @@ open http://localhost:5173
 - [Tiptap](https://tiptap.dev/) for rich text editor.
 - [Groq](https://groq.com/) for LLM-powered writing assistance.
 - [Flaticon](https://www.flaticon.com/), [Icons8](https://icons8.com/), [Google Fonts Icons](https://fonts.google.com/icons) for button icons.
+- [Unsplash](https://unsplash.com/) for home page background.
 
 ---
 
