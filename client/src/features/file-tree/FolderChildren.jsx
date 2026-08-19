@@ -7,8 +7,13 @@ import Document from "./Document.jsx"
 
 
 /**
- * This is a recursive component that builds the nested list. The
- * recursion is triggered when a folder is toggled to expand.
+ * This component is part of a two-step recursion that builds the nested list. The
+ * second recursion is triggered when a folder is toggled to expand.
+ * 
+ * @param {*} folderId is the current folder level. 
+ * @param {*} depth is used by Folder/Document components to determine collision 
+ * priority during drag and drop operations.
+ * @returns 
  */
 export default function FolderChildren({folderId, depth}) {
     const { projectState } = useContext(ProjectContext);

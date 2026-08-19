@@ -9,7 +9,17 @@ import EditorPanel from "../editor/EditorPanel.jsx"
 import FileTreePanel from "../file-tree/FileTreePanel.jsx"
 import "./workSpace.css"
 
-
+/**
+ * This is a top-level component on the editor page responsible for 
+ * coordinating state/actions between panels (FileTree, Editor, and Assistant).
+ * 
+ * Combines useProject (project/node data) and useDocument (active document
+ * selection) to keep the file tree, editor, and last-active-document state
+ * in sync.
+ * 
+ * @param projectId is the project selected from the home page. It is passed down
+ * by a route level component.
+ */
 export default function Workspace({projectId}) {
     const { state: projectState, actions: projectActions } = useProject(projectId);
     const { nodeMapRef, loading, error } = projectState;
