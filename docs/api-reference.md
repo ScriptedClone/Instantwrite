@@ -198,6 +198,28 @@ Creates a new user account and starts an authenticated session.
 }
 ```
 
+### `GET /api/v1/sessions`
+
+Read session to check if user is authenticated / unauthenticated.
+
+**Request Body** None
+
+**Response Body**
+
+```json
+{
+  "message": "User has active session", 
+  "session": true
+}
+```
+
+```json
+{
+  "message": "User has no active session", 
+  "session": false
+}
+```
+
 ### `POST /api/v1/sessions`
 
 Creates a new authenticated session for an existing user.
