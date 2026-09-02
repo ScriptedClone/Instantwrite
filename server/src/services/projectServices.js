@@ -1,4 +1,5 @@
 import { convertProjectsRows, convertRowsToFileMap, getFolderRoot } from '../helpers/projectHelpers.js'
+import { EMPTY_DOCUMENT_NODE } from '../const/defaultNodeContent.js';
 import { db } from '../config/database.js'
 
 export async function getProject(projectId, userId) {
@@ -86,7 +87,8 @@ export async function putProject(projectId, userId, project, nodeMap) {
 export async function createProject(name, userId){
     const client = await db.connect();
     let res;
-    let id;
+    let projectId;
+    let rootFolderId;
 
     try {
         await client.query('BEGIN');
@@ -97,15 +99,23 @@ export async function createProject(name, userId){
                 [userId, name]
         )
 
-        id = res.rows[0].project_id;
+        projectId = res.rows[0].project_id;
+        res = await client.query(`
+            INSERT INTO nodes (node_id, parent_id, project_id, type, index, name, content)
+            VALUES (gen_random_uuid(), NULL, $1, 'folder', NULL, 'root', NULL)
+            RETURNING node_id`,
+            [projectId]
+        )
+        
+        rootFolderId = res.rows[0].node_id;
         await client.query(`
             INSERT INTO nodes (node_id, parent_id, project_id, type, index, name, content)
-            VALUES (gen_random_uuid(), NULL, $1, 'folder', NULL, 'root', NULL)`,
-            [id]
+            VALUES (gen_random_uuid(), $1, $2, 'document', 0, 'untitled document', $3)`,
+            [rootFolderId, projectId, EMPTY_DOCUMENT_NODE]
         )
          
         await client.query('COMMIT');
-        return { id, name };
+        return { id: projectId, name };
     } catch(error) {
         await client.query('ROLLBACK');
         throw error;
