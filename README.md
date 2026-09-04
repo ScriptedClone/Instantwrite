@@ -6,6 +6,7 @@
 </p>
 
 ## Table of contents
+* [Live Preview](#Live-Preview)
 * [About](#About)
 * [Features](#Features)
 * [Tech Stack](#Tech-Stack)
@@ -17,6 +18,9 @@
 * [Known Issues](#Known-Issues)
 * [Author](#Author)
 * [License](#License)
+
+## Live Preview
+**[instantwrite.onrender.com](https://instantwrite.onrender.com)**
 
 ## About
 **Instantwrite** is a writing app for aspiring authors, combining LLM-powered writing tools with a file-tree system to keep
