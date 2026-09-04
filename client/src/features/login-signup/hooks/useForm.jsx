@@ -7,16 +7,18 @@ export default function useForm(formType) {
     const nav = useNavigate()
 
     async function handleSubmit(e) {
+        // prevent default page refresh on submit
+        e.preventDefault();
+
         //prevent duplicate request
         if(isSubmitting) return;
         setIsSubmitting(true);
         
-        e.preventDefault();
         try {
             const data = Object.fromEntries(new FormData(e.target));
             if(formType === 'login') await postSession(data)
             if(formType === 'signup') await postUser(data);
-            
+
             nav('/home')
         } catch (error){
             alert(error.message)
