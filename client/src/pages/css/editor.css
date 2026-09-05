@@ -1,0 +1,6 @@
+.editorPage{
+    display: grid;
+    height: 100vh;
+    grid-template-rows: 5% 95%;
+}
+

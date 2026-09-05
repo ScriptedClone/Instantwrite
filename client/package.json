@@ -1,0 +1,32 @@
+{
+  "name": "Instantwrite",
+  "version": "0.1.0",
+  "description": "A React writing assistant prototype with document editing, file-tree organization, and AI rewrite/chat features.",
+  "license": "ISC",
+  "author": "Tracee Anrei Miasco",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@dnd-kit/helpers": "^0.5.0",
+    "@dnd-kit/react": "^0.5.0",
+    "@tiptap/core": "^3.26.1",
+    "@tiptap/extension-document": "^3.26.1",
+    "@tiptap/extension-paragraph": "^3.26.1",
+    "@tiptap/extension-text": "^3.26.1",
+    "@tiptap/pm": "^3.26.1",
+    "@tiptap/react": "^3.26.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-router": "^8.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.2",
+    "vite": "^8.0.16"
+  }
+}

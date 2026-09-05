@@ -1,0 +1,48 @@
+.errorMessageContainer * {
+    margin: 0;
+    padding: 0;
+}
+
+.errorMessageContainer {
+    position: absolute;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.errorMessageTitle {
+    font-size: 6rem;
+}
+
+.errorMessageBtnWrapper {
+    display: flex;
+    gap: 10px;
+
+    margin-top: 10px;
+    transition: transform 0.1s ease;
+}
+.errorMessageBtn {
+    background-color: var(--accent-dark);
+    
+    padding: 10px 12px;
+
+    border: none;
+    border-radius: 12px;
+
+    font-size: 2rem;
+    color: var(--text-dark);
+    
+    cursor: pointer;
+}
+
+.errorMessageBtnWrapper:hover {
+    transform: scale(1.05);
+}

@@ -1,0 +1,151 @@
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin-left: 10px;
+}
+
+.fileTreePanel {
+    display: grid;
+    grid-template-rows: 5% 95%;
+
+    background-color: var(--secondary-dark)
+}
+
+.fileTreeHeader {
+    display: flex;
+    justify-content: start;
+    align-self: center;
+
+    gap: 8px;
+    margin-left: 5px;
+}
+
+.fileTreeHeaderBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    max-width: var(--panelHeader-btn-max-width);
+    min-width: var(--panelHeader-btn-min-width);
+    height: var(--panelHeader-btn-height);
+
+    border-radius: 4px;
+
+    background-color: var(--accent-dark);
+    color: var(--text-dark);
+
+    cursor: pointer;
+}
+.fileTreeHeaderBtn:hover {
+    filter: brightness(1.2);
+}
+
+.fileTreeHeaderIcon {
+    width: var(--panelHeader-btn-icon-width);
+    height: var(--panelHeader-btn-icon-height);
+}
+
+
+.fileTree {
+    height: 100%;
+
+    padding-top: 10px;
+    margin-right: 7px;
+
+    box-sizing: border-box;
+}
+
+.activeFile {
+    background-color: var(--accent-dark-faded);
+}
+
+.file {
+    position: relative;
+    display: flex;
+    gap: 5px;
+
+    border: 1px solid transparent;
+    border-radius: 4px;
+
+    padding: 6px;
+
+    cursor: pointer;
+}
+
+.fileName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    cursor: pointer;
+}
+
+.fileTree input {
+    width: 50%;
+}
+
+li button {
+    position: absolute;
+    background: none;
+    border: none;
+    top: 1px;
+    padding: 0;
+
+    opacity: 0;
+    visibility: hidden;
+}
+
+.folderToggleActive {
+    rotate: 90deg;
+}
+
+.folderToggleIcon {
+    display: inline-block;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.hoverFolderDrop {
+    background-color: var(--accent-dark-faded);
+}
+
+.hoverBtn {
+    opacity: 1;
+    visibility: visible; 
+}
+
+.hoverFile {
+    border-color: var(--border-dark);
+}
+
+.renameIcon {
+    width: var(--fileTree-icon-width);
+    height: var(--fileTree-icon-height);
+
+    cursor: pointer;
+}
+
+.deleteIcon {
+    width: var(--fileTree-icon-width);
+    height: var(--fileTree-icon-height);
+
+    cursor: pointer;
+}
+
+.renameBtn {
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.deleteBtn{
+    right: 33px;
+    top: 50%;
+    transform: translateY(-50%);
+}

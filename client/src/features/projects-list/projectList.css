@@ -1,0 +1,129 @@
+.projectListContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: start; /* Pack rows vertically from top*/
+    gap: 60px;
+
+    max-width: 1250px; /* Set 4 maximum cards per row*/
+    margin: 0 auto;
+    padding: 100px 0px; /* Set row to start 100px below nav*/
+
+    box-sizing: border-box;
+}
+
+.projectCard {
+    position: relative;
+    container-type: inline-size;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    flex: 0 0 200px;
+    height: 280px;
+    padding: 20px;
+
+    background-color: var(--primary-dark);
+    color: var(--text-dark);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .75);
+
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    
+    cursor: pointer;
+}
+
+.projectCard:hover {
+    transform: scale(1.03);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .85);
+    z-index: 100; 
+}
+
+.projectDropDownContainer {
+    position: relative;
+    height: 10px; /* mock vertical space to center project name */
+    width: 100%;
+}
+
+/* To group dropdown icon and dropdown content*/
+.projectDropDownWrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+
+.projectDropDownIcon {
+    width: 20px;
+    height: 20px;
+    display: block;
+
+    padding: 8px;
+    margin: -8px;
+    border-radius: 4px;
+
+    box-sizing: content-box;
+    transition: background-color 0.15s ease
+}
+
+.projectDropDownIcon:hover {
+    background-color: var(--primary-dark-faded);
+}
+
+.projectDropDownContent {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 100;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    border-radius: 6px 4px;
+
+    padding: 10px 5px;
+    background-color: white;
+    animation: dropDownOpen 0.15s ease-out;
+}
+
+@keyframes dropDownOpen {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.projectDeleteBtn,
+.projectRenameBtn{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    
+    background: none;
+    border: none;
+    padding: 2px 6px;
+
+    font-size: 1rem;
+
+    cursor: pointer;
+}
+
+.projectName {
+    font-size: clamp(2rem, 5cqw, 2.5rem);
+    text-align: center;
+    overflow: hidden;
+
+    max-width: 100%;
+}
+
+.projectWords {
+    font-size: 0.7rem;
+}
+

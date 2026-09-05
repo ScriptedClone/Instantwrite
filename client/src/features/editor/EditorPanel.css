@@ -1,0 +1,27 @@
+.editorPanel *{
+    padding: 0;
+    margin: 0;
+}
+
+.editorPanel {
+    padding: 10px;
+    overflow: auto;
+
+    background-color: var(--tertiary-dark);
+
+    cursor: text;
+}
+
+.EditorTitle h1{
+    margin: var(--editor-header-margin);
+}
+
+.tiptap {
+    outline: 0;
+    height: 100%;
+}
+
+.tiptap p {
+    font-size: var(--editor-paragraph-font-size);
+    margin: var(--editor-paragraph-margin);
+}
