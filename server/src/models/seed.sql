@@ -6,7 +6,7 @@ INSERT INTO users (email, name, password_hash)
 VALUES (
     'dev@email.com',
     'Development',
-    '$2b$12$WznwoQa8rysNSsGpV/RWL.VAik9awaLuK8Mk0G.o/aF8I77ddpL12'
+    '$2b$08$4CHnja7N4ZTb5j8sNzTi4uN0JnIyjdeA3efRw.wEAgIWaG/CP4hKS'
 );
 
 INSERT INTO projects (project_id, user_id, name)
