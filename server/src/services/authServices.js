@@ -3,12 +3,17 @@ import { db } from '../config/database.js'
 import bcrypt from 'bcrypt'
 import Joi from "joi";
 
-const saltRounds = 12
+// Low salt round value due to Render's low CPU power to prevent
+// noticeable delay during login/signup
+const saltRounds = 8;
+
 const sessionExpire = 60 * 60 * 1000;
+
 const loginValidator = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required()
 })
+
 const signupValidator = Joi.object({
     username: Joi.string().min(3).max(20).required(),
     email: Joi.string().email().required(),
@@ -104,30 +109,45 @@ export async function createUser(username, email, password) {
     }
 }
 
+function tsss() {
+    return new Date().toISOString();
+}
+
 export async function authUser(email, password) {
+    console.log(`[${tsss()}] login: db lookup start`);
+    console.time('login: db lookup');
+
     const user = await db.query(`
         SELECT *
         FROM users
         WHERE email = $1`,
         [email]
-    )
+    );
+
+    console.timeEnd('login: db lookup');
+    console.log(`[${tsss()}] login: db lookup end`);
 
     if(user.rows.length !== 1) {
         const error = new Error('invalid email or password');
         error.status = 404;
-
         throw error;
     }
 
-    if(await bcrypt.compare(password, user.rows[0].password_hash)) {
+    console.log(`[${tsss()}] login: bcrypt compare start`);
+    console.time('login: bcrypt compare');
+
+    const passwordMatches = await bcrypt.compare(password, user.rows[0].password_hash);
+
+    console.timeEnd('login: bcrypt compare');
+    console.log(`[${tsss()}] login: bcrypt compare end`);
+
+    if(passwordMatches) {
         return user;
-    } 
-    else {
-        const error = new Error('invalid email or password')
-        error.status = 401;
-        
-        throw error;
     }
+
+    const error = new Error('invalid email or password');
+    error.status = 401;
+    throw error;
 }
 
 export async function createSession(user_id, req) {
