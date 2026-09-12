@@ -3,7 +3,7 @@ import { db } from '../config/database.js'
 import bcrypt from 'bcrypt'
 import Joi from "joi";
 
-const saltRounds = 6;
+const saltRounds = 10;
 const sessionExpire = 60 * 60 * 1000;
 const loginValidator = Joi.object({
     email: Joi.string().email().required(),
