@@ -10,14 +10,39 @@ export async function createUser(req, res) {
     res.status(201).json({message: 'signup success'});
 }
 
-export async function createSession(req, res) {
-    const { email, password } = req.body;
-    authService.validateLogin({email, password})
-    
-    const user = await authService.authUser(email, password);
-    await authService.createSession(user.rows[0].user_id, req);
+function ts() {
+    return new Date().toISOString();
+}
 
-    res.status(200).json({message: 'login successful'})
+export async function createSession(req, res) {
+    console.log(`[${ts()}] login: total start`);
+    console.time('login: total');
+
+    const { email, password } = req.body;
+    authService.validateLogin({ email, password });
+
+    const user = await authService.authUser(email, password);
+
+    req.session.auth = true;
+    req.session.user_id = user.rows[0].user_id;
+    req.session.cookie.maxAge = 60 * 60 * 1000;
+
+    console.log(`[${ts()}] login: session save start`);
+    console.time('login: session save');
+
+    req.session.save((error) => {
+        console.timeEnd('login: session save');
+        console.log(`[${ts()}] login: session save end`);
+
+        console.timeEnd('login: total');
+        console.log(`[${ts()}] login: total end`);
+
+        if (error) {
+            return res.status(500).json({ message: 'session save failed' });
+        }
+
+        res.status(200).json({ message: 'login successful' });
+    });
 }
 
 export async function deleteSession(req, res) {
