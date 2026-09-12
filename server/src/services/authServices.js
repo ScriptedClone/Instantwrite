@@ -3,7 +3,10 @@ import { db } from '../config/database.js'
 import bcrypt from 'bcrypt'
 import Joi from "joi";
 
-const saltRounds = 12
+// Low salt round value due to Render's low CPU power to prevent
+// noticeable delay during login/signup
+const saltRounds = 8;
+
 const sessionExpire = 60 * 60 * 1000;
 const loginValidator = Joi.object({
     email: Joi.string().email().required(),
