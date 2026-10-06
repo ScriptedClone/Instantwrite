@@ -1,23 +1,24 @@
 import { convertProjectsRows, convertRowsToFileMap, getFolderRoot } from '../helpers/projectHelpers.js'
 import { EMPTY_DOCUMENT_NODE } from '../const/defaultNodeContent.js';
-import { db } from '../config/database.js'
+import { databaseQuery, transactionQuery } from '../util/query.js';
 
 export async function getProject(projectId, userId) {
-    const project = await db.query(`
-        SELECT 
-            n.node_id,
-            n.parent_id,
-            n.name,
-            n.type,
-            n.index,
-            n.content
-        FROM nodes n
-        JOIN projects p
-        ON n.project_id = p.project_id
-        WHERE p.project_id = $1 
-        AND p.user_id = $2`, 
-        [projectId, userId]
-    )
+    const project = await databaseQuery({
+        text: `
+            SELECT 
+                n.node_id,
+                n.parent_id,
+                n.name,
+                n.type,
+                n.index,
+                n.content
+            FROM nodes n
+            JOIN projects p
+            ON n.project_id = p.project_id
+            WHERE p.project_id = $1 
+            AND p.user_id = $2`,
+        values: [projectId, userId]
+    })
 
     if(project.rowCount === 0) {
         const error = new Error('project does not exist');
@@ -30,22 +31,20 @@ export async function getProject(projectId, userId) {
 }
 
 export async function getProjects(userId){
-    const projects = await db.query(`
-        SELECT * FROM projects
-        WHERE user_id = $1`,
-        [userId]
-    )
+    const projects = await databaseQuery({
+        text: `
+            SELECT * FROM projects
+            WHERE user_id = $1`,
+        values: [userId]
+    })
 
     return convertProjectsRows(projects.rows)
 }
 
 export async function putProject(projectId, userId, project, nodeMap) {
-    const client = await db.connect();
     const rootId = getFolderRoot(nodeMap);
 
-    try {
-        await client.query('BEGIN');
-
+    await transactionQuery(async (client) => {
         const { rows } = await client.query(`
             SELECT project_id FROM projects 
             WHERE project_id = $1 
@@ -75,23 +74,15 @@ export async function putProject(projectId, userId, project, nodeMap) {
                                                                          nodeMap[childId].tiptapContent ?? null])
             }
         }
-        await client.query('COMMIT');
-    } catch(error) {
-        await client.query('ROLLBACK');
-        throw error;
-    } finally {
-        client.release();
-    }
+    });
 }
 
 export async function createProject(name, userId){
-    const client = await db.connect();
-    let res;
-    let projectId;
-    let rootFolderId;
+    return await transactionQuery(async (client) => {
+        let res;
+        let projectId;
+        let rootFolderId;
 
-    try {
-        await client.query('BEGIN');
         res = await client.query(`
                 INSERT INTO projects(user_id, name)
                 values($1, $2)
@@ -114,22 +105,12 @@ export async function createProject(name, userId){
             [rootFolderId, projectId, EMPTY_DOCUMENT_NODE]
         )
          
-        await client.query('COMMIT');
         return { id: projectId, name };
-    } catch(error) {
-        await client.query('ROLLBACK');
-        throw error;
-    } finally {
-        client.release();
-    }
+    });
 }
 
 export async function deleteProject(projectId, userId) {
-    const client = await db.connect();
-
-    try {
-        await client.query('BEGIN');
-
+    await transactionQuery(async (client) => {
         const { rows } = await client.query(`
             SELECT project_id FROM projects 
             WHERE project_id = $1 
@@ -153,24 +134,18 @@ export async function deleteProject(projectId, userId) {
             WHERE project_id = $1`, 
             [projectId]
         );
-
-        await client.query('COMMIT');
-    } catch (error) {
-        await client.query('ROLLBACK');
-        throw error;
-    } finally {
-        client.release();
-    }
+    });
 }
 
 export async function renameProject(newName, projectId, userId) {
-    const result = await db.query(`
-        UPDATE projects
-        SET name = $1
-        WHERE project_id = $2 
-        AND user_id = $3`,
-        [newName, projectId, userId]
-    )
+    const result = await databaseQuery({
+        text: `
+            UPDATE projects
+            SET name = $1
+            WHERE project_id = $2 
+            AND user_id = $3`,
+        values: [newName, projectId, userId]
+    })
 
     if (result.rowCount !== 1) {
         const error = new Error('project not found');
