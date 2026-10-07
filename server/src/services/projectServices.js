@@ -1,9 +1,11 @@
 import { convertProjectsRows, convertRowsToFileMap, getFolderRoot } from '../helpers/projectHelpers.js'
 import { EMPTY_DOCUMENT_NODE } from '../const/defaultNodeContent.js';
-import { databaseQuery, transactionQuery } from '../util/query.js';
+import { db } from '../config/database.js';
+import { transactionQuery } from '../util/query.js';
+import { AppError } from '../util/AppError.js';
 
 export async function getProject(projectId, userId) {
-    const project = await databaseQuery({
+    const project = await db.query({
         text: `
             SELECT 
                 n.node_id,
@@ -21,17 +23,14 @@ export async function getProject(projectId, userId) {
     })
 
     if(project.rowCount === 0) {
-        const error = new Error('project does not exist');
-        error.status = 404;
-
-        throw error
+        throw new AppError('project does not exist', 404);
     } 
     
     return convertRowsToFileMap(project.rows);
 }
 
 export async function getProjects(userId){
-    const projects = await databaseQuery({
+    const projects = await db.query({
         text: `
             SELECT * FROM projects
             WHERE user_id = $1`,
@@ -53,9 +52,7 @@ export async function putProject(projectId, userId, project, nodeMap) {
         );
 
         if(rows.length === 0) {
-            const error = new Error('project not found')
-            error.status = 404;
-            throw error;
+            throw new AppError('project not found', 404);
         }
 
         await client.query(`DELETE FROM nodes WHERE project_id = $1`, [projectId]);
@@ -119,9 +116,7 @@ export async function deleteProject(projectId, userId) {
         );
 
         if(rows.length === 0) {
-            const error = new Error('project not found')
-            error.status = 404;
-            throw error;
+            throw new AppError('project not found', 404);
         }
 
         await client.query(`
@@ -138,7 +133,7 @@ export async function deleteProject(projectId, userId) {
 }
 
 export async function renameProject(newName, projectId, userId) {
-    const result = await databaseQuery({
+    const result = await db.query({
         text: `
             UPDATE projects
             SET name = $1
@@ -148,9 +143,6 @@ export async function renameProject(newName, projectId, userId) {
     })
 
     if (result.rowCount !== 1) {
-        const error = new Error('project not found');
-        error.status = 404;
-        
-        throw error;
+        throw new AppError('project not found', 404);
     }
 }

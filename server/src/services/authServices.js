@@ -1,5 +1,7 @@
 import { EMPTY_DOCUMENT_NODE } from '../const/defaultNodeContent.js';
-import { databaseQuery, transactionQuery } from '../util/query.js';
+import { AppError } from '../util/AppError.js';
+import { db } from '../config/database.js';
+import { transactionQuery } from '../util/query.js';
 import bcrypt from 'bcrypt'
 import Joi from "joi";
 
@@ -28,10 +30,7 @@ export function validateLogin({email, password}) {
     const result  = loginValidator.validate({email, password});
 
     if(result.error) {
-        const error = new Error(result.error.details[0].message)
-        error.status = 400
-
-        throw error;
+        throw new AppError(result.error.details[0].message, 400);
     }
 }
 
@@ -45,10 +44,7 @@ export function validateSignup({username, email, password}) {
     const result = signupValidator.validate({username, email, password})
 
     if(result.error) {
-        const error = new Error(result.error.details[0].message)
-        error.status = 400
-
-        throw error;
+        throw new AppError(result.error.details[0].message, 400);
     }
 }
 
@@ -92,10 +88,7 @@ export async function createUser(username, email, password) {
             return userId;
         } catch (error) {
             if(error.code === '23505') {
-                const dbError = new Error('email already in use');
-                dbError.status = 409;
-                
-                throw dbError
+                throw new AppError('email already in use', 409);
             }
 
             throw error;
@@ -104,7 +97,7 @@ export async function createUser(username, email, password) {
 }
 
 export async function authUser(email, password) {
-    const user = await databaseQuery({
+    const user = await db.query({
         text: `
             SELECT *
             FROM users
@@ -113,20 +106,14 @@ export async function authUser(email, password) {
     })
 
     if(user.rows.length !== 1) {
-        const error = new Error('invalid email or password');
-        error.status = 404;
-
-        throw error;
+        throw new AppError('invalid email or password', 401);
     }
 
     if(await bcrypt.compare(password, user.rows[0].password_hash)) {
         return user;
     } 
     else {
-        const error = new Error('invalid email or password')
-        error.status = 401;
-        
-        throw error;
+        throw new AppError('invalid email or password', 401);
     }
 }
 
