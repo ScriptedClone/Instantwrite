@@ -239,7 +239,6 @@ open http://localhost:5173
 - LLM rewrite and chat history not persisted on refresh.
 
 ## Known Issues
-- Some database error messages leak to client. Discovered during SQL syntax error.
 - Chat responses are not format-constrained and can return long unstructured markdown blocks.
 - Loading and error states UI handling.
 

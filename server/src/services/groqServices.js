@@ -2,6 +2,7 @@ import Groq from 'groq-sdk'
 import { createUserPrompt, createSystemPrompt, rebuildChat } from '../helpers/groqHelpers.js';
 import { SYSTEM_PROMPT, CONTEXT_PROMPT } from '../const/prompts.js';
 import { MODELS } from '../const/models.js';
+import { AppError } from '../util/AppError.js';
 
 const key = process.env.GROQ_API_KEY
 const groq = new Groq({apiKey: key});
@@ -23,32 +24,20 @@ export async function fetchModelResponse(messages, model, temperature) {
         });
     } catch (APIError) {
         if (APIError instanceof Groq.RateLimitError) {
-            const error = new Error('AI service is busy, please try again shortly');
-            error.status = 429;
-            error.cause = APIError;
-            throw error;
+            throw new AppError('AI service is busy, please try again shortly', 429, APIError);
         }
         
         if (APIError instanceof Groq.AuthenticationError) {
-            const error = new Error('AI service is temporarily unavailable');
-            error.status = 502;
-            error.cause = APIError;
-            throw error;
+            throw new AppError('AI service is temporarily unavailable', 502, APIError);
         }
 
         if (APIError instanceof Groq.APIConnectionError) {
-            const error = new Error('Could not reach AI service');
-            error.status = 502;
-            error.cause = APIError;
-            throw error;
+            throw new AppError('Could not reach AI service', 502, APIError);
         }
 
         // catch 4xx/5xx cases
         if (APIError instanceof Groq.APIError) {
-            const error = new Error('AI service returned an error');
-            error.status = APIError.status >= 500 ? 502 : 400;
-            error.cause = APIError;
-            throw error;
+            throw new AppError('AI service returned an error', APIError.status >= 500 ? 502 : 400, APIError);
         }
 
         // unexpected errors not from groq sdk
