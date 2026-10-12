@@ -1,5 +1,7 @@
 import { EMPTY_DOCUMENT_NODE } from '../const/defaultNodeContent.js';
-import { db } from '../config/database.js'
+import { AppError } from '../util/AppError.js';
+import { db } from '../config/database.js';
+import { transactionQuery } from '../util/query.js';
 import bcrypt from 'bcrypt'
 import Joi from "joi";
 
@@ -28,10 +30,7 @@ export function validateLogin({email, password}) {
     const result  = loginValidator.validate({email, password});
 
     if(result.error) {
-        const error = new Error(result.error.details[0].message)
-        error.status = 400
-
-        throw error;
+        throw new AppError(result.error.details[0].message, 400);
     }
 }
 
@@ -45,91 +44,76 @@ export function validateSignup({username, email, password}) {
     const result = signupValidator.validate({username, email, password})
 
     if(result.error) {
-        const error = new Error(result.error.details[0].message)
-        error.status = 400
-
-        throw error;
+        throw new AppError(result.error.details[0].message, 400);
     }
 }
 
 export async function createUser(username, email, password) {
     const passwordHash = await bcrypt.hash(password, saltRounds)
-    const client = await db.connect();
-    let userId;
-    let projectId;
-    let res;
 
-    try {
-        await client.query('BEGIN');
-        res = await client.query(`
-            INSERT INTO users(name, email, password_hash)
-            VALUES($1, $2, $3)
-            RETURNING user_id`,
-            [username, email, passwordHash]
-        )
+    return await transactionQuery(async (client) => {
+        let userId;
+        let projectId;
+        let res;
 
-        userId = res.rows[0].user_id;
-        res = await client.query(`
-            INSERT INTO projects(user_id, name)
-            values($1, $2)
-            RETURNING project_id`,
-            [userId, 'Untitled Project']
-        )
-
-        projectId = res.rows[0].project_id;
-        await client.query(`
-            WITH root_folder AS (
-                INSERT INTO nodes (node_id, parent_id, project_id, type, index, name, content)
-                VALUES (gen_random_uuid(), NULL, $1, 'folder', NULL, 'root', NULL)
-                returning node_id
+        try {
+            res = await client.query(`
+                INSERT INTO users(name, email, password_hash)
+                VALUES($1, $2, $3)
+                RETURNING user_id`,
+                [username, email, passwordHash]
             )
-            INSERT INTO nodes (node_id, parent_id, project_id, type, index, name, content)
-            SELECT gen_random_uuid(), node_id, $1, 'document', 0, 'Untitled Document', $2
-            FROM root_folder`,
-            [projectId, EMPTY_DOCUMENT_NODE]
-        )
-        await client.query('COMMIT');
 
-        return userId;
-    } catch (error) {
-        await client.query('ROLLBACK');
+            userId = res.rows[0].user_id;
+            res = await client.query(`
+                INSERT INTO projects(user_id, name)
+                values($1, $2)
+                RETURNING project_id`,
+                [userId, 'Untitled Project']
+            )
 
-        if(error.code === '23505') {
-            const dbError = new Error('email already in use');
-            dbError.status = 409;
-            
-            throw dbError
+            projectId = res.rows[0].project_id;
+            await client.query(`
+                WITH root_folder AS (
+                    INSERT INTO nodes (node_id, parent_id, project_id, type, index, name, content)
+                    VALUES (gen_random_uuid(), NULL, $1, 'folder', NULL, 'root', NULL)
+                    returning node_id
+                )
+                INSERT INTO nodes (node_id, parent_id, project_id, type, index, name, content)
+                SELECT gen_random_uuid(), node_id, $1, 'document', 0, 'Untitled Document', $2
+                FROM root_folder`,
+                [projectId, EMPTY_DOCUMENT_NODE]
+            )
+
+            return userId;
+        } catch (error) {
+            if(error.code === '23505') {
+                throw new AppError('email already in use', 409);
+            }
+
+            throw error;
         }
-
-        throw error;
-    } finally {
-        client.release();
-    }
+    });
 }
 
 export async function authUser(email, password) {
-    const user = await db.query(`
-        SELECT *
-        FROM users
-        WHERE email = $1`,
-        [email]
-    )
+    const user = await db.query({
+        text: `
+            SELECT *
+            FROM users
+            WHERE email = $1`,
+        values: [email]
+    })
 
     if(user.rows.length !== 1) {
-        const error = new Error('invalid email or password');
-        error.status = 404;
-
-        throw error;
+        throw new AppError('invalid email or password', 401);
     }
 
     if(await bcrypt.compare(password, user.rows[0].password_hash)) {
         return user;
     } 
     else {
-        const error = new Error('invalid email or password')
-        error.status = 401;
-        
-        throw error;
+        throw new AppError('invalid email or password', 401);
     }
 }
 
